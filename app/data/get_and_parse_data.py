@@ -33,7 +33,8 @@ def from_csv_to_json():
                 "Id":'',
                 "X":re.split(r'[( )]', raw[10])[2],
                 "Y":re.split(r'[( )]', raw[10])[1],
-                "descript":'',
+                "Type":raw[11],
+                "Descript":'',
                 "Rating":'',
                 "Time":''
             })
@@ -65,7 +66,8 @@ def create_table_geo():
           "Name varchar(256), " \
           "X float(11, 6), " \
           "Y float(11, 6), " \
-          "Desc varchar(512), " \
+          "Descript varchar(512), " \
+          "Type varchar(64), " \
           "Rating int(11), " \
           "Time int(11) " \
           ") " \
@@ -86,20 +88,12 @@ def add_json_to_sql(json_data):
         return {"Answer": "Warning", "Data": "Ошибка доступа к базе данных, повторить позже"}
 
     for json_data_single in json_data:
-        get_sql = "SELECT * FROM Geo WHERE Name='{}'".format(json.loads(json_data_single)['Name'])
-        current_connect.execute(get_sql)
-        result = current_connect.fetchall()
-
-        if result is not ():
-            print("res ")
-            print(result)
-            continue
-
         sql = "INSERT INTO Geo" \
-              " VALUES (null, '{}', {}, {}, '0', 0, 0)".format(
+              " VALUES (null, '{}', {}, {}, '{}', '0', 0, 0)".format(
             json.loads(json_data_single)['Name'],
             json.loads(json_data_single)['X'],
-            json.loads(json_data_single)['Y']
+            json.loads(json_data_single)['Y'],
+            json.loads(json_data_single)['Type']
         )
         print(sql)
         try:
@@ -107,7 +101,6 @@ def add_json_to_sql(json_data):
             connect.commit()
         except:
             print('error: Ошибка запроса к базе данных.')
-            return {'Answer': 'Warning', "Data": "Ошибка запроса к базе данных."}
 
 
 #create_table_geo()
