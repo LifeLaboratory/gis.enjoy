@@ -29,13 +29,13 @@ def from_csv_to_json():
         json_res.append(
             json.dumps(
             {
-                "name":raw[3],
-                "id":'',
-                "x":re.split(r'[( )]', raw[10])[2],
-                "y":re.split(r'[( )]', raw[10])[1],
-                "desc":'',
-                "rating":'',
-                "time":''
+                "Name":raw[3],
+                "Id":'',
+                "X":re.split(r'[( )]', raw[10])[2],
+                "Y":re.split(r'[( )]', raw[10])[1],
+                "descript":'',
+                "Rating":'',
+                "Time":''
             })
         )
     print(json_res)
@@ -86,9 +86,8 @@ def add_json_to_sql(json_data):
         return {"Answer": "Warning", "Data": "Ошибка доступа к базе данных, повторить позже"}
 
     for json_data_single in json_data:
-        get_sql = "SELECT * FROM Geo WHERE Name='{}'".format(json.loads(json_data_single)['name'])
+        get_sql = "SELECT * FROM Geo WHERE Name='{}'".format(json.loads(json_data_single)['Name'])
         current_connect.execute(get_sql)
-        connect.commit()
         result = current_connect.fetchall()
 
         if result is not ():
@@ -98,9 +97,9 @@ def add_json_to_sql(json_data):
 
         sql = "INSERT INTO Geo" \
               " VALUES (null, '{}', {}, {}, '0', 0, 0)".format(
-            json.loads(json_data_single)['name'],
-            json.loads(json_data_single)['x'],
-            json.loads(json_data_single)['y']
+            json.loads(json_data_single)['Name'],
+            json.loads(json_data_single)['X'],
+            json.loads(json_data_single)['Y']
         )
         print(sql)
         try:
@@ -113,4 +112,4 @@ def add_json_to_sql(json_data):
 
 #create_table_geo()
 #get_csv(url_gov)
-add_json_to_sql(from_csv_to_json())
+#add_json_to_sql(from_csv_to_json())
