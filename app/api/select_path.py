@@ -63,7 +63,7 @@ def select_avalible_points(start_point, finish_point):
                 json_data_batch.append(json.dumps(event))
         trying = trying + 1
 
-    print(json_data_batch)
+    #print(json_data_batch)
     return json_data_batch
 
 #select_avalible_points((55.028133392, 82.922988892),(55.028133391, 82.922988889))

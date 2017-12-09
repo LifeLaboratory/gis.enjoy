@@ -20,7 +20,7 @@ def generate_roads(graph, time=None, max_time=None):
             pred[u][neighbor] = u
             dist[neighbor][u] = graph[u][neighbor]
         dist[u][u] = time[u]
-    pprint.pprint(dist)
+    #pprint.pprint(dist)
     pos_start = 0
     pos_end = 1
     result = {(0,): 0}
