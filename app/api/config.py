@@ -1,0 +1,1 @@
+HEADER = {'Access-Control-Allow-Origin': '*'}
