@@ -3,7 +3,7 @@ from app.data.get_and_parse_data import db_connect
 import math
 import json
 
-delta = 0.000005
+delta = 0.000000005
 
 def select_avalible_points(start_point, finish_point):
     json_data_batch = []
