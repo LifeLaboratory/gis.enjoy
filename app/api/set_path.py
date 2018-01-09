@@ -100,12 +100,14 @@ def longest_paths(begin_point, end_point, current_point, graph, time, max_time, 
     visited[current_point] = 0
     return 0
 
+
 def get_top_paths(graph, time, max_time):
     global top_paths
     global top_count
     top_paths = []
     longest_paths(0, len(graph) - 1, 0, graph, time, max_time)
     return sorted(top_paths, key=itemgetter('point'))
+
 
 graph = {0: {1: 10, 2: 70, 5: 20},
          1: {2: 20, 3: 30, 4: 40},
@@ -118,8 +120,8 @@ graph1 = {0: {0: 0,   1: 186, 2: 87,  3: 98,  4: 96},
           2: {0: 87,  1: 117, 2: 0,   3: 13,  4: 9},
           3: {0: 98,  1: 114, 2: 13,  3: 0,   4: 10},
           4: {0: 96,  1: 110, 2: 9,   3: 10,  4: 0}}
-#time = [14, 15, 16, 17, 18]
-#max_time = 240
+time = [14, 15, 16, 17, 18]
+max_time = 240
 #result = generate_roads(graph1, time, max_time)
 #pprint.pprint(result)
 

@@ -6,10 +6,13 @@ from multiprocessing import Pool
 from pprint import pprint
 result = {}
 list = []
+
+
 def get_google(data):
-    key = "AIzaSyADEMon19f_alm4J3kPxw3BPH3NnfQDI1w"
+    key = "AIzaSyCDN4EeyBbDA8Pg4Pz9oeIP1IFk8Codrk0"
     s = req.Session()
     url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins={}&destinations={}&key={}&mode=walking".format(data[0], data[1], key)
+    #print(url)
     answer = s.get(url)
     print(answer.text)
     answer = json.loads(answer.text)['rows'][0]['elements'][0]['duration']['text'].split()
@@ -21,19 +24,17 @@ def get_google(data):
         return int(answer[0])
 
 
-
 def get_coords(touch, time=None):
     data = []
     json_batch = select_p.select_avalible_points(touch[0], touch[1])
     print("jsn_b", len(json_batch))
     for i in range(len(json_batch)):
         buf = {}
-        buf['x'] = json.loads(json_batch[i])['X']
-        buf['y'] = json.loads(json_batch[i])['Y']
-        time.append(json.loads(json_batch[i])['Time'])
+        buf['x'] = json.loads(json_batch[i])['x']
+        buf['y'] = json.loads(json_batch[i])['x']
+        time.append(json.loads(json_batch[i])['time'])
         data.append(buf)
     return data
-
 
 
 def quer(touch, time=None):
@@ -51,10 +52,10 @@ def quer(touch, time=None):
         for j in range(len(data)):
             result[i][j] = list[ch]
             ch += 1
-    return result
+    return result, data
+
 
 def set_route(result, data, id):
-
     for i in id:
         temp = {'name': [], 'X': [], 'Y': [], 'Time': [], 'Desc': [], 'Type': []}
         for j in i:
@@ -63,15 +64,18 @@ def set_route(result, data, id):
             temp['Y'].append(data[j]['Y'])
             temp['Time'].append(data[j]['Time'])
             temp['Desc'].append(data[j]['Descript'])
-            temp['Type'].append(data[j]['Type'])
+            #temp['Type'].append(data[j]['Type'])
         result['route'].append(temp)
+
 
 def get_finish(touch, user_time):
     time = []
-    d = quer(touch, time)
+    d, json_batch = quer(touch, time)
+    pprint(d)
+    pprint(json_batch)
     id = []
     names = {}
-    json_batch = select_p.select_avalible_points(touch[0], touch[1])
+    #json_batch = select_p.select_avalible_points(touch[0], touch[1])
 
     for i in range(len(json_batch)):
         js = json.loads(json_batch[i])
@@ -92,6 +96,6 @@ def get_finish(touch, user_time):
     return result
 
 
-#touch = ((55.028133392, 82.922988892), (55.028133392, 82.922988892))
-
-#print(get_finish(touch))
+if __name__ == '__main__':
+    touch = ((55.028133392, 82.922988892), (55.028133392, 82.922988892))
+    print(get_finish(touch, 600))
