@@ -4,14 +4,14 @@ import app.api.set_path as sp
 import app.api.select_path as select_p
 from multiprocessing import Pool
 from pprint import pprint
+from app.google_key import KEY
 result = {}
 list = []
 
 
 def get_google(data):
-    key = "AIzaSyCDN4EeyBbDA8Pg4Pz9oeIP1IFk8Codrk0"
     s = req.Session()
-    url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins={}&destinations={}&key={}&mode=walking".format(data[0], data[1], key)
+    url = "https://maps.googleapis.com/maps/api/distancemarix/json?units=metric&origins={}&destinations={}&key={}&mode=walking".format(data[0], data[1], KEY)
     #print(url)
     answer = s.get(url)
     print(answer.text)
