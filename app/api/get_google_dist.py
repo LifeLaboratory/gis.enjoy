@@ -13,7 +13,7 @@ def get_google(data):
     s = req.Session()
     url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking&origins={}&destinations={}&key={}".format(data[0], data[1], KEY[1])
 
-    print(url)
+    #print(url)
     answer = s.get(url)
     #print(answer.text)
     answer = json.loads(answer.text)['rows'][0]['elements'][0]['duration']['text'].split()
@@ -31,9 +31,9 @@ def get_coords(touch, time=None):
     print("jsn_b", len(json_batch))
     for i in range(len(json_batch)):
         buf = {}
-        buf['x'] = json.loads(json_batch[i])['x']
-        buf['y'] = json.loads(json_batch[i])['x']
-        time.append(json.loads(json_batch[i])['time'])
+        buf['x'] = json_batch[i]['X']
+        buf['y'] = json_batch[i]['Y']
+        time.append(json_batch[i]['Time'])
         data.append(buf)
     return data
 
@@ -79,7 +79,8 @@ def get_finish(touch, user_time):
     #json_batch = select_p.select_avalible_points(touch[0], touch[1])
 
     for i in range(len(json_batch)):
-        js = json.loads(json_batch[i])
+        js = json_batch[i]
+        print(js)
         id_geo = js["Id"]
         names[id_geo] = js
         id.append(id_geo)

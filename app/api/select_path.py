@@ -85,7 +85,11 @@ def extract_coords(result_coord, time,  coord):
         time.append(time_coord)
         result_coord[id_coord] = {'X': touch.get('X'),
                                   'Y': touch.get('Y'),
-                                  'Time': time_coord}
+                                  'Descr': touch.get('Descrip'),
+                                  'Time': time_coord,
+                                  'Type': touch.get('Type'),
+                                  'Name': touch.get('Name')
+                                  }
     time.append(0)
     return sorted(temp_id)
 
