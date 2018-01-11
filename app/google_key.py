@@ -1,2 +1,4 @@
 __author__ = 'RaldenProg'
-KEY = "AIzaSyCDN4EeyBbDA8Pg4Pz9oeIP1IFk8Codrk0"
+KEY = "AIzaSyCq1eN3OLTe0RWDxrnkcdovunYVhrMmH68 "
+KEY1 = "AIzaSyAAeR-hL5mevOnoqs-F_9V3R-TMjI7-DB0"
+KEY2 = "AIzaSyBFUm8_SPBeZjxD6gPnZHEWp6wOROPXPaw"

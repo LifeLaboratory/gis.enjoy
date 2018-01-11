@@ -86,6 +86,7 @@ def extract_coords(result_coord, time,  coord):
         result_coord[id_coord] = {'X': touch.get('X'),
                                   'Y': touch.get('Y'),
                                   'Time': time_coord}
+    time.append(0)
     return sorted(temp_id)
 
 
@@ -104,8 +105,9 @@ def genereate_pare(id_list):
 def set_graph(graph, id_list, result, time):
     helper = dict()
     for i in range(len(id_list)):
-        helper[id_list[i]] = i+1
-        graph[i+1] = {i+1: time[i]}
+        helper[id_list[i]] = i + 1
+    for i in range(len(id_list) + 2):
+        graph[i] = {i: 0}
     #pprint(helper)
     #print(graph)
     for pair in result:
@@ -132,7 +134,7 @@ def get_pair_distance(coords):
 
 def get_distance(touch):
     result_coord = dict()
-    time = list()
+    time = [0]
     coord = select_avalible_points(touch[0], touch[1])
     id_list = extract_coords(result_coord, time, coord)
     coords = genereate_pare(id_list)
@@ -142,11 +144,11 @@ def get_distance(touch):
     N = len(id_list)+1
     graph = {0: {1:1, 2:4, 3:6, 4:10}, N: {}}
     set_graph(graph, id_list, result, time)
-    pprint(graph)
+    #pprint(graph)
     return graph, result_coord, id_list, time
 
 #p = select_avalible_points((55.028133392, 82.922988892),(55.028133391, 82.922988889))
-graph, result_coord, id_list, time = get_distance(((55.028133392, 82.922988892), (55.028133391, 82.922988889)))
+#graph, result_coord, id_list, time = get_distance(((55.028133392, 82.922988892), (55.028133391, 82.922988889)))
 #print(len(p))
-a = get_top_paths(graph, time, 500)
-print(a)
+#a = get_top_paths(graph, time, 500)
+#print(a)
