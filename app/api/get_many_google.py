@@ -15,7 +15,7 @@ def get_many(touch):
     #print(touch_list)
     touch0 = str(touch[0][0]) + ',' + str(touch[0][1])
     #print(touch0)
-    url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking&origins={}&destinations={}&key={}".format(touch0, touch_list, KEY)
+    url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking&origins={}&destinations={}&key={}".format(touch0, touch_list, KEY[2])
     #print(url)
     s = req.Session()
     answer0 = s.get(url)

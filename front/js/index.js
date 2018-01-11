@@ -117,7 +117,7 @@ function sendResult() {
     console.log("sending start");
     console.log();
     //var httpRequest = "http://192.168.49.77:13451/geo?data=" + JSON.stringify(results);
-    var httpRequest = "http://192.168.49.77:13451/test?data=" + JSON.stringify(results);
+    var httpRequest = "http://localhost:13451/geo?data=" + JSON.stringify(results);
 
     var xhr = createCORSRequest('GET', httpRequest);
     xhr.send(); //отправка даты
