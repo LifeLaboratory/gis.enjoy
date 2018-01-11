@@ -8,6 +8,7 @@ import json
 from app.api.set_path import get_top_paths
 from app.api.get_google_dist import get_google
 def get_many(touch):
+    google_key = KEY[1]
     graph, result_coord, id_list, time = get_distance(touch)
     touch_list = ""
     for i in id_list:
@@ -15,10 +16,10 @@ def get_many(touch):
     #print(touch_list)
     touch0 = str(touch[0][0]) + ',' + str(touch[0][1])
     #print(touch0)
-    url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking&origins={}&destinations={}&key={}".format(touch0, touch_list, KEY[2])
+    url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking&origins={}&destinations={}&key={}".format(touch0, touch_list, google_key)
     #print(url)
-    s = req.Session()
-    answer0 = s.get(url)
+    #s = req.Session()
+    answer0 = req.get(url)
     #print(answer0.text)
     len_answer0 = len(json.loads(answer0.text)["rows"][0]["elements"])
     result0 = []
@@ -32,11 +33,11 @@ def get_many(touch):
     touch1 = str(touch[1][0]) + ',' + str(touch[1][1])
     # print(touch1)
     url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking&origins={}&destinations={}&key={}".format(
-        touch1, touch_list, KEY)
+        touch1, touch_list, google_key)
     # print(url)
 
-    answer1 = s.get(url)
-    s.close()
+    answer1 = req.get(url)
+    #s.close()
     print(answer1.text)
     len_answer1 = len(json.loads(answer1.text)["rows"][0]["elements"])
     result1 = []
@@ -67,10 +68,12 @@ t = get_google(touch_google_list)
 N = len(graph)-1
 graph[N][0] = t
 graph[0][N] = t
-pprint(graph)
+print(graph)
+print('time')
 print(time)
 
 result = get_top_paths(graph, time, 500)
 
+print('result')
 print(result)
 

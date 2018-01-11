@@ -67,7 +67,9 @@ top_count = 5
 def longest_paths(begin_point, end_point, current_point, graph, time, max_time, visited=None, current_path=None):
     global top_paths
     global top_count
-
+    #print('len(top_paths) == ', len(top_paths))
+    #print('top_paths == ', top_paths)
+    #print('top_count == ', top_count)
     if len(top_paths) == top_count:
         return 1
 
@@ -88,14 +90,16 @@ def longest_paths(begin_point, end_point, current_point, graph, time, max_time, 
             return 0
 
     visited[current_point] = 1
-    for i in range(begin_point, end_point + 1):
+    for i in range(current_point+1, end_point + 1):
         if graph[current_point][i] and visited[i] == 0:
             tmp = deepcopy(current_path)
             tmp[0].append(i)
             tmp = (tmp[0], tmp[1] + graph[current_point][i] + time[i])
-
-            if longest_paths(begin_point, end_point, i, graph, time, max_time, visited, tmp) == 1:
-                return 1
+            if max_time < tmp[1]:
+                return 0
+            if tmp[1] + graph[current_point][i] <= max_time:
+                if longest_paths(begin_point, end_point, i, graph, time, max_time, visited, tmp) == 1:
+                    return 1
 
     visited[current_point] = 0
     return 0

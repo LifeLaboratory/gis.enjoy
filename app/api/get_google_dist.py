@@ -11,9 +11,9 @@ list = []
 
 def get_google(data):
     s = req.Session()
-    url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking&origins={}&destinations={}&key={}".format(data[0], data[1], KEY)
+    url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking&origins={}&destinations={}&key={}".format(data[0], data[1], KEY[1])
 
-    #print(url)
+    print(url)
     answer = s.get(url)
     #print(answer.text)
     answer = json.loads(answer.text)['rows'][0]['elements'][0]['duration']['text'].split()
