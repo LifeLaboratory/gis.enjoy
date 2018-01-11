@@ -11,11 +11,11 @@ list = []
 
 def get_google(data):
     s = req.Session()
-    url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking&origins={}&destinations={}&key={}".format(data[0], data[1], KEY[1])
+    url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking&origins={}&destinations={}&key={}".format(data[0], data[1], KEY())
 
     #print(url)
     answer = s.get(url)
-    #print(answer.text)
+    print(answer.text)
     answer = json.loads(answer.text)['rows'][0]['elements'][0]['duration']['text'].split()
 
 
@@ -23,6 +23,7 @@ def get_google(data):
         return int(answer[0])*60+int(answer[2])
     else:
         return int(answer[0])
+
 
 
 def get_coords(touch, time=None):
@@ -101,3 +102,5 @@ def get_finish(touch, user_time):
 if __name__ == '__main__':
     touch = ((55.028133392, 82.922988892), (55.028133392, 82.922988892))
     print(get_finish(touch, 600))
+
+

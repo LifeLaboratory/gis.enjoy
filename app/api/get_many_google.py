@@ -10,7 +10,7 @@ from app.api.get_google_dist import get_google
 
 
 def get_many(touch):
-    google_key = KEY[1]
+    google_key = KEY()
     graph, result_coord, id_list, time = get_distance(touch)
     touch_list = ""
     for i in id_list:
