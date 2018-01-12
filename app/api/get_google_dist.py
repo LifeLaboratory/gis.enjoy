@@ -99,8 +99,8 @@ def get_finish(touch, user_time):
     return result
 
 
-if __name__ == '__main__':
-    touch = ((55.028133392, 82.922988892), (55.028133392, 82.922988892))
-    print(get_finish(touch, 600))
+#if __name__ == '__main__':
+#    touch = ((55.028133392, 82.922988892), (55.028133392, 82.922988892))
+#    print(get_finish(touch, 600))
 
 

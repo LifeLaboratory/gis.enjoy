@@ -131,7 +131,7 @@ def get_pair_distance(coords):
     connect, current_connect = db_connect()
     if connect == -1:
         return {"Answer": "Warning", "Data": "Ошибка доступа к базе данных, повторить позже"}
-    #print(get_sql)
+    print(get_sql)
     current_connect.execute(get_sql)
     return current_connect.fetchall()
 

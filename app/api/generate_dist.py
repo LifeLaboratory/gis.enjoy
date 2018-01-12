@@ -18,4 +18,4 @@ def generate_distance_p2p():
             # тут делать запрос и добавлять в базу координаты в таблицу geo_distance
 
 
-generate_distance_p2p()
+#generate_distance_p2p()
