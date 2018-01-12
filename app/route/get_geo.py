@@ -4,7 +4,7 @@ from flask import request
 from app.api.config import HEADER
 import json
 from ast import literal_eval
-from app.api.get_google_dist import get_finish
+from app.api.get_many_google import get_many
 from pprint import pprint
 
 class Geo(Resource):
@@ -32,8 +32,9 @@ class Geo(Resource):
         datas = (data_origin, data_destination)
         print("datas", datas)
         print("user_time", int(data["time"]))
-        answer = get_finish(datas, int(data["time"]))
-        #pprint(answer)
+        answer = get_many(datas, int(data["time"]))
+        print("OK SEND")
+        answer = json.dumps(answer)
         return answer, 200, {'Access-Control-Allow-Origin': '*'}
 
     def options(self):

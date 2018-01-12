@@ -1,6 +1,17 @@
 //ymaps.ready(init);
 
 function init(routIndex) {
+    multiRoute = new ymaps.multiRouter.MultiRoute({
+            referencePoints: routeCords[routIndex],
+            params: {
+                //Тип маршрутизации - пешеходная маршрутизация.
+                routingMode: 'pedestrian'
+            }
+        }, {
+            // Автоматически устанавливать границы карты так, чтобы маршрут был виден целиком.
+            boundsAutoApply: true
+        });
+
     var myMap = new ymaps.Map("map", {
         //center: [55.745508, 37.435225],
         center: [results.origin.X, results.origin.Y],
@@ -10,6 +21,8 @@ function init(routIndex) {
         searchControlProvider: 'yandex#search'
     });
 
+    myMap.geoObjects.add(multiRoute);
+    /*
     // Добавим на карту схему проезда
     // от улицы Крылатские холмы до станции метро "Кунцевская"
     // через станцию "Молодежная" и затем до станции "Пионерская".
@@ -30,7 +43,7 @@ function init(routIndex) {
         points.get(lastPoint).properties.set('iconContent', 'Точка прибытия');
     }, function (error) {
         alert('Возникла ошибка: ' + error.message);
-    });
+    });*/
 
 
     //далее идет добавление подсказок

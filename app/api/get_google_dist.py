@@ -15,7 +15,7 @@ def get_google(data):
 
     #print(url)
     answer = s.get(url)
-    print(answer.text)
+    #print(answer.text)
     answer = json.loads(answer.text)['rows'][0]['elements'][0]['duration']['text'].split()
 
 
