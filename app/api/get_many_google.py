@@ -61,7 +61,13 @@ def get_many(touch, max_time):
     t = get_google(touch_google_list)
     graph[N][0] = t
     graph[0][N] = t
-    result = get_top_paths(graph, time, max_time)
+    new_graph = {}
+    for i in range(len(graph)):
+        new_graph[i] = []
+        for j in range(len(graph[i])):
+            new_graph[i].append((j, graph[i][j]))
+        new_graph[i] = sorted(new_graph[i], key=lambda x: x[1])
+    result = get_top_paths(new_graph, time, max_time)
     result = generate_answer(result, result_coord, id_list, N, touch)
 
     #return result0, result1, graph, time
@@ -92,9 +98,9 @@ def generate_answer(result, result_coord, id_list, N, touch_be):
         ch += 1
     return answer
 
-#touch = ((55.05941, 82.912488), (55.030039, 82.920088))
-#result = get_many(touch, 500)
-#print(result)
+touch = ((55.05941, 82.912488), (55.030039, 82.920088))
+result = get_many(touch, 500)
+print(result)
 #touch = ((54.9870301969, 82.8739339379), (55.0666090889, 82.9952098502))
 #result0, result1, graph, time = get_many(touch)
 #result = get_many(touch)
