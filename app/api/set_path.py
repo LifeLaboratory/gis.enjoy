@@ -97,7 +97,7 @@ def longest_paths(begin_point, end_point, current_point, graph, time, max_time, 
             tmp = (tmp[0], tmp[1] + graph[current_point][i][1] + time[graph[current_point][i][0]])
             if max_time < tmp[1]:
                 return 0
-            if tmp[1] + graph[current_point][i][1] <= max_time:
+            if tmp[1] <= max_time:
                 if longest_paths(begin_point, end_point, graph[current_point][i][0], graph, time, max_time, visited, tmp) == 1:
                     return 1
 
