@@ -91,7 +91,7 @@ def longest_paths(begin_point, end_point, current_point, graph, time, max_time, 
 
     visited[current_point] = 1
     for i in range(begin_point, end_point + 1):
-        if graph[current_point][i][1] and visited[i] == 0:
+        if graph[current_point][i][1] and visited[graph[current_point][i][0]] == 0:
             tmp = deepcopy(current_path)
             tmp[0].append(graph[current_point][i][0])
             tmp = (tmp[0], tmp[1] + graph[current_point][i][1] + time[i])
