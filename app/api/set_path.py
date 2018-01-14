@@ -91,14 +91,14 @@ def longest_paths(begin_point, end_point, current_point, graph, time, max_time, 
 
     visited[current_point] = 1
     for i in range(begin_point, end_point + 1):
-        if graph[current_point][i] and visited[i] == 0:
+        if graph[current_point][i][1] and visited[i] == 0:
             tmp = deepcopy(current_path)
-            tmp[0].append(i)
-            tmp = (tmp[0], tmp[1] + graph[current_point][i] + time[i])
+            tmp[0].append(graph[current_point][i][0])
+            tmp = (tmp[0], tmp[1] + graph[current_point][i][1] + time[i])
             if max_time < tmp[1]:
                 return 0
-            if tmp[1] + graph[current_point][i] <= max_time:
-                if longest_paths(begin_point, end_point, i, graph, time, max_time, visited, tmp) == 1:
+            if tmp[1] + graph[current_point][i][1] <= max_time:
+                if longest_paths(begin_point, end_point, graph[current_point][i][0], graph, time, max_time, visited, tmp) == 1:
                     return 1
 
     visited[current_point] = 0
