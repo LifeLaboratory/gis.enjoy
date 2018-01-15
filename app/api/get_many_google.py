@@ -67,9 +67,11 @@ def get_many(touch, max_time):
         for j in range(len(graph[i])):
             new_graph[i].append((j, graph[i][j]))
         new_graph[i] = sorted(new_graph[i], key=lambda x: x[1])
+    print('START')
+    print(new_graph)
     result = get_top_paths(new_graph, time, max_time)
+    pprint(result)
     result = generate_answer(result, result_coord, id_list, N, touch)
-
     #return result0, result1, graph, time
     return result
 

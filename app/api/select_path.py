@@ -58,6 +58,7 @@ def select_avalible_points(start_point, finish_point):
                 start_point[1] - dynamic_delta
             )
         #print(get_sql)
+        get_sql = "SELECT * FROM Geo"
         current_connect.execute(get_sql)
         result = current_connect.fetchall()
         #pprint(result)

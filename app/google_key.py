@@ -12,7 +12,10 @@ def KEY():
               "AIzaSyCoL4nAJQr9-MXvRgRVW-FPjgBJBdAi6Wk",
               "AIzaSyANPHRugehEQeHEqNZfsP2sdI8MYlHx8PE",
               "AIzaSyDLX4jT_FG3OR21ayCpBH2DE9eY2egbtiI",
-              "AIzaSyD39PkKI4O5VhNQCK75htcCrh0ZtC5yj7o"
+              "AIzaSyD39PkKI4O5VhNQCK75htcCrh0ZtC5yj7o",
+              "AIzaSyDCDlgJOT_YqxINbki_5LBJH844AlXalBs",
+              "AIzaSyB5zwH6ZjRrl45J322WnGgtH6CgHS8tRYg",
+              "AIzaSyCchAfgzg5toHqppqqC5SpNWymInz3mVqU"
               ]
        s = req.Session()
        for k in key:
