@@ -33,9 +33,9 @@ def get_coords(touch, time=None):
     print("jsn_b", len(json_batch))
     for i in range(len(json_batch)):
         buf = {}
-        buf['x'] = json_batch[i]['X']
-        buf['y'] = json_batch[i]['Y']
-        time.append(json_batch[i]['Time'])
+        buf['x'] = json_batch[i]['x']
+        buf['y'] = json_batch[i]['y']
+        time.append(json_batch[i]['time'])
         data.append(buf)
     return data
 
@@ -62,12 +62,12 @@ def set_route(result, data, id):
     for i in id:
         temp = {'name': [], 'X': [], 'Y': [], 'Time': [], 'Desc': [], 'Type': []}
         for j in i:
-            temp['name'].append(data[j]['Name'])
-            temp['X'].append(data[j]['X'])
-            temp['Y'].append(data[j]['Y'])
-            temp['Time'].append(data[j]['Time'])
-            temp['Desc'].append(data[j]['Descript'])
-            #temp['Type'].append(data[j]['Type'])
+            temp['name'].append(data[j]['name'])
+            temp['X'].append(data[j]['x'])
+            temp['Y'].append(data[j]['y'])
+            temp['Time'].append(data[j]['time'])
+            temp['Desc'].append(data[j]['descript'])
+            temp['Type'].append(data[j]['type'])
         result['route'].append(temp)
 
 

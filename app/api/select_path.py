@@ -58,7 +58,7 @@ def select_avalible_points(start_point, finish_point):
         #print(get_sql)
         get_sql = "SELECT * FROM Geo"
         result = SqlQuery(get_sql)
-        #pprint(result)
+        print(result)
         #if result is not ():
             #for event in result:
                 #json_data_batch.append(json.dumps(event))
@@ -77,18 +77,19 @@ def extract_coords(result_coord, time,  coord):
     """
     temp_id = list()
     for touch in coord:
-        id_coord = touch.get('Id')
-        time_coord = touch.get('Time')
+        id_coord = touch.get('id')
+        time_coord = touch.get('time')
         temp_id.append(id_coord)
         time.append(time_coord)
-        result_coord[id_coord] = {'X': touch.get('X'),
-                                  'Y': touch.get('Y'),
-                                  'Descr': touch.get('Descrip'),
+        result_coord[id_coord] = {'X': touch.get('x'),
+                                  'Y': touch.get('y'),
+                                  'Descr': touch.get('descrip'),
                                   'Time': time_coord,
-                                  'Type': touch.get('Type'),
-                                  'Name': touch.get('Name')
+                                  'Type': touch.get('type'),
+                                  'Name': touch.get('name')
                                   }
     time.append(0)
+    print(temp_id)
     return sorted(temp_id)
 
 
@@ -138,6 +139,7 @@ def get_distance(touch):
     result_coord = dict()
     time = [0]
     coord = select_avalible_points(touch[0], touch[1])
+    print(coord)
     id_list = extract_coords(result_coord, time, coord)
     coords = genereate_pare(id_list)
     #print(id_list)

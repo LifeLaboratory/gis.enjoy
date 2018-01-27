@@ -13,6 +13,10 @@ from api.sql import SqlQuery
 def get_many(touch, max_time):
     google_key = KEY()
     graph, result_coord, id_list, time = get_distance(touch)
+    print(
+        graph
+    )
+    a = input()
     touch_list = ""
     for i in id_list:
        touch_list += str(result_coord[i]['X']) + "," + str(result_coord[i]['Y']) + "%7C"
@@ -101,9 +105,9 @@ def generate_answer(result, result_coord, id_list, N, touch_be):
         ch += 1
     return answer
 
-#touch = ((55.05941, 82.912488), (55.030039, 82.920088))
-#result = get_many(touch, 500)
-#print(result)
+touch = ((55.05941, 82.912488), (55.030039, 82.920088))
+result = get_many(touch, 500)
+print(result)
 #touch = ((54.9870301969, 82.8739339379), (55.0666090889, 82.9952098502))
 #result0, result1, graph, time = get_many(touch)
 #result = get_many(touch)
