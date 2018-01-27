@@ -78,7 +78,11 @@ def get_many(touch, max_time):
     answer1 = req.get(url)
     #s.close()
     #print(answer1.text)
-    len_answer1 = len(json.loads(answer1.text)["rows"][0]["elements"])
+    try:
+        len_answer1 = len(json.loads(answer1.text)["rows"][0]["elements"])
+    except:
+        print(answer1.text)
+        return
     result1 = []
     for i in range(len_answer1):
         answ = json.loads(answer1.text)["rows"][0]["elements"][i]['duration']['text'].split()
@@ -100,10 +104,15 @@ def get_many(touch, max_time):
     graph[N][0] = t
     graph[0][N] = t
     new_graph = {}
+    print('graph  =  ', graph)
     for i in range(len(graph)):
         new_graph[i] = []
         for j in range(len(graph[i])):
-            new_graph[i].append((j, graph[i][j]))
+            try:
+                new_graph[i].append((j, graph[i][j]))
+            except:
+                print(i, j)
+                return
         new_graph[i] = sorted(new_graph[i], key=lambda x: x[1])
     print('START')
     print(new_graph)
