@@ -11,9 +11,28 @@ from api.sql import SqlQuery
 #touch = ((54.9870301969, 82.8739339379), (55.0666090889, 82.9952098502))
 #print(get_coords(touch, 500))
 
-def add_new_point():
-    last_id = SqlQuery("SELECT currval('geo_id_seq');")
-    points = SqlQuery("SELECT id, x, y WHERE id != {} FROM Geo ".format(last_id))
+def add_new_point(new_point):
+    points = SqlQuery("SELECT id, x, y FROM Geo WHERE id <> 999")
+    for i in range(len(points)):
+        data = []
+        disti = str(points[i]['x']) + "," + str(points[i]['y'])
+        distj = str(new_point['x']) + "," + str(new_point['y'])
+        data.append(disti)
+        data.append(distj)
+        answer = get_google(data)
+        print(points[i]['id'], new_point['id'], answer)
+
+        SqlQuery("INSERT INTO geo_distance" \
+                  " VALUES (null, {}, {}, {})".format(
+                points[i]['id'],
+                new_point['id'],
+                answer))
+        SqlQuery("INSERT INTO geo_distance" \
+                 " VALUES (null, {}, {}, {})".format(
+            new_point['id'],
+            points[i]['id'],
+            answer))
+
 
 def get():
     sql = "SELECT id, x, y FROM Geo"
