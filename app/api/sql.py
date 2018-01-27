@@ -1,5 +1,6 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
+import json
 
 DATABASE = {
     "dbname": "life_game_service",
@@ -38,3 +39,13 @@ def SqlQuery(query):
             return result
         connect.close()
         return result
+
+
+def converter(js):
+    """
+    Метод преобразовывает передаваемый json в Dict и наоборот
+    :param js: str или json
+    :return: str или dict преобразованный элемент
+    """
+    return json.dumps(js) if isinstance(js, dict) \
+        else json.loads(js)

@@ -136,7 +136,7 @@ select * from get_coord;
 """
     result = SqlQuery(get_sql)
     print(get_sql)
-    #a = input()
+    # a = input()
     return result
 
 
@@ -156,8 +156,8 @@ def get_distance(touch):
     #pprint(graph)
     return graph, result_coord, id_list, time
 
-#p = select_avalible_points((55.028133392, 82.922988892),(55.028133391, 82.922988889))
-#graph, result_coord, id_list, time = get_distance(((55.028133392, 82.922988892), (55.028133391, 82.922988889)))
-#print(len(p))
-#a = get_top_paths(graph, time, 500)
-#print(a)
+# p = select_avalible_points((55.028133392, 82.922988892),(55.028133391, 82.922988889))
+# graph, result_coord, id_list, time = get_distance(((55.028133392, 82.922988892), (55.028133391, 82.922988889)))
+# print(len(p))
+# a = get_top_paths(graph, time, 500)
+# print(a)
