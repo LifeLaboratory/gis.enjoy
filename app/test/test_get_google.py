@@ -5,10 +5,15 @@ import json
 from app.api.get_google_dist import get_google, get_coords
 from pprint import pprint
 from app.data.get_and_parse_data import db_connect
+from api.sql import SqlQuery
 #print(get_google(["54.9870301969,82.8739339379", "55.0666090889,82.9952098502"]))
 
 #touch = ((54.9870301969, 82.8739339379), (55.0666090889, 82.9952098502))
 #print(get_coords(touch, 500))
+
+def add_new_point():
+    last_id = SqlQuery("SELECT currval('geo_id_seq');")
+    points = SqlQuery("SELECT id, x, y WHERE id != {} FROM Geo ".format(last_id))
 
 def get():
     sql = "SELECT id, x, y FROM Geo"
