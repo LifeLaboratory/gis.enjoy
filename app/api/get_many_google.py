@@ -9,6 +9,41 @@ from app.api.set_path import get_top_paths
 from app.api.get_google_dist import get_google
 from api.sql import SqlQuery
 
+# It function normalize data about points (distance, user's priority, objective estimate)
+# By MinMax Scaling method
+# TODO: Try to make StandartScaling method of normalization
+def normalize_point_data(distances, priority):
+    norm_priority = priority / 5 # 5 - max value of user's priorities
+    result_matrix = []
+
+    # Normalize data by distance
+    for dist_from_once_point in distances:
+        matrix_row = []
+        max_dist = max(dist_from_once_point, key=lambda x: x[1])
+        min_dist = min(dist_from_once_point, key=lambda x: x[1])
+        dist_diff = max_dist - min_dist
+
+        max_estimate = max(dist_from_once_point, key=lambda x: x[3]) #
+        min_estimate = min(dist_from_once_point, key=lambda x: x[3]) # TODO: Make in before cycle
+        estimate_diff = max_estimate - min_estimate                  #
+
+        for point in dist_from_once_point:
+            # Change point's distance to it's normalized coefficient
+            point[1] = 1 - (point[1] - min_dist)/dist_diff
+
+            # Change type of point to it's normalized estimation
+            point[2] = norm_priority[point[2]]
+
+            # Change objective estimate of point to it's normalized by local line estimate
+            point[3] = (point[3] - min_estimate)/estimate_diff
+
+            # Result matrix's point forming
+            norm_point = (point[0], point[1] + point[2] + point[3])
+
+            matrix_row.append(norm_point)
+
+        result_matrix.append(matrix_row)
+    return result_matrix
 
 def get_many(touch, max_time):
     google_key = KEY()
