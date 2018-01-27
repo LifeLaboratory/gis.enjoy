@@ -108,6 +108,7 @@ def get_many(touch, max_time):
     graph[0][N] = t
     new_graph = {}
     print('graph  =  ', graph)
+    typeobj = None
     for i in range(len(graph)):
         new_graph[i] = []
         for j in range(len(graph[i])):
