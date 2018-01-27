@@ -12,7 +12,7 @@ from api.sql import SqlQuery
 #print(get_coords(touch, 500))
 
 def add_new_point(new_point):
-    points = SqlQuery("SELECT id, x, y FROM Geo WHERE id <> 999")
+    points = SqlQuery("SELECT id, x, y FROM Geo WHERE id <> currval('geo_id_seq')")
     for i in range(len(points)):
         data = []
         disti = str(points[i]['x']) + "," + str(points[i]['y'])
