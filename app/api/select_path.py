@@ -3,7 +3,7 @@ from app.data.get_and_parse_data import db_connect
 import math
 from app.api.set_path import get_top_paths
 from api.sql import SqlQuery
-
+from timeit import default_timer as timer
 
 delta = 0.0005
 #delta = 0.000000005
@@ -58,7 +58,7 @@ def select_avalible_points(start_point, finish_point):
         #print(get_sql)
         get_sql = "SELECT * FROM Geo"
         result = SqlQuery(get_sql)
-        print(result)
+        #print("SQLQUERY", result)
         #if result is not ():
             #for event in result:
                 #json_data_batch.append(json.dumps(event))
@@ -86,10 +86,11 @@ def extract_coords(result_coord, time,  coord):
                                   'Descr': touch.get('descrip'),
                                   'Time': time_coord,
                                   'Type': touch.get('type'),
-                                  'Name': touch.get('name')
+                                  'Name': touch.get('name'),
+                                  'Rating': touch.get('rating')
                                   }
     time.append(0)
-    print(temp_id)
+    #print(temp_id)
     return sorted(temp_id)
 
 
@@ -135,7 +136,7 @@ SELECT d.id, d.point_1, d.point_2, d.distance FROM geo_distance d, get_pair pair
 select * from get_coord;
 """
     result = SqlQuery(get_sql)
-    print(get_sql)
+    #print(get_sql)
     # a = input()
     return result
 
@@ -143,17 +144,32 @@ select * from get_coord;
 def get_distance(touch):
     result_coord = dict()
     time = [0]
+    start = timer()
     coord = select_avalible_points(touch[0], touch[1])
-    print(coord)
+    end = timer()
+    print("select_avalible_points", end - start)
+    #print("coord", coord)
+    start = timer()
     id_list = extract_coords(result_coord, time, coord)
+    end = timer()
+    print("extract_coords", end - start)
     #coords = genereate_pare(id_list)
     #print(id_list)
-    #pprint(result_coord)
+    #print("result coord", result_coord)
+
+    start = timer()
     result = get_pair_distance()#coords)
+    end = timer()
+    print("get_pair_distance", end - start)
     N = len(id_list)+1
     graph = {0: {1:1, 2:4, 3:6, 4:10}, N: {}}
+    start = timer()
     set_graph(graph, id_list, result, time)
+    end = timer()
+    print("extract_coords", end - start)
+
     #pprint(graph)
+
     return graph, result_coord, id_list, time
 
 # p = select_avalible_points((55.028133392, 82.922988892),(55.028133391, 82.922988889))
