@@ -119,20 +119,25 @@ def set_graph(graph, id_list, result, time):
     #print(graph)
 
 
-def get_pair_distance(coords):
+def get_pair_distance():
     """
     Метод получает из базы дистанцию для всех пар значений координат
     :param coords: кортеж ID координат
     """
     get_sql = """
-    SELECT * FROM geo_distance WHERE (point_1, point_2) in {0} 
-    or (point_2, point_1) in {0}""".format(coords)
-    connect, current_connect = db_connect()
-    if connect == -1:
-        return {"Answer": "Warning", "Data": "Ошибка доступа к базе данных, повторить позже"}
-    #print(get_sql)
-    current_connect.execute(get_sql)
-    return current_connect.fetchall()
+    with 
+get_pair as (
+select a.id as a_p, b.id as b_p from geo a, geo b where b.id <> a.id
+),
+get_coord as (
+SELECT d.id, d.point_1, d.point_2, d.distance FROM geo_distance d, get_pair pair  WHERE (point_1, point_2) = (pair.a_p, pair.b_p) or (point_1, point_2) = (pair.b_p, pair.a_p)
+)
+select * from get_coord;
+"""
+    result = SqlQuery(get_sql)
+    print(get_sql)
+    #a = input()
+    return result
 
 
 def get_distance(touch):
@@ -141,10 +146,10 @@ def get_distance(touch):
     coord = select_avalible_points(touch[0], touch[1])
     print(coord)
     id_list = extract_coords(result_coord, time, coord)
-    coords = genereate_pare(id_list)
+    #coords = genereate_pare(id_list)
     #print(id_list)
     #pprint(result_coord)
-    result = get_pair_distance(coords)
+    result = get_pair_distance()#coords)
     N = len(id_list)+1
     graph = {0: {1:1, 2:4, 3:6, 4:10}, N: {}}
     set_graph(graph, id_list, result, time)

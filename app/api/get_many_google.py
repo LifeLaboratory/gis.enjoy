@@ -48,10 +48,7 @@ def normalize_point_data(distances, priority):
 def get_many(touch, max_time):
     google_key = KEY()
     graph, result_coord, id_list, time = get_distance(touch)
-    print(
-        graph
-    )
-    a = input()
+    print(graph)
     touch_list = ""
     for i in id_list:
        touch_list += str(result_coord[i]['X']) + "," + str(result_coord[i]['Y']) + "%7C"
@@ -95,6 +92,8 @@ def get_many(touch, max_time):
         graph[i + 1][0] = result0[i]
         graph[N][i + 1] = result1[i]
         graph[i + 1][N] = result1[i]
+    pprint(graph)
+    a = input()
     touch_get_google0 = str(touch[0][0]) + "," + str(touch[0][1])
     touch_get_google1 = str(touch[1][0]) + "," + str(touch[1][1])
     touch_google_list = [touch_get_google0, touch_get_google1]
