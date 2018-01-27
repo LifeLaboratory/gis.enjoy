@@ -1,12 +1,10 @@
 from app.data.get_and_parse_data import db_connect
 from pprint import pprint
-
+from api.sql import SqlQuery
 
 def generate_distance_p2p():
     sql = "SELECT id, x, y FROM Geo"
-    connect, current_connect = db_connect()
-    current_connect.execute(sql)
-    result = current_connect.fetchall()
+    result = SqlQuery(sql)
     points = dict()
     for data in result:
         points[data.get('id')] = {'x': data.get('x'),

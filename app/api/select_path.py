@@ -2,6 +2,7 @@ from pprint import pprint
 from app.data.get_and_parse_data import db_connect
 import math
 from app.api.set_path import get_top_paths
+from api.sql import SqlQuery
 
 
 delta = 0.0005
@@ -9,9 +10,6 @@ delta = 0.0005
 
 def select_avalible_points(start_point, finish_point):
     json_data_batch = []
-    connect, current_connect = db_connect()
-    if connect == -1:
-        return {"Answer": "Warning", "Data": "Ошибка доступа к базе данных, повторить позже"}
     get_sql = ""
     result = ()
     dynamic_delta = 3*delta*math.sqrt(2)
@@ -59,8 +57,7 @@ def select_avalible_points(start_point, finish_point):
             )
         #print(get_sql)
         get_sql = "SELECT * FROM Geo"
-        current_connect.execute(get_sql)
-        result = current_connect.fetchall()
+        result = SqlQuery(get_sql)
         #pprint(result)
         #if result is not ():
             #for event in result:

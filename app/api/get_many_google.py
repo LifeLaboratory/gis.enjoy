@@ -7,6 +7,7 @@ import requests as req
 import json
 from app.api.set_path import get_top_paths
 from app.api.get_google_dist import get_google
+from api.sql import SqlQuery
 
 
 def get_many(touch, max_time):

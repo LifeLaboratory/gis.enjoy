@@ -5,6 +5,7 @@ import app.api.select_path as select_p
 from multiprocessing import Pool
 from pprint import pprint
 from app.google_key import KEY
+from api.sql import SqlQuery
 result = {}
 list = []
 
