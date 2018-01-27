@@ -32,16 +32,16 @@ def normalize_point_data(distances, priority):
 
         for point in dist:
             # Change point's distance to it's normalized coefficient
-            point[1] = 1 - (point[1] - min_dist)/dist_diff
+            point_dist = 1 - (point[1] - min_dist)/dist_diff
 
             # Change type of point to it's normalized estimation
-            point[2] = norm_priority[point[2]]
+            point_priority = norm_priority[point[2]]
 
             # Change objective estimate of point to it's normalized by local line estimate
-            point[3] = (point[3] - min_estimate)/estimate_diff
+            point_estimate = (point[3] - min_estimate)/estimate_diff
 
             # Result matrix's point forming
-            norm_point = (point[0], point[1] + point[2] + point[3])
+            norm_point = (point[0], point_dist + point_priority + point_estimate)
 
             matrix_row.append(norm_point)
 
