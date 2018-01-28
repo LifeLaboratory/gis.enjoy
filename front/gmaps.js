@@ -4,12 +4,14 @@ var start;
 var end;
 var map;
 var routeCordArray = new Array();
-
 var markerA;
 var markerB;
 var cordA;
 var cordB;
-
+var image;
+var markers = new Array();
+var markersCords = new Array();
+var infoWindows = new Array();
 
 
 var setPoints = 0;
@@ -19,12 +21,8 @@ function initMap() {
     directionsService = new google.maps.DirectionsService();
     directionsDisplay = new google.maps.DirectionsRenderer();
 
-    //start = new google.maps.LatLng(56.845229, 60.645281);
-    //end = new google.maps.LatLng(56.841996, 60.658903);
 
-
-
-    //var ekb = new google.maps.LatLng(56.845417, 60.645740);
+    var ekb = new google.maps.LatLng(56.845417, 60.645740);
     var nsk = new google.maps.LatLng(55.027978, 82.951315);
     var mapOptions = {
         zoom:14,
@@ -33,6 +31,13 @@ function initMap() {
 
     map = new google.maps.Map(document.getElementById('map'), mapOptions);
     directionsDisplay.setMap(map);
+
+    image = {
+        url: 'https://foiz.ru/style/icons/info.png',
+        size: new google.maps.Size(20, 20),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(0, 32)
+    };
 
 
     var contentString = "lorem  asdasdddddddddd asd hujhiu g sifhgidsfhgisdh sdfhgdhsfg isdjfhg ijshsdfu ghsiddfhsug idsuhfisdfhg isisdfhg isfduiudfshg "
@@ -112,21 +117,32 @@ function initMap() {
 
 function calculateAndDisplayRoute(id, directionsService, directionsDisplay) {
     var waypts = [];
-    console.log("Весь массив выбранного пути ");
+    console.log("Весь массив выбранного пути");
     console.log(routeCordArray[id]);
-    var markers = new Array();
     for (var i = 0; i < routeCordArray[id].length; i++) {
         waypts.push({
             location: routeCordArray[id][i],
             stopover: true
         });
 
+        markersCords[i] = {
+            lat: routeCordArray[id][i].lat - 0.000268,
+            lng: routeCordArray[id][i].lng -0.000398
+        };
+
         markers[i] = new google.maps.Marker({
-            position: routeCordArray[id][i],
+            position: markersCords[i],
             map: map,
-            title: i,
-            label: i
+            title: routes.route.name,
+            label: "",
+            icon: image
         });
+        console.log("desct log");
+        console.log(routes.route.descr);
+        infoWindows[i] = new google.maps.InfoWindow({
+            content: routes.route[id].descr[i]
+        });
+        addWindowActionForMarker(i);
     }
 
     directionsService.route({
@@ -141,6 +157,12 @@ function calculateAndDisplayRoute(id, directionsService, directionsDisplay) {
         } else {
             window.alert('Directions request failed due to ' + status);
         }
+    });
+}
+
+function addWindowActionForMarker(i) {
+    markers[i].addListener('click', function() {
+        infoWindows[i].open(map, markers[i]);
     });
 }
 

@@ -2,22 +2,24 @@ var priority = new Array();
 var resultCords = new Array();
 var routes;
 var selectedRoute;
-
 var routesList = new Array();
 
 function addActionForParameters(id) {
     document.getElementById("filters__category" + id).onclick = function () {
-        console.log("До");
-        console.log(priority);
+        console.log("тубасе");
+
+        console.log(document.getElementById("filters__category" + id).getAttribute('toDataBase'));
 
         if (!document.getElementById("filters__category" + id).classList.contains("filters__category--active")) { // Не еще не выбран
-            priority[priority.length] = $("#filters__category" + id).html();
+            //priority[priority.length] = $("#filters__category" + id).html(); // ТАК БЫЛО И РАБОТАЛО
+
+            priority[priority.length] = document.getElementById("filters__category" + id).getAttribute('toDataBase');
             document.getElementById("filters__category" + id).classList.toggle("filters__category--active");
         } else {
             document.getElementById("filters__category" + id).classList.toggle("filters__category--active");
 
             for (var i = 0; i< priority.length; i++) {
-                if (priority[i] === $("#filters__category" + id).html()) {
+                if (priority[i] === document.getElementById("filters__category" + id).getAttribute('toDataBase')) {
                     for (var j = i; j < priority.length-1; j++) {
                         priority[j] = priority[j+1]
                     }
@@ -123,15 +125,14 @@ $(document).ready(function(){
         var element = document.getElementById("filters__category" + i);
 
         if (element) {
-            console.log($("#filters__category" + i));
             addActionForParameters(i);
         } else {
             isok = false;
         }
     }
-//тест
-/*
 
+    //тест
+/*
     var answ = {
         "route": [
             {
@@ -158,9 +159,8 @@ $(document).ready(function(){
 
 
 
-
-
     document.getElementById("build-route").onclick = function () {
+
         var time = Number($("#hours").val())*60 + Number($("#minutes").val());
         document.getElementById("placeholder").classList.toggle("disabled-block");
         results = {
@@ -181,7 +181,7 @@ $(document).ready(function(){
         console.log("sending start");
         console.log();
 
-        var httpRequest = "http://192.168.43.177:13451/geo?data=" + JSON.stringify(results);
+        var httpRequest = "http://10.33.79.37:13451/geo?data=" + JSON.stringify(results);
 
         var xhr = createCORSRequest('GET', httpRequest);
         xhr.send(); //отправка даты
@@ -204,10 +204,9 @@ $(document).ready(function(){
             document.getElementById("placeholder").classList.toggle("disabled-block");
         };
 
-
         document.getElementById("hint").classList.toggle("disabled-block");
 
-        //makeList();
+        //makeList(); //ДЛЯ ТЕСТА, ПОТОМ УБРАТЬ
     };
 
 
