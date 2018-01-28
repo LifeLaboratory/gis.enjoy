@@ -158,8 +158,16 @@ def get_many(touch, max_time, priority):
     #print("new_graph", new_graph)
     coefficiet_graph = normalize_point_data(new_graph, priority)
     #print("!", coefficiet_graph)
+    def new_element(l, element):
+        new_l = list(l)
+        new_l.append(element)
+        return tuple(new_l)
+
     for i in range(len(coefficiet_graph)):
-        coefficiet_graph[i] = sorted(coefficiet_graph[i], key=lambda x: x[1])
+        for j in range(len(coefficiet_graph[i])):
+            new_graph[i][j] = new_element(new_graph[i][j], coefficiet_graph[i][j][1])
+        new_graph[i] = sorted(new_graph[i], key=lambda x: (x[1], x[4]))
+
     #print('START')
     #print(new_graph)
     result = get_top_paths(coefficiet_graph, time, max_time)
@@ -201,8 +209,8 @@ def generate_answer(result, result_coord, id_list, N, touch_be):
 #print(result)
 touch = ((54.9870301969, 82.8739339379), (55.0666090889, 82.9952098502))
 #result0, result1, graph, time = get_many(touch)
-#result = get_many(touch, 100, [5, 3, 4, 2, 1])
-#   print(result)
+result = get_many(touch, 100, [5, 3, 4, 2, 1])
+print(result)
 #touch_get_google0 = str(touch[0][0]) + "," + str(touch[0][1])
 #touch_get_google1 = str(touch[1][0]) + "," + str(touch[1][1])
 #touch_google_list = [touch_get_google0, touch_get_google1]
