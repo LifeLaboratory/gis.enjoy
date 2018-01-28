@@ -2,6 +2,7 @@ from pprint import pprint
 from app.data.get_and_parse_data import db_connect
 import math
 from app.api.set_path import get_top_paths
+from api.sql import SqlQuery
 
 
 delta = 0.0005
@@ -9,9 +10,6 @@ delta = 0.0005
 
 def select_avalible_points(start_point, finish_point):
     json_data_batch = []
-    connect, current_connect = db_connect()
-    if connect == -1:
-        return {"Answer": "Warning", "Data": "Ошибка доступа к базе данных, повторить позже"}
     get_sql = ""
     result = ()
     dynamic_delta = 3*delta*math.sqrt(2)
@@ -59,9 +57,8 @@ def select_avalible_points(start_point, finish_point):
             )
         #print(get_sql)
         get_sql = "SELECT * FROM Geo"
-        current_connect.execute(get_sql)
-        result = current_connect.fetchall()
-        #pprint(result)
+        result = SqlQuery(get_sql)
+        print(result)
         #if result is not ():
             #for event in result:
                 #json_data_batch.append(json.dumps(event))
@@ -80,18 +77,19 @@ def extract_coords(result_coord, time,  coord):
     """
     temp_id = list()
     for touch in coord:
-        id_coord = touch.get('Id')
-        time_coord = touch.get('Time')
+        id_coord = touch.get('id')
+        time_coord = touch.get('time')
         temp_id.append(id_coord)
         time.append(time_coord)
-        result_coord[id_coord] = {'X': touch.get('X'),
-                                  'Y': touch.get('Y'),
-                                  'Descr': touch.get('Descrip'),
+        result_coord[id_coord] = {'X': touch.get('x'),
+                                  'Y': touch.get('y'),
+                                  'Descr': touch.get('descrip'),
                                   'Time': time_coord,
-                                  'Type': touch.get('Type'),
-                                  'Name': touch.get('Name')
+                                  'Type': touch.get('type'),
+                                  'Name': touch.get('name')
                                   }
     time.append(0)
+    print(temp_id)
     return sorted(temp_id)
 
 
@@ -121,39 +119,45 @@ def set_graph(graph, id_list, result, time):
     #print(graph)
 
 
-def get_pair_distance(coords):
+def get_pair_distance():
     """
     Метод получает из базы дистанцию для всех пар значений координат
     :param coords: кортеж ID координат
     """
     get_sql = """
-    SELECT * FROM geo_distance WHERE (point_1, point_2) in {0} 
-    or (point_2, point_1) in {0}""".format(coords)
-    connect, current_connect = db_connect()
-    if connect == -1:
-        return {"Answer": "Warning", "Data": "Ошибка доступа к базе данных, повторить позже"}
-    #print(get_sql)
-    current_connect.execute(get_sql)
-    return current_connect.fetchall()
+    with 
+get_pair as (
+select a.id as a_p, b.id as b_p from geo a, geo b where b.id <> a.id
+),
+get_coord as (
+SELECT d.id, d.point_1, d.point_2, d.distance FROM geo_distance d, get_pair pair  WHERE (point_1, point_2) = (pair.a_p, pair.b_p) or (point_1, point_2) = (pair.b_p, pair.a_p)
+)
+select * from get_coord;
+"""
+    result = SqlQuery(get_sql)
+    print(get_sql)
+    # a = input()
+    return result
 
 
 def get_distance(touch):
     result_coord = dict()
     time = [0]
     coord = select_avalible_points(touch[0], touch[1])
+    print(coord)
     id_list = extract_coords(result_coord, time, coord)
-    coords = genereate_pare(id_list)
+    #coords = genereate_pare(id_list)
     #print(id_list)
     #pprint(result_coord)
-    result = get_pair_distance(coords)
+    result = get_pair_distance()#coords)
     N = len(id_list)+1
     graph = {0: {1:1, 2:4, 3:6, 4:10}, N: {}}
     set_graph(graph, id_list, result, time)
     #pprint(graph)
     return graph, result_coord, id_list, time
 
-#p = select_avalible_points((55.028133392, 82.922988892),(55.028133391, 82.922988889))
-#graph, result_coord, id_list, time = get_distance(((55.028133392, 82.922988892), (55.028133391, 82.922988889)))
-#print(len(p))
-#a = get_top_paths(graph, time, 500)
-#print(a)
+# p = select_avalible_points((55.028133392, 82.922988892),(55.028133391, 82.922988889))
+# graph, result_coord, id_list, time = get_distance(((55.028133392, 82.922988892), (55.028133391, 82.922988889)))
+# print(len(p))
+# a = get_top_paths(graph, time, 500)
+# print(a)
