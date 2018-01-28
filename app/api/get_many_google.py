@@ -159,7 +159,10 @@ def get_many(touch, max_time, priority):
                 print(len(result_coord), j)
                 tyobj = INDEXES.get(result_coord[j]['Type'], 0)
                 #print(tyobj)
-                new_graph[i].append((j, graph[i][j], tyobj, result_coord[j]['Rating']))
+                try:
+                    new_graph[i].append((j, graph[i][j], tyobj, result_coord[j]['Rating']))
+                except:
+                    pass
     print("new_graph", new_graph)
     print("prior: ", priority)
     coefficiet_graph = normalize_point_data(new_graph, priority)
