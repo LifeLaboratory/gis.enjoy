@@ -1,0 +1,232 @@
+var priority = new Array();
+var resultCords = new Array();
+var routes;
+var selectedRoute;
+
+var routesList = new Array();
+
+function addActionForParameters(id) {
+    document.getElementById("filters__category" + id).onclick = function () {
+        console.log("До");
+        console.log(priority);
+
+        if (!document.getElementById("filters__category" + id).classList.contains("filters__category--active")) { // Не еще не выбран
+            priority[priority.length] = $("#filters__category" + id).html();
+            document.getElementById("filters__category" + id).classList.toggle("filters__category--active");
+        } else {
+            document.getElementById("filters__category" + id).classList.toggle("filters__category--active");
+
+            for (var i = 0; i< priority.length; i++) {
+                if (priority[i] === $("#filters__category" + id).html()) {
+                    for (var j = i; j < priority.length-1; j++) {
+                        priority[j] = priority[j+1]
+                    }
+
+                    priority.splice(priority.length-1, 1);
+                    break;
+                }
+            }
+        }
+
+        console.log("После");
+        console.log(priority);
+    };
+}
+
+function createCORSRequest(method, url) {
+    var xhr = new XMLHttpRequest();
+    if ("withCredentials" in xhr) {
+        xhr.open(method, url, true);
+    } else if (typeof XDomainRequest != "undefined") {
+        xhr = new XDomainRequest();
+        xhr.open(method, url);
+    } else {
+        xhr = null;
+    }
+    return xhr;
+}
+
+function showRoutes() {
+    document.getElementById("routes-block").classList.toggle("disabled-block");
+    document.getElementById("menu").classList.toggle("disabled-block");
+    document.getElementById("filters").style.left = "-300px";
+    var str = "";
+
+    for (var i = 0; i < routesList.length; i++) {
+        str+= '<div class="routes__one-route" id="routes__one-route' + i + '">';
+        for (var j = 0; j < routesList[i].length; j++) {
+            if (i+1 < routesList[i].length) {
+                str+= routesList[i][j] + " -> ";
+            } else {
+                str+= routesList[i][j];
+            }
+        }
+        str+= '</div>'
+    }
+    str+= '<div class="routes__back-link" id="routes__back-link">Назад</div>';
+    document.getElementById("routes-block").innerHTML = str;
+
+    for (var i = 0; i < routesList.length; i++) {
+        setActionForRoute(i);
+    }
+
+    document.getElementById("routes__back-link").onclick = function () {
+        document.getElementById("routes-block").classList.toggle("disabled-block");
+        document.getElementById("menu").classList.toggle("disabled-block");
+        document.getElementById("filters").style.left = "0";
+        document.getElementById("hint").classList.toggle("disabled-block");
+    };
+}
+
+function setActionForRoute(id) {
+    document.getElementById("routes__one-route" + id).onclick = function () {
+        selectedRoute = id;
+        document.getElementById("routes-block").classList.toggle("disabled-block");
+        document.getElementById("route-menu").classList.toggle("disabled-block");
+        calculateAndDisplayRoute(id, directionsService, directionsDisplay);
+    };
+}
+
+function makeList() {
+    for (var i = 0; i < routes.route.length; i++) {
+        routesList[i] = new Array();
+        for (var j = 0; j < routes.route[i].name.length; j++ )
+        routesList[i][j] = routes.route[i].name[j];
+    }
+
+    console.log("routes list: ");
+    console.log(routesList);
+    makeCordArray();
+    showRoutes();
+}
+
+function makeCordArray() {
+    for (var i = 0; i < routes.route.length; i++) {
+        routeCordArray[i] = new Array();
+
+        for (var j = 0; j < routes.route[i].X.length; j++) {
+            routeCordArray[i][j] = {
+                lat: routes.route[i].X[j],
+                lng: routes.route[i].Y[j]
+            };
+        }
+    }
+    console.log("Полученный массив координат");
+    console.log(routeCordArray);
+}
+
+
+$(document).ready(function(){
+    var isok = true;
+
+    for (var i = 0; isok != false; i++) {
+        var element = document.getElementById("filters__category" + i);
+
+        if (element) {
+            console.log($("#filters__category" + i));
+            addActionForParameters(i);
+        } else {
+            isok = false;
+        }
+    }
+//тест
+/*
+
+    var answ = {
+        "route": [
+            {
+                "name": ["Lenina", "duck", "fuck", "ducken"],
+                "time": [20, 30, 40, 35],
+                "descr": ["descr_lenina", "discr_duck", "discr_fuck", "duckduck"],
+                "X": [56.845229, 56.839619, 56.840200, 56.841996],
+                "type": ["park", "galery", "park", "park"],
+                "Y": [60.645281, 60.647116, 60.654428, 60.658903]
+            },
+            {
+                "name": ["Lenina", "duck", "ducken", "fuck"],
+                "time": [20, 30, 35, 40],
+                "descr": ["descr_lenina", "discr_duck", "duckduck", "discr_fuck"],
+                "X": [56.845229, 56.839619, 56.841996, 56.840200],
+                "type": ["park", "galery", "park", "park"],
+                "Y": [60.645281, 60.647116, 60.658903, 60.654428]
+            }
+        ]
+    };
+    results = JSON.stringify(answ);
+    routes = JSON.parse(results);
+*/
+
+
+
+
+
+    document.getElementById("build-route").onclick = function () {
+        var time = Number($("#hours").val())*60 + Number($("#minutes").val());
+        document.getElementById("placeholder").classList.toggle("disabled-block");
+        results = {
+            origin: {
+                X: resultCords[0][0],
+                Y: resultCords[0][1]
+            },
+            destination: {
+                X: resultCords[1][0],
+                Y: resultCords[1][1]
+            },
+            time: time,
+            priority: priority
+        };
+        results = JSON.stringify(results);
+        results = JSON.parse(results);
+
+        console.log("sending start");
+        console.log();
+
+        var httpRequest = "http://192.168.43.177:13451/geo?data=" + JSON.stringify(results);
+
+        var xhr = createCORSRequest('GET', httpRequest);
+        xhr.send(); //отправка даты
+
+        xhr.onload = function () {
+            document.getElementById("placeholder").classList.toggle("disabled-block");
+            console.log("полученные данные");
+            console.log(this.responseText);
+
+            routes = $.parseJSON(this.responseText);
+            //routes = JSON.parse(routes);
+            console.log(routes);
+
+            makeList();
+            //showRoutes();
+        };
+
+        xhr.onerror = function () {
+            //console.log('error ' + this.status);
+            document.getElementById("placeholder").classList.toggle("disabled-block");
+        };
+
+
+        document.getElementById("hint").classList.toggle("disabled-block");
+
+        //makeList();
+    };
+
+
+    document.getElementById("change-route").onclick = function () {
+        removeRoute();
+        document.getElementById("routes-block").classList.toggle("disabled-block");
+        document.getElementById("route-menu").classList.toggle("disabled-block");
+    };
+
+    document.getElementById("change-parameters").onclick = function () {
+        document.getElementById("menu").classList.toggle("disabled-block");
+        document.getElementById("hint").classList.toggle("disabled-block");
+        markerA.setMap(null);
+        markerB.setMap(null);
+
+        document.getElementById("parameters").style.display = "flex";
+        document.getElementById("hint").innerHTML = "Выберите исходную точку точку";
+        document.getElementById("search-address").placeholder = "Адрес отправления";
+        document.getElementById("build-route").classList.toggle("menu__element--main-point");
+        removeRoute();
+    };
+});

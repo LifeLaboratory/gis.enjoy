@@ -1,6 +1,10 @@
 //ymaps.ready(init);
 
 function init(routIndex) {
+    if (routIndex) refPoints = routeCords[routIndex];
+    else refPoints = [];
+
+
     multiRoute = new ymaps.multiRouter.MultiRoute({
             referencePoints: routeCords[routIndex],
             params: {
@@ -13,8 +17,8 @@ function init(routIndex) {
         });
 
     var myMap = new ymaps.Map("map", {
+        center: [results.origin.X, results.origin.Y], //как было
         //center: [55.745508, 37.435225],
-        center: [results.origin.X, results.origin.Y],
         //center: [54.9870301969, 82.8739339379],
         zoom: 13
     }, {
@@ -22,6 +26,8 @@ function init(routIndex) {
     });
 
     myMap.geoObjects.add(multiRoute);
+
+
     /*
     // Добавим на карту схему проезда
     // от улицы Крылатские холмы до станции метро "Кунцевская"
@@ -69,24 +75,6 @@ function init(routIndex) {
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /*

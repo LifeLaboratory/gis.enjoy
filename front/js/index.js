@@ -1,6 +1,7 @@
 var results;
 var routes;
 var routeCords = new Array();
+
 function createCORSRequest(method, url) {
     var xhr = new XMLHttpRequest();
     if ("withCredentials" in xhr) {
@@ -53,7 +54,6 @@ function showRoutes() {
             routeCords[i][j] = [routes.route[i].X[j], routes.route[i].Y[j]];
             console.log(routeCords[i][j]);
         }
-
     }
     console.log(routeCords);
 }
@@ -117,7 +117,8 @@ function sendResult() {
     console.log("sending start");
     console.log();
     //var httpRequest = "http://192.168.49.77:13451/geo?data=" + JSON.stringify(results);
-    var httpRequest = "http://localhost:13451/geo?data=" + JSON.stringify(results);
+    //var httpRequest = "http://localhost:13451/geo?data=" + JSON.stringify(results); Так было
+    var httpRequest = "http://90.189.132.25:13451/geo?data=" + JSON.stringify(results);
 
     var xhr = createCORSRequest('GET', httpRequest);
     xhr.send(); //отправка даты
@@ -246,3 +247,7 @@ $prevButton.click(function () {
 
 $step = 0;
 $lastStep = countSteps() - 1;
+
+
+
+
