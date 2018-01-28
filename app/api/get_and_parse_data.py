@@ -4,8 +4,10 @@ import json
 import pymysql
 import wget
 import re
-from api.sql import SqlQuery
+from pprint import pprint
+from api.sql import SqlQuery, converter
 from app.api.get_google_dist import get_google
+
 url_gov = "http://maps.nso.ru/232/getcsv.php?file=%D0%9E%D0%B1%D1%8A%D0%B5%D0%BA%D1%82%D1%8B%20%D0%BA%D1%83%D0%BB%D1%8C%D1%82%D1%83%D1%80%D0%BD%D0%BE%D0%B3%D0%BE%20%D0%BD%D0%B0%D1%81%D0%BB%D0%B5%D0%B4%D0%B8%D1%8F.csv"
 gov_file_name = "gov_dataset.csv"
 
@@ -108,25 +110,37 @@ def add_json_to_sql(json_data):
 #add_json_to_sql(from_csv_to_json())
 
 def add_new_point(new_point):
+    sql = " INSERT INTO Geo (Name, X, Y, Type, Descript, Rating, Time) VALUES (\'{}\', {}, {}, \'{}\', \'{}\', {}, {})".format(
+        new_point["Name"], float(new_point["X"]), float(new_point["Y"]), new_point["Type"], new_point["Description"], int(new_point["Rating"]), int(new_point["Time"]))
+    print(sql)
+    SqlQuery(sql)
+
+    sql = "SELECT id FROM Geo WHERE X={} AND Y={}".format(new_point["X"], new_point["Y"])
+    new_point["id"] = SqlQuery(sql)
+    new_point["id"] = int(new_point["id"][0]['id'])
+    #print(new_point["id"][0]['id'])
     points = SqlQuery("SELECT id, x, y FROM Geo WHERE id <> (SELECT last_value from geo_id_seq)")
     for i in range(len(points)):
         data = []
         disti = ""
         distj = ""
         disti = str(points[i]['x']) + "," + str(points[i]['y'])
-        distj = str(new_point['x']) + "," + str(new_point['y'])
+        distj = str(new_point['X']) + "," + str(new_point['Y'])
         data.append(disti)
         data.append(distj)
+        #print(data)
         answer = get_google(data)
         print(points[i]['id'], new_point['id'], answer)
-
-        SqlQuery("INSERT INTO geo_distance" \
-                  " VALUES (null, {}, {}, {})".format(
+        sql = "INSERT INTO geo_distance (point_1, point_2, distance)" \
+                  " VALUES ({}, {}, {})".format(
                 points[i]['id'],
                 new_point['id'],
-                answer))
-        SqlQuery("INSERT INTO geo_distance" \
-                 " VALUES (null, {}, {}, {})".format(
+                answer)
+        #print(sql)
+        SqlQuery(sql)
+
+        SqlQuery("INSERT INTO geo_distance (point_1, point_2, distance)" \
+                 " VALUES ({}, {}, {})".format(
             new_point['id'],
             points[i]['id'],
             answer))
@@ -134,35 +148,32 @@ def add_new_point(new_point):
 
 
 def get_from_txt():
-    f = open('/home/raldenprog/gis.enjoy/app/api/Ekb.txt')
+    f = open('/home/raldenprog/gis.enjoy/app/api/Spb.txt')
     text = f.read()
     #text = text.split("\n")
     result = text.split('\n')
+    #pprint(result)
     list_js = []
-    js = {"Name": None,
-          "x": None,
-          "y": None,
-          "Type": None,
-          "Discription": None,
-          "Rating": None,
-          "Time": None,
-          "Max_time": None
-          }
-    for i in range(len(result)-2):
+    js = {}
+    for i in range(len(result)):
         line = result[i].split(';')
         #print(line)
         js["Name"] = line[0]
-        js["x"] = line[1]
-        js["y"] = line[2]
+        js["X"] = line[1]
+        js["Y"] = line[2]
         js["Type"] = line[3]
-        js["Discription"] = line[4]
+        js["Description"] = line[4]
         js["Rating"] = line[5]
         js["Time"] = line[6]
-        js["Max_time"] = line[7]
         #print(js)
+        #print(len(line))
+        js["Max_time"] = line[7]
+        #pprint(js)
         list_js.append(js)
+        js = {}
+        #pprint(list_js)
     return list_js
 result = get_from_txt()
-print(result)
+#pprint(result)
 for i in result:
     print(add_new_point(i))

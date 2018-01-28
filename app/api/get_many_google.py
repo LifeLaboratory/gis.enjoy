@@ -144,8 +144,9 @@ def get_many(touch, max_time, priority):
     graph[0][N] = t
     new_graph = {}
     #print('graph  =  ', graph)
-    typeobj = None
     for i in range(len(graph)):
+        if i > 57 and i < 81:
+            continue
         new_graph[i] = []
         for j in range(len(graph[i])):
             if j == 0:
@@ -153,9 +154,14 @@ def get_many(touch, max_time, priority):
             elif j == len(graph)-1:
                 new_graph[i].append((j, graph[i][j], 0, 0))
             elif j > 0:
+                if j > 57 and j < 81:
+                    continue
+                print(len(result_coord), j)
                 tyobj = INDEXES.get(result_coord[j]['Type'], 0)
+                #print(tyobj)
                 new_graph[i].append((j, graph[i][j], tyobj, result_coord[j]['Rating']))
-    #print("new_graph", new_graph)
+    print("new_graph", new_graph)
+    print("prior: ", priority)
     coefficiet_graph = normalize_point_data(new_graph, priority)
     #print("!", coefficiet_graph)
     def new_element(l, element):
