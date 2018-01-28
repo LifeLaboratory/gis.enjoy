@@ -209,8 +209,8 @@ def generate_answer(result, result_coord, id_list, N, touch_be):
 #print(result)
 touch = ((54.9870301969, 82.8739339379), (55.0666090889, 82.9952098502))
 #result0, result1, graph, time = get_many(touch)
-result = get_many(touch, 100, [5, 3, 4, 2, 1])
-print(result)
+#result = get_many(touch, 100, [5, 3, 4, 2, 1])
+#print(result)
 #touch_get_google0 = str(touch[0][0]) + "," + str(touch[0][1])
 #touch_get_google1 = str(touch[1][0]) + "," + str(touch[1][1])
 #touch_google_list = [touch_get_google0, touch_get_google1]
