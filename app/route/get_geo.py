@@ -18,7 +18,7 @@ class Geo(Resource):
         #print('cookies = ', request.cookies)
         #print('ARGS = ', args)
         data = args.get('data', None)
-
+        print("data: ", data)
         data = converter(data)
         #print(data)
         #print(data["origin"])
@@ -34,9 +34,9 @@ class Geo(Resource):
         priority = []
         index_priority = []
         for i in range(len(data["priority"])):
-            for j in range(len(INDEXES)):
-                if data["priority"][i] == INDEXES[j]:
-                    index_priority.append(5-j)
+            index_priority.append(INDEXES.get(data["priority"][i], 0))
+
+        print('priority = ', priority)
         print("index_priority", index_priority)
         print("datas", datas)
         #print("user_time", int(data["time"]))

@@ -7,7 +7,7 @@ from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
 from route.get_geo import Geo
 from route.get_list import List
-#from route.test import Test
+#from route.testing import Test
 _app = Flask(__name__)
 _app.config['JSON_AS_ASCII'] = False
 api = Api(_app)
@@ -25,13 +25,13 @@ class Index(Resource):
         print(request.headers)
         print('cookies = ', request.cookies)
         print('ARGS = ', request.args)
-        return {'test': 'test'}, 200, HEADER
+        return {'testing': 'testing'}, 200, HEADER
 
 
 api.add_resource(Index, '/')
 api.add_resource(Geo, '/geo')
 api.add_resource(List, '/list')
-#api.add_resource(Test, '/test')
+#api.add_resource(Test, '/testing')
 
 if __name__ == '__main__':
     try:

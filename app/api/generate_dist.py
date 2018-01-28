@@ -1,5 +1,3 @@
-from app.data.get_and_parse_data import db_connect
-from pprint import pprint
 from api.sql import SqlQuery
 
 def generate_distance_p2p():

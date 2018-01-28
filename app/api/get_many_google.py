@@ -36,7 +36,7 @@ def normalize_point_data(distances, priority):
         for point in dist:
             # Change point's distance to it's normalized coefficient
             point_dist = 1 - (point[1] - min_dist)/dist_diff
-
+            #print(point)
             # Change type of point to it's normalized estimation
             point_priority = norm_priority[point[2]]
 
@@ -153,9 +153,7 @@ def get_many(touch, max_time, priority):
             elif j == len(graph)-1:
                 new_graph[i].append((j, graph[i][j], 0, 0))
             elif j > 0:
-                for ty in range(len(INDEXES)):
-                    if INDEXES[ty] == result_coord[j]['Type']:
-                        tyobj = ty
+                tyobj = INDEXES.get(result_coord[j]['Type'], 0)
                 new_graph[i].append((j, graph[i][j], tyobj, result_coord[j]['Rating']))
     #print("new_graph", new_graph)
     coefficiet_graph = normalize_point_data(new_graph, priority)

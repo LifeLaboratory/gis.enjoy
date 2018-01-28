@@ -1,10 +1,7 @@
 __author__ = 'RaldenProg'
 
-
-import json
-from app.api.get_google_dist import get_google, get_coords
-from pprint import pprint
-from app.data.get_and_parse_data import db_connect
+from app.api.get_google_dist import get_google
+from api.get_and_parse_data import db_connect
 from api.sql import SqlQuery
 import time
 from multiprocessing import Process
@@ -17,10 +14,27 @@ def insert_db(sql):
     SqlQuery(sql)
 
 
-def add_new_point():
-    last_id = SqlQuery("SELECT currval('geo_id_seq');")
-    points = SqlQuery("SELECT id, x, y WHERE id != {} FROM Geo ".format(last_id))
+def add_new_point(new_point):
+    points = SqlQuery("SELECT id, x, y FROM Geo WHERE id <> currval('geo_id_seq')")
+    for i in range(len(points)):
+        data = []
+        disti = str(points[i]['x']) + "," + str(points[i]['y'])
+        distj = str(new_point['x']) + "," + str(new_point['y'])
+        data.append(disti)
+        data.append(distj)
+        answer = get_google(data)
+        print(points[i]['id'], new_point['id'], answer)
 
+        SqlQuery("INSERT INTO geo_distance" \
+                  " VALUES (null, {}, {}, {})".format(
+                points[i]['id'],
+                new_point['id'],
+                answer))
+        SqlQuery("INSERT INTO geo_distance" \
+                 " VALUES (null, {}, {}, {})".format(
+            new_point['id'],
+            points[i]['id'],
+            answer))
 def get():
     sql = "SELECT id, x, y FROM Geo order by id"
     #connect, current_connect = db_connect()
@@ -57,4 +71,4 @@ def generate_distance():
             count+=1
             #print(sql)
 
-generate_distance()
+#generate_distance()

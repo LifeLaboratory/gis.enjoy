@@ -1,7 +1,4 @@
-from pprint import pprint
-from app.data.get_and_parse_data import db_connect
 import math
-from app.api.set_path import get_top_paths
 from api.sql import SqlQuery
 from timeit import default_timer as timer
 
