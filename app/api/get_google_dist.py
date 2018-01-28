@@ -30,7 +30,7 @@ def get_google(data):
 def get_coords(touch, time=None):
     data = []
     json_batch = select_p.select_avalible_points(touch[0], touch[1])
-    print("jsn_b", len(json_batch))
+    #print("jsn_b", len(json_batch))
     for i in range(len(json_batch)):
         buf = {}
         buf['x'] = json_batch[i]['x']
@@ -74,15 +74,15 @@ def set_route(result, data, id):
 def get_finish(touch, user_time):
     time = []
     d, json_batch = quer(touch, time)
-    pprint(d)
-    pprint(json_batch)
+    #pprint(d)
+    #pprint(json_batch)
     id = []
     names = {}
     #json_batch = select_p.select_avalible_points(touch[0], touch[1])
 
     for i in range(len(json_batch)):
         js = json_batch[i]
-        print(js)
+        #print(js)
         id_geo = js["Id"]
         names[id_geo] = js
         id.append(id_geo)
