@@ -18,7 +18,7 @@ class Sql:
     @staticmethod
     def exec(query=None, args=None, file=None):
         try:
-            Sql._switch(query=query, args=args, file=file)
+            return Sql._switch(query=query, args=args, file=file)
         except:
             return None
 
