@@ -5,7 +5,7 @@ import requests as req
 
 import app.api.set_path as sp
 import app.api.select_path as select_p
-from api.google.helpers.google_key import Google
+from api.google.helpers.google import Google
 
 result = {}
 list = []

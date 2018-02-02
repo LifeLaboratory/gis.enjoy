@@ -6,6 +6,7 @@ DATABASE = {
     "host": "90.189.132.25",
     "password": "PINLOX!@#"
 }
+
 """
 INDEXES = {"Парк": 0,
            "Памятник": 1,

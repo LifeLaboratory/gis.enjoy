@@ -6,7 +6,7 @@ from timeit import default_timer as timer
 import requests as req
 
 from app.api.select_path import get_distance
-from api.google.helpers.google_key import Google
+from api.google.helpers.google import Google
 from app.api.set_path import get_top_paths
 from app.api.get_google_dist import get_google
 from config import INDEXES

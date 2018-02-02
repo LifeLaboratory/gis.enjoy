@@ -1,7 +1,6 @@
 import requests as req
 from api.helpers.json import converter
 from .key import key
-
 __author__ = 'RaldenProg'
 
 GET_TOUCH_FROM_MANY = "https://maps.googleapis.com/maps/api/distancematrix/" \
@@ -10,7 +9,6 @@ GET_TOUCH_FROM_MANY = "https://maps.googleapis.com/maps/api/distancematrix/" \
 
 class Google:
     def __init__(self, touch, touch_list=None):
-        global KEY
         self.start = str(touch[0][0]) + ',' + str(touch[0][1])
         self.end = str(touch[1][0]) + ',' + str(touch[1][1])
         self.touch_list = touch_list
@@ -20,7 +18,7 @@ class Google:
         self.distance_from_start = []
         self.distance_from_end = []
         # Ќе уверен, что прокинетс€ как ссылка на пам€ть (!!!)
-        self.key = KEY
+        self.key = Google.set_google_key()
         self._generate_dist()
 
     def _generate_dist(self):
