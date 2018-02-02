@@ -51,6 +51,7 @@ def normalize_point_data(distances, priority):
         result_matrix.append(matrix_row)
     return result_matrix
 
+
 def get_many(touch, max_time, priority):
     start = timer()
     google_key = set_google_key()

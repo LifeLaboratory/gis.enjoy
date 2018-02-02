@@ -7,7 +7,7 @@ from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
 from route.get_geo import Geo
 from route.get_list import List
-from api.google.helpers.google_key import set_google_key
+from api.google.helpers.google_key import Google
 #from route.testing import Test
 _app = Flask(__name__)
 _app.config['JSON_AS_ASCII'] = False
@@ -43,7 +43,7 @@ api.add_resource(List, '/list')
 if __name__ == '__main__':
     global KEY
     try:
-        KEY = set_google_key()
+        KEY = Google.set_google_key()
         _app.run(host='0.0.0.0', port=13451, threaded=True)
     except Exception as e:
         print(e)
