@@ -1,13 +1,11 @@
 # coding=utf-8
 from flask_restful import Resource, reqparse
-from flask import request
-from app.api.config import HEADER
-import json
-from ast import literal_eval
+
 from app.api.get_many_google import get_many
-from pprint import pprint
-from api.config import INDEXES
+from config import INDEXES
 from api.sql import converter
+
+
 class Geo(Resource):
     def get(self):
         parser = reqparse.RequestParser()

@@ -1,0 +1,11 @@
+CREATE TABLE geo_1
+(
+    id SERIAL PRIMARY KEY NOT NULL,
+    name VARCHAR,
+    x DOUBLE PRECISION,
+    y DOUBLE PRECISION,
+    type VARCHAR,
+    descript VARCHAR,
+    rating INT,
+    time INT
+);

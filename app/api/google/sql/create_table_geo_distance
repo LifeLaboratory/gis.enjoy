@@ -1,0 +1,8 @@
+CREATE TABLE geo_distance
+(
+    id SERIAL DEFAULT nextval('geo_distance_id_seq'::regclass) NOT NULL,
+    point_1 INT,
+    point_2 INT,
+    distance INT
+);
+CREATE UNIQUE INDEX geo_distance_point_1_point_2_uindex ON geo_distance (point_1, point_2);

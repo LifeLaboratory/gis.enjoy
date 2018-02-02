@@ -9,7 +9,7 @@ from app.api.select_path import get_distance
 from api.google.helpers.google_key import set_google_key
 from app.api.set_path import get_top_paths
 from app.api.get_google_dist import get_google
-from api.config import INDEXES
+from config import INDEXES
 
 
 # It function normalize data about points (distance, user's priority, objective estimate)

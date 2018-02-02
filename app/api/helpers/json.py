@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 
 __author__ = 'ar.chusovitin'
@@ -5,8 +6,8 @@ __author__ = 'ar.chusovitin'
 
 def converter(js):
     """
-    Метод преобразовывает передаваемый json в Dict и наоборот
-    :param js: str или json
-    :return: str или dict преобразованный элемент
+    РњРµС‚РѕРґ РїСЂРµРѕР±СЂР°Р·РѕРІС‹РІР°РµС‚ РїРµСЂРµРґР°РІР°РµРјС‹Р№ json РІ Dict Рё РЅР°РѕР±РѕСЂРѕС‚
+    :param js: str РёР»Рё json
+    :return: str РёР»Рё dict РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРЅС‹Р№ СЌР»РµРјРµРЅС‚
     """
     return json.dumps(js) if isinstance(js, dict) else json.loads(js)
