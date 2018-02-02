@@ -58,14 +58,14 @@ class Sql:
         result = None
         try:
             current_connect.execute(query)
-            connect.commit()
         except:
             pass
         finally:
             try:
                 result = current_connect.fetchall()
+                connect.commit()
             except:
-                pass
+                connect.rollback()
             finally:
                 connect.close()
                 return result
