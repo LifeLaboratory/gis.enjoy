@@ -7,12 +7,19 @@ from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
 from route.get_geo import Geo
 from route.get_list import List
+from api.google.helpers.google_key import set_google_key
 #from route.testing import Test
 _app = Flask(__name__)
 _app.config['JSON_AS_ASCII'] = False
 api = Api(_app)
 HEADER = {'Access-Control-Allow-Origin': '*'}
+KEY = None
 
+# Выбор настройки
+config = {
+    'google': 'init_google',
+    'nso': 'init_nso'
+}
 
 @_app.errorhandler(404)
 def not_found(error):
@@ -34,7 +41,9 @@ api.add_resource(List, '/list')
 #api.add_resource(Test, '/testing')
 
 if __name__ == '__main__':
+    global KEY
     try:
+        KEY = set_google_key()
         _app.run(host='0.0.0.0', port=13451, threaded=True)
     except Exception as e:
         print(e)

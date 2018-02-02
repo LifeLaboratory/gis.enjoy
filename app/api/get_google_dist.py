@@ -1,18 +1,19 @@
-import requests as req
 import json
+from multiprocessing import Pool
+
+import requests as req
+
 import app.api.set_path as sp
 import app.api.select_path as select_p
-from multiprocessing import Pool
-from pprint import pprint
-from app.google_key import KEY
-from api.sql import SqlQuery
+from api.google.helpers.google_key import set_google_key
+
 result = {}
 list = []
 
 
 def get_google(data):
     s = req.Session()
-    url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking&origins={}&destinations={}&key={}".format(data[0], data[1], KEY())
+    url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking&origins={}&destinations={}&key={}".format(data[0], data[1], set_google_key())
 
     #print(url)
     answer = s.get(url)

@@ -1,15 +1,15 @@
 __author__ = 'RaldenProg'
 
-from app.api.select_path import get_distance
-from pprint import pprint
-from app.google_key import KEY
-import requests as req
 import json
+from timeit import default_timer as timer
+
+import requests as req
+
+from app.api.select_path import get_distance
+from api.google.helpers.google_key import set_google_key
 from app.api.set_path import get_top_paths
 from app.api.get_google_dist import get_google
-from api.sql import SqlQuery
 from api.config import INDEXES
-from timeit import default_timer as timer
 
 
 # It function normalize data about points (distance, user's priority, objective estimate)
@@ -53,7 +53,7 @@ def normalize_point_data(distances, priority):
 
 def get_many(touch, max_time, priority):
     start = timer()
-    google_key = KEY()
+    google_key = set_google_key()
     end = timer()
     print("google_key", end - start)
 
@@ -76,7 +76,7 @@ def get_many(touch, max_time, priority):
     start = timer()
     while(1):
         if count0_0 == 10:
-            google_key = KEY()
+            google_key = set_google_key()
             count0_1 += 1
             if count0_1 == 20:
                 return "Error"
@@ -105,7 +105,7 @@ def get_many(touch, max_time, priority):
     # print(touch1)
     while (1):
         if count0_0 == 10:
-            google_key = KEY()
+            google_key = set_google_key()
             count0_1 += 1
             if count0_1 == 20:
                 return "Error"
