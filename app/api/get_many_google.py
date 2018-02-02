@@ -6,7 +6,7 @@ from timeit import default_timer as timer
 import requests as req
 
 from app.api.select_path import get_distance
-from api.google.helpers.google_key import set_google_key
+from api.google.helpers.google_key import Google
 from app.api.set_path import get_top_paths
 from app.api.get_google_dist import get_google
 from config import INDEXES
@@ -54,7 +54,7 @@ def normalize_point_data(distances, priority):
 
 def get_many(touch, max_time, priority):
     start = timer()
-    google_key = set_google_key()
+    google_key = Google.set_google_key()
     end = timer()
     print("google_key", end - start)
 
@@ -77,7 +77,7 @@ def get_many(touch, max_time, priority):
     start = timer()
     while(1):
         if count0_0 == 10:
-            google_key = set_google_key()
+            google_key = Google.set_google_key()
             count0_1 += 1
             if count0_1 == 20:
                 return "Error"

@@ -5,7 +5,7 @@ import requests as req
 
 import app.api.set_path as sp
 import app.api.select_path as select_p
-from api.google.helpers.google_key import set_google_key
+from api.google.helpers.google_key import Google
 
 result = {}
 list = []
@@ -13,7 +13,7 @@ list = []
 
 def get_google(data):
     s = req.Session()
-    url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking&origins={}&destinations={}&key={}".format(data[0], data[1], set_google_key())
+    url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking&origins={}&destinations={}&key={}".format(data[0], data[1], Google.set_google_key())
 
     #print(url)
     answer = s.get(url)

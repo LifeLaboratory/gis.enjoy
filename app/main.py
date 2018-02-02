@@ -41,7 +41,7 @@ api.add_resource(List, '/list')
 #api.add_resource(Test, '/testing')
 
 if __name__ == '__main__':
-    global KEY
+    #global KEY
     try:
         KEY = Google.set_google_key()
         _app.run(host='0.0.0.0', port=13451, threaded=True)
