@@ -1,8 +1,8 @@
-from api.helpers.sql import Sql
 import math
+from api.helpers.sql import Sql
 
 __author__ = 'ar.chusovitin'
-delta = 0.0005
+DELTA = 0.0005
 
 
 class Path:
@@ -26,7 +26,7 @@ class Path:
     def set_touch(self):
         get_sql = ""
         result = ()
-        dynamic_delta = 3*delta*math.sqrt(2)
+        dynamic_delta = 3 * DELTA * math.sqrt(2)
         trying = 1
         point = [0, 0, 0, 0]
         while result is () and trying < 3:
@@ -34,26 +34,26 @@ class Path:
             if self.start is not self.finish and trying == 1:
                 if self.start[0] >= self.finish[0]:
                     if self.start[1] >= self.finish[1]:
-                        point[0] = self.finish[0] - delta
-                        point[1] = self.start[0] + delta
-                        point[2] = self.finish[1] - delta
-                        point[3] = self.start[1] + delta
+                        point[0] = self.finish[0] - DELTA
+                        point[1] = self.start[0] + DELTA
+                        point[2] = self.finish[1] - DELTA
+                        point[3] = self.start[1] + DELTA
                     else:
-                        point[0] = self.finish[0] - delta
-                        point[1] = self.start[0] + delta
-                        point[2] = self.start[1] - delta
-                        point[3] = self.finish[1] + delta
+                        point[0] = self.finish[0] - DELTA
+                        point[1] = self.start[0] + DELTA
+                        point[2] = self.start[1] - DELTA
+                        point[3] = self.finish[1] + DELTA
                 else:
                     if self.start[1] >= self.finish[1]:
-                        point[0] = self.start[0] - delta
-                        point[1] = self.finish[0] + delta
-                        point[2] = self.finish[1] - delta
-                        point[3] = self.start[1] + delta
+                        point[0] = self.start[0] - DELTA
+                        point[1] = self.finish[0] + DELTA
+                        point[2] = self.finish[1] - DELTA
+                        point[3] = self.start[1] + DELTA
                     else:
-                        point[0] = self.start[0] - delta
-                        point[1] = self.finish[0] + delta
-                        point[2] = self.start[1] - delta
-                        point[3] = self.finish[1] + delta
+                        point[0] = self.start[0] - DELTA
+                        point[1] = self.finish[0] + DELTA
+                        point[2] = self.start[1] - DELTA
+                        point[3] = self.finish[1] + DELTA
             else:
                 point[0] = self.start[0] + dynamic_delta
                 point[1] = self.start[0] - dynamic_delta
@@ -87,7 +87,7 @@ class Path:
                                           'Type': touch.get('type'),
                                           'Name': touch.get('name'),
                                           'Rating': touch.get('rating')
-                                          }
+                                         }
         self.list_time.append(0)
         return sorted(temp_id)
 
@@ -111,13 +111,20 @@ class Path:
         )
         select * from get_coord;
         """
-        result = Sql.exec(get_sql)
-        return result
+        self.dict_pair_touch = Sql.exec(get_sql)
 
     def set_distance(self):
         pass
 
     def set_graph(self):
-        pass
-
-
+        helper = dict()
+        for i in range(len(self.id_list)):
+            helper[self.id_list[i]] = i + 1
+        for i in range(len(self.id_list) + 2):
+            self.dict_graph[i] = {i: 0}
+        # pprint(helper)
+        # print(graph)
+        for pair in self.dict_pair_touch:
+            self.dict_graph[helper[pair['point_1']]][helper[pair['point_2']]] = pair['distance']
+            self.dict_graph[helper[pair['point_2']]][helper[pair['point_1']]] = pair['distance']
+        # print(graph)
