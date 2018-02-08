@@ -28,46 +28,45 @@ class Path:
         result = ()
         dynamic_delta = 3*delta*math.sqrt(2)
         trying = 1
+        point = [0, 0, 0, 0]
         while result is () and trying < 3:
             dynamic_delta = dynamic_delta * trying
             if self.start is not self.finish and trying == 1:
                 if self.start[0] >= self.finish[0]:
                     if self.start[1] >= self.finish[1]:
-                        get_sql = "SELECT * FROM Geo WHERE x >= {} and x <= {} and y >= {} and y <= {}".format(
-                            self.finish[0] - delta,
-                            self.start[0] + delta,
-                            self.finish[1] - delta,
-                            self.start[1] + delta
-                        )
+                        point[0] = self.finish[0] - delta
+                        point[1] = self.start[0] + delta
+                        point[2] = self.finish[1] - delta
+                        point[3] = self.start[1] + delta
                     else:
-                        get_sql = "SELECT * FROM Geo WHERE x >= {} and x <= {} and y >= {} and y <= {}".format(
-                            self.finish[0] - delta,
-                            self.start[0] + delta,
-                            self.start[1] - delta,
-                            self.finish[1] + delta
-                        )
+                        point[0] = self.finish[0] - delta
+                        point[1] = self.start[0] + delta
+                        point[2] = self.start[1] - delta
+                        point[3] = self.finish[1] + delta
                 else:
                     if self.start[1] >= self.finish[1]:
-                        get_sql = "SELECT * FROM Geo WHERE x >= {} and x <= {} and y >= {} and y <= {}".format(
-                            self.start[0] - delta,
-                            self.finish[0] + delta,
-                            self.finish[1] - delta,
-                            self.start[1] + delta
-                        )
+                        point[0] = self.start[0] - delta
+                        point[1] = self.finish[0] + delta
+                        point[2] = self.finish[1] - delta
+                        point[3] = self.start[1] + delta
                     else:
-                        get_sql = "SELECT * FROM Geo WHERE x >= {} and x <= {} and y >= {} and y <= {}".format(
-                            self.start[0] - delta,
-                            self.finish[0] + delta,
-                            self.start[1] - delta,
-                            self.finish[1] + delta
-                        )
+                        point[0] = self.start[0] - delta
+                        point[1] = self.finish[0] + delta
+                        point[2] = self.start[1] - delta
+                        point[3] = self.finish[1] + delta
             else:
-                get_sql = "SELECT * FROM Geo WHERE x >= {} and x <= {} and y >= {} and y <= {}".format(
-                    self.start[0] + dynamic_delta,
-                    self.start[0] - dynamic_delta,
-                    self.start[1] + dynamic_delta,
-                    self.start[1] - dynamic_delta
-                )
+                point[0] = self.start[0] + dynamic_delta
+                point[1] = self.start[0] - dynamic_delta
+                point[2] = self.start[1] + dynamic_delta
+                point[3] = self.start[1] - dynamic_delta
+
+            get_sql = "SELECT * FROM Geo WHERE x >= {} and x <= {} and y >= {} and y <= {}".format(
+                point[0],
+                point[1],
+                point[2],
+                point[3]
+            )
+
             # print(get_sql)
             get_sql = "SELECT * FROM Geo"
             result = Sql.exec(get_sql)
