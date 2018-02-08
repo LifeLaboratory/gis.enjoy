@@ -7,23 +7,23 @@ delta = 0.0005
 
 class Path:
     def __init__(self, start, finish, user_time):
-        self.graph = {}
-        self.distance = []
-        self.coords = []
+        self.dict_graph = {}
+        self.list_distance = []
+        self.list_coords = []
         self.dict_coords = {}
         self.id_list = []
-        self.time = []
+        self.dict_pair_touch = {}
+        self.list_time = []
         self.start = start
         self.finish = finish
         self.user_time = user_time
         self.select_path()
 
     def select_path(self):
-        self.coords = self.set_touch()
+        self.list_coords = self.set_touch()
         self.id_list = self.get_coord()
 
     def set_touch(self):
-        json_data_batch = []
         get_sql = ""
         result = ()
         dynamic_delta = 3*delta*math.sqrt(2)
@@ -75,11 +75,11 @@ class Path:
 
     def get_coord(self):
         temp_id = list()
-        for touch in self.coords:
+        for touch in self.list_coords:
             id_coord = touch.get('id')
             time_coord = touch.get('time')
             temp_id.append(id_coord)
-            self.time.append(time_coord)
+            self.list_time.append(time_coord)
             self.dict_coords[id_coord] = {'X': touch.get('x'),
                                           'Y': touch.get('y'),
                                           'Descr': touch.get('descrip'),
@@ -88,11 +88,31 @@ class Path:
                                           'Name': touch.get('name'),
                                           'Rating': touch.get('rating')
                                           }
-        self.time.append(0)
+        self.list_time.append(0)
         return sorted(temp_id)
 
-    def get_touch(self):
-        pass
+    def get_pair_touch(self):
+        """
+        Метод получает из базы дистанцию для всех пар значений координат
+        :param coords: кортеж ID координат
+        """
+        get_sql = """
+            with 
+        get_pair as (
+          select a.id as a_p, b.id as b_p 
+          from geo a, geo b 
+          where b.id <> a.id
+        ),
+        get_coord as (
+          select d.id, d.point_1, d.point_2, d.distance 
+          from geo_distance d, get_pair pair  
+            where (point_1, point_2) = (pair.a_p, pair.b_p) 
+            or (point_1, point_2) = (pair.b_p, pair.a_p)
+        )
+        select * from get_coord;
+        """
+        result = Sql.exec(get_sql)
+        return result
 
     def set_distance(self):
         pass
