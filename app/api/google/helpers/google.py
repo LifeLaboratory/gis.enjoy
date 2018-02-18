@@ -1,3 +1,4 @@
+# coding=utf-8
 import requests as req
 from api.helpers.json import converter
 from .key import key
@@ -17,15 +18,28 @@ class Google:
         self.distance = []
         self.distance_from_start = []
         self.distance_from_end = []
-        # Не уверен, что прокинется как ссылка на память (!!!)
+        # РќРµ СѓРІРµСЂРµРЅ, С‡С‚Рѕ РїСЂРѕРєРёРЅРµС‚СЃСЏ РєР°Рє СЃСЃС‹Р»РєР° РЅР° РїР°РјСЏС‚СЊ (!!!)
         self.key = Google.set_google_key()
         self._generate_dist()
 
     def _generate_dist(self):
-        self.distance_from_start = self._get_one_to_many(self.start)
-        self.distance_from_end = self._get_one_to_many(self.end)
+        self.distance_from_start = self.get_one_to_many(self.start)
+        self.distance_from_end = self.get_one_to_many(self.end)
 
-    def _get_one_to_many(self, touch):
+    def get_one_to_one(self, start, finish):
+        start = '{},{}'.format(start[0], start[1])
+        finish = '{},{}'.format(finish[0], finish[1])
+        s = req.Session()
+        url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking&origins={}&destinations={}&key={}".format(
+            start, finish, self.key)
+        answer = s.get(url)
+        answer = converter(answer.text)['rows'][0]['elements'][0]['duration']['text'].split()
+        if len(answer) > 2:
+            return int(answer[0]) * 60 + int(answer[2])
+        else:
+            return int(answer[0])
+
+    def get_one_to_many(self, touch):
         self.iter = 0
         self.deep = 0
         while True:
@@ -38,7 +52,7 @@ class Google:
             try:
                 self.distance = req.get(GET_TOUCH_FROM_MANY.format(touch, self.touch_list, self.key)).text
             except:
-                # Костыль, нужно продумать
+                # РљРѕСЃС‚С‹Р»СЊ, РЅСѓР¶РЅРѕ РїСЂРѕРґСѓРјР°С‚СЊ
                 self.iter += 1
             break
         return self._get_distance()
