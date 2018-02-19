@@ -187,7 +187,8 @@ class Path:
         (время пути до точки, тип точки, общая оценка точки)
         :param priority: Интексы типы выбранных достопримечательностей (из INDEXES), с учётом приоритета
         пользователя
-        :return: Матрица взвешанных путей между точками
+        :return: Матрица взвешанных путей между точками, отсортированная по убыванию
+        взвешанных весов
         '''
 
         result_matrix = []
@@ -208,6 +209,7 @@ class Path:
 
                 matrix_row.append(norm_point)
 
+            matrix_row = sorted(matrix_row, key=lambda x: x[1])
             result_matrix.append(matrix_row)
         return result_matrix
 
