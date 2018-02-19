@@ -2,12 +2,13 @@ from api.helpers.sql import Sql
 
 __author__ = 'RaldenProg'
 
+
 class Filter:
     def __init__(self):
         self.__dict_type = {}
         self.__list_type = []
-    def get_filter(self):
 
+    def get_filter(self):
         get_sql = """
             with
             filter as (
