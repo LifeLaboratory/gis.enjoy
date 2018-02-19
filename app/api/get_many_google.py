@@ -11,40 +11,38 @@ from app.api.set_path import get_top_paths
 from app.api.get_google_dist import get_google
 from config import INDEXES
 
-
-# It function normalize data about points (distance, user's priority, objective estimate)
-# By MinMax Scaling method
-# TODO: Try to make StandartScaling method of normalization
 def normalize_point_data(distances, priority):
-    for i in range(len(priority)):
-        priority[i]/=5
-    #print(priority)
-    norm_priority = priority # 5 - max value of user's priorities
+    '''
+    Данный метод приводит 3 параметра, характеризующих точку матрицы @distances
+    (время до точки, тип точки, общая оценка точки),к одной единице измерения - времени.
+    Другими словами, определяет какое приемлемое количество времени пользователь
+    готов потратить, чтобы перейти к более приоритетному типу достопримечательности,
+    или к месту, с более высокой общей оценкой.
+
+    :param distances: Матрица, каждый элемент которой представляется кортежем из:
+    (время пути до точки, тип точки, общая оценка точки)
+    :param priority: Интексы типы выбранных достопримечательностей (из INDEXES), с учётом приоритета
+    пользователя
+    :return: Матрица взвешанных путей между точками
+    '''
+
+    # TODO: Исследовать наилучшией значения для оптимального выбора
+    global time_per_priority # Соотношение количества времени к 1 условной единице приоритета
+    global time_per_estimate # Соотношение количества времени к 1 условной единице общей оценки
+
     result_matrix = []
 
-    # Normalize data by distance
+    # Перевод приоритета во время
+    max_priority = len(priority)
+
     for key_dist, dist in distances.items():
         matrix_row = []
-        max_dist = max(dist, key=lambda x: x[1])[1]
-        min_dist = min(dist, key=lambda x: x[1])[1]
-        dist_diff = max_dist - min_dist
-
-        max_estimate = max(dist, key=lambda x: x[3])[3] #
-        min_estimate = min(dist, key=lambda x: x[3])[3] # TODO: Make in before cycle
-        estimate_diff = max_estimate - min_estimate                  #
 
         for point in dist:
-            # Change point's distance to it's normalized coefficient
-            point_dist = 1 - (point[1] - min_dist)/dist_diff
-            #print(point)
-            # Change type of point to it's normalized estimation
-            point_priority = norm_priority[point[2]]
+            priority_to_time = max_priority - priority.index(INDEXES.get(point[2],0)) * time_per_priority
+            estimate_to_time = point[3] * time_per_estimate
 
-            # Change objective estimate of point to it's normalized by local line estimate
-            point_estimate = (point[3] - min_estimate)/estimate_diff
-
-            # Result matrix's point forming
-            norm_point = (point[0], point_dist + point_priority + point_estimate)
+            norm_point = (point[0], point[1] + priority_to_time + estimate_to_time)
 
             matrix_row.append(norm_point)
 

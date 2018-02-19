@@ -3,6 +3,7 @@ from operator import itemgetter
 from copy import deepcopy
 from api.helpers.sql import Sql
 from api.google.helpers.google import Google
+from config import INDEXES
 __author__ = 'ar.chusovitin'
 DELTA = 0.0005
 
@@ -22,6 +23,9 @@ class Path:
         self.user_time = user_time
         self.new_graph = {}
         self.select_path()
+        # TODO: Исследовать наилучшией значения для оптимального выбора
+        self.time_per_priority = 1  # Соотношение количества времени к 1 условной единице приоритета
+        self.time_per_estimate = 1  # Соотношение количества времени к 1 условной единице общей оценки
 
     def select_path(self):
         self.list_coords = self.set_touch()
@@ -171,6 +175,42 @@ class Path:
                     except:
                         pass
 
+    def normalize_point_data(self, distances, priority):
+        '''
+        Данный метод приводит 4 параметра, характеризующих точку матрицы @distances
+        (номер точки, время до точки, тип точки, общая оценка точки),к одной единице измерения - времени.
+        Другими словами, определяет какое приемлемое количество времени пользователь
+        готов потратить, чтобы перейти к более приоритетному типу достопримечательности,
+        или к месту, с более высокой общей оценкой.
+
+        :param distances: Матрица, каждый элемент которой представляется кортежем из:
+        (время пути до точки, тип точки, общая оценка точки)
+        :param priority: Интексы типы выбранных достопримечательностей (из INDEXES), с учётом приоритета
+        пользователя
+        :return: Матрица взвешанных путей между точками
+        '''
+
+        result_matrix = []
+
+        # Определение максимально приоритета
+        max_priority = len(priority)
+
+        for key_dist, dist in distances.items():
+            matrix_row = []
+
+            for point in dist:
+                # Перевод приоритета во время
+                priority_to_time = (max_priority - priority.index(INDEXES.get(point[2], 0))) * self.time_per_priority
+                # Перевод оценки во время
+                estimate_to_time = point[3] * self.time_per_estimate
+
+                norm_point = (point[0], point[1] + priority_to_time + estimate_to_time)
+
+                matrix_row.append(norm_point)
+
+            result_matrix.append(matrix_row)
+        return result_matrix
+
     def normalize_graph_coefficient(self):
         # coefficiet_graph = normalize_point_data(new_graph, priority)
 
@@ -256,12 +296,26 @@ class Path:
     top_paths = []
     top_count = 5
 
-    # It's recursion function for top_count paths finding from begin_point to end_point
-    # and value of such paths less then max_time
     def longest_paths(
             self, begin_point, end_point, current_point,
             graph, time, max_time, visited=None, current_path=None
     ):
+        '''
+        Данный рекурсивный метод возвращает top_count маршрутов
+        :param begin_point: Индекс начальной точки
+        :param end_point: Индекс конечной точки
+        :param current_point: Текущая точка
+        :param graph: Матрица точек, каждый элемент которой представлен
+        в виде кортежа (индекс точки, предобработанное время до точки)
+        :param time: Массив времён, которое пользователь может провести на
+        каждом из мест
+        :param max_time: Максимальное время, которое есть у пользователя в
+        распоряжении
+        :param visited: Массив уже посещённых точек
+        :param current_path: Массив из точек, которые представляют собой
+        маршрут
+        :return: top_paths - массив из top_count маршрутов
+        '''
         global top_paths
         global top_count
         if len(top_paths) == top_count:
