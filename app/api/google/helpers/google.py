@@ -2,6 +2,7 @@
 import requests as req
 from api.helpers.json import converter
 from .key import key
+from multiprocessing import Manager, Process
 __author__ = 'RaldenProg'
 
 GET_TOUCH_FROM_MANY = "https://maps.googleapis.com/maps/api/distancematrix/" \
@@ -20,13 +21,13 @@ class Google:
         self.distance_from_end = []
         # Не уверен, что прокинется как ссылка на память (!!!)
         self.key = Google.set_google_key()
-        self._generate_dist()
+        #self._generate_dist()
 
     def _generate_dist(self):
         self.distance_from_start = self.get_one_to_many(self.start)
         self.distance_from_end = self.get_one_to_many(self.end)
 
-    def get_one_to_one(self, start, finish):
+    def get_one_to_one(self, start, finish, op=None, record=None):
         start = '{},{}'.format(start[0], start[1])
         finish = '{},{}'.format(finish[0], finish[1])
         s = req.Session()
@@ -34,12 +35,20 @@ class Google:
             start, finish, self.key)
         answer = s.get(url)
         answer = converter(answer.text)['rows'][0]['elements'][0]['duration']['text'].split()
+
         if len(answer) > 2:
+            if op:
+                record[op] = int(answer[0]) * 60 + int(answer[2])
             return int(answer[0]) * 60 + int(answer[2])
         else:
+            if op:
+                record[op] = int(answer[0])
             return int(answer[0])
 
-    def get_one_to_many(self, touch):
+    def get_one_to_many(self, touch, list_touch, op=None, record=None):
+        text_url_touch = ""
+        for point in list_touch:
+            text_url_touch += str(point['x']) + "," + str(point['y']) + "%7C"
         self.iter = 0
         self.deep = 0
         while True:
@@ -50,11 +59,13 @@ class Google:
             if self.deep == 3:
                 raise ('ErrorKey', 'ErrorKey')
             try:
-                self.distance = req.get(GET_TOUCH_FROM_MANY.format(touch, self.touch_list, self.key)).text
+                self.distance = req.get(GET_TOUCH_FROM_MANY.format(self.start, text_url_touch, self.key)).text
             except:
                 # Костыль, нужно продумать
                 self.iter += 1
             break
+        if op:
+            record[op] = self._get_distance()
         return self._get_distance()
 
     def _get_distance(self):
@@ -67,6 +78,19 @@ class Google:
             else:
                 result.append(int(times[0]))
         return result
+
+    def get_fast(self, start, finish, list_coord):
+        manager = Manager()
+        record = manager.dict()
+        jobs = []
+        s_l = Process(target=self.get_one_to_many, args=(start, list_coord, 's', record))
+        s_l.start()
+        e_l = Process(target=self.get_one_to_many, args=(finish, list_coord, 'f', record))
+        e_l.start()
+        s_f = Process(target=self.get_one_to_one, args=(start, finish, 'o', record))
+        s_f.start()
+        s_f.join()
+        return record
 
     @staticmethod
     def set_google_key():

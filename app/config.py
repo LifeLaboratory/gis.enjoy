@@ -29,6 +29,7 @@ INDEXES = {"Парк": 0,
            "храм": 11
            }
 """
+"""
 INDEXES ={}
 sql = "SELECT distinct type FROM Geo"
 result = SqlQuery(sql)
@@ -36,3 +37,4 @@ for i in range(len(result)):
     #print(i, [result[i]['type']])
     INDEXES[result[i]['type']] = i
 print(INDEXES)
+"""

@@ -1,11 +1,15 @@
 import math
+from pprint import pprint
+from multiprocessing import Pool
 from operator import itemgetter
 from copy import deepcopy
 from api.helpers.sql import Sql
 from api.google.helpers.google import Google
-from config import INDEXES
+#from config import INDEXES
+import time
 __author__ = 'ar.chusovitin'
 DELTA = 0.0005
+
 
 
 class Path:
@@ -17,7 +21,7 @@ class Path:
         self.dict_coords = {}
         self.id_list = []
         self.dict_pair_touch = {}
-        self.list_time = []
+        self.list_time = [0]
         self.start = start
         self.finish = finish
         self.user_time = user_time
@@ -28,10 +32,28 @@ class Path:
         self.time_per_estimate = 1  # Соотношение количества времени к 1 условной единице общей оценки
 
     def select_path(self):
+        start = time.time()
         self.list_coords = self.set_touch()
+        print('set_touch = ', time.time() - start)
+
+        start = time.time()
         self.id_list = self.get_coord()
+
+        print('get_coord = ', time.time() - start)
+        start = time.time()
+        self.get_pair_touch()
+
+        print('get_pair_touch = ', time.time() - start)
+        start = time.time()
+        self.set_graph()
+
+        print('set_graph = ', time.time() - start)
+        start = time.time()
         self.modif_graph()
-        self.filtered_graph()
+
+        print('modif_graph = ', time.time() - start)
+        a = 1
+        #self.filtered_graph()
         #result = get_top_paths(coefficiet_graph, time, max_time)
         #result = generate_answer(result, result_coord, id_list, N, touch)
 
@@ -79,7 +101,6 @@ class Path:
                 point[3]
             )
 
-            # print(get_sql)
             get_sql = "SELECT * FROM Geo"
             result = Sql.exec(get_sql)
             trying = trying + 1
@@ -99,7 +120,7 @@ class Path:
                                           'Type': touch.get('type'),
                                           'Name': touch.get('name'),
                                           'Rating': touch.get('rating')
-                                         }
+                                          }
         self.list_time.append(0)
         return sorted(temp_id)
 
@@ -136,22 +157,35 @@ class Path:
             self.dict_graph[i] = {i: 0}
         # pprint(helper)
         # print(graph)
+        a =1
         for pair in self.dict_pair_touch:
             self.dict_graph[helper[pair['point_1']]][helper[pair['point_2']]] = pair['distance']
             self.dict_graph[helper[pair['point_2']]][helper[pair['point_1']]] = pair['distance']
         # print(graph)
 
     def modif_graph(self):
-        list_touch = self.google.get_one_to_many(self.list_coords)
+
+        start = time.time()
+        answer = self.google.get_fast(self.start, self.finish, self.list_coords)
+        '''
+        list_touch_start_to_all = self.google.get_one_to_many(self.start, self.list_coords)
+        print('start = ', time.time() - start)
+        start = time.time()
+        list_touch_finish_to_all = self.google.get_one_to_many(self.finish, self.list_coords)
+        print('finish = ', time.time() - start)
+        start = time.time()
         t = self.google.get_one_to_one(self.start, self.finish)
+        '''
+        print('one_to_one = ', time.time() - start)
         N = len(self.dict_graph) - 1
-        for i in range(len(list_touch)):
-            self.dict_graph[0][i + 1] = list_touch[i]
-            self.dict_graph[i + 1][0] = list_touch[i]
-            self.dict_graph[N][i + 1] = list_touch[i]
-            self.dict_graph[i + 1][N] = list_touch[i]
-        self.dict_graph[N][0] = t
-        self.dict_graph[0][N] = t
+        for i in range(len(answer['s'])):
+            self.dict_graph[i] = {i: 0}
+            self.dict_graph[0][i + 1] = answer['s'][i]
+            self.dict_graph[i + 1][0] = answer['s'][i]
+            self.dict_graph[N][i + 1] = answer['f'][i]
+            self.dict_graph[i + 1][N] = answer['f'][i]
+        self.dict_graph[N][0] = answer['o']
+        self.dict_graph[0][N] = answer['o']
 
     def filtered_graph(self):
         for i in range(len(self.dict_graph)):
@@ -201,7 +235,7 @@ class Path:
 
             for point in dist:
                 # Перевод приоритета во время
-                priority_to_time = (max_priority - priority.index(INDEXES.get(point[2], 0))) * self.time_per_priority
+                #priority_to_time = (max_priority - priority.index(INDEXES.get(point[2], 0))) * self.time_per_priority
                 # Перевод оценки во время
                 estimate_to_time = point[3] * self.time_per_estimate
 
@@ -362,3 +396,10 @@ class Path:
         top_paths = []
         self.longest_paths(0, len(graph) - 1, 0, graph, time, max_time)
         return sorted(top_paths, key=itemgetter('point'))
+
+
+if __name__ == '__main__':
+    start = time.time()
+    print('Start')
+    Path((54.9870301969, 82.8739339379), (55.0666090889, 82.9952098502), 800)
+    print(time.time() - start)
