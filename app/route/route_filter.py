@@ -7,10 +7,8 @@ __author__ = 'RaldenProg'
 
 class RouteFilter(Resource):
     def __init__(self):
-        self.__filter = []
-        self.__answer = []
+        self.__filter = Filter()
 
     def get(self):
-        self.__filter = Filter()
-        self.__answer = self.__filter.get_filter()
-        return self.__answer, 200, {'Access-Control-Allow-Origin': '*'}
+        answer = self.__filter.get_filter()
+        return answer, 200, {'Access-Control-Allow-Origin': '*'}
