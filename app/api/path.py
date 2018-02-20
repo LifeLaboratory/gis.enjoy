@@ -27,9 +27,6 @@ class Path:
         self.user_time = user_time
         self.new_graph = {}
         self.select_path()
-        # TODO: Исследовать наилучшией значения для оптимального выбора
-        self.time_per_priority = 1  # Соотношение количества времени к 1 условной единице приоритета
-        self.time_per_estimate = 1  # Соотношение количества времени к 1 условной единице общей оценки
 
     def select_path(self):
         start = time.time()
@@ -222,7 +219,8 @@ class Path:
         :param priority: Интексы типы выбранных достопримечательностей (из INDEXES), с учётом приоритета
         пользователя
         :return: Матрица взвешанных путей между точками, отсортированная по убыванию
-        взвешанных весов
+        взвешанных весов, где каждый элемент представлен в виде кортежа
+        (номер точки, время до точки, нормализованное время до точки)
         '''
 
         result_matrix = []
@@ -230,20 +228,27 @@ class Path:
         # Определение максимально приоритета
         max_priority = len(priority)
 
+        time_per_priority = sum(distances, key=lambda x: x[1])[1] / len(distances[0]) / max_priority # Соотношение количества времени к 1 условной единице приоритета
+        time_per_estimate = sum(distances, key=lambda x: x[1])[1] / len(distances[0]) / 100 # Соотношение количества времени к 1 условной единице общей оценки
+
         for key_dist, dist in distances.items():
             matrix_row = []
 
             for point in dist:
                 # Перевод приоритета во время
-                #priority_to_time = (max_priority - priority.index(INDEXES.get(point[2], 0))) * self.time_per_priority
+                try:
+                    priority_to_time = (max_priority - priority.index(INDEXES.get(point[2], 0))) * self.time_per_priority
+                except:
+                    priority_to_time = 0
+
                 # Перевод оценки во время
                 estimate_to_time = point[3] * self.time_per_estimate
 
-                norm_point = (point[0], point[1] + priority_to_time + estimate_to_time)
+                norm_point = (point[0], point[1], point[1] - priority_to_time - estimate_to_time)
 
                 matrix_row.append(norm_point)
 
-            matrix_row = sorted(matrix_row, key=lambda x: x[1])
+            matrix_row = sorted(matrix_row, key=lambda x: x[2])
             result_matrix.append(matrix_row)
         return result_matrix
 
