@@ -5,8 +5,11 @@ import os
 sys.path.append(os.getcwd())
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
-from route.get_geo import Geo
+from route.route_geo import RouteGeo
 from route.get_list import List
+from route.filter import Filter
+import app.api.Log
+
 from api.google.helpers.google import Google
 from timeit import default_timer as timer
 #from route.testing import Test
@@ -36,8 +39,9 @@ class Index(Resource):
 
 
 api.add_resource(Index, '/')
-api.add_resource(Geo, '/geo')
+api.add_resource(RouteGeo, '/geo')
 api.add_resource(List, '/list')
+api.add_resource(Filter, '/filter')
 #api.add_resource(Test, '/testing')
 
 if __name__ == '__main__':
