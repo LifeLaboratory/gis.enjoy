@@ -50,9 +50,15 @@ class Path:
 
         print('modif_graph = ', time.time() - start)
         a = 1
-        #self.filtered_graph()
-        #result = get_top_paths(coefficiet_graph, time, max_time)
-        #result = generate_answer(result, result_coord, id_list, N, touch)
+        self.filtered_graph()
+        result = self.get_top_paths(self.new_graph, self.list_time, self.user_time)
+        result = self.generate_answer(
+            result, self.dict_coords,
+            self.id_list,
+            len(self.id_list) - 1,
+            (self.start, self.finish)
+        )
+        return result
 
     def set_touch(self):
         get_sql = ""
@@ -339,8 +345,7 @@ class Path:
 
     def longest_paths(
             self, begin_point, end_point, current_point,
-            graph, time, max_time, visited=None, current_path=None
-    ):
+            graph, time, max_time, visited=None, current_path=None):
         '''
         Данный рекурсивный метод возвращает top_count маршрутов
         :param begin_point: Индекс начальной точки
