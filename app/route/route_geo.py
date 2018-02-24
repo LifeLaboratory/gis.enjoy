@@ -2,7 +2,7 @@
 from flask_restful import Resource, reqparse
 
 from app.api.get_many_google import get_many
-from config import INDEXES
+#from config import INDEXES
 from api.helpers.json import converter
 
 

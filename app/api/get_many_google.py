@@ -9,7 +9,7 @@ from app.api.select_path import get_distance
 from api.google.helpers.google import Google
 from app.api.set_path import get_top_paths
 from app.api.get_google_dist import get_google
-from config import INDEXES
+#from config import INDEXES
 
 def normalize_point_data(distances, priority):
     '''

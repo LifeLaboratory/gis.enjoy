@@ -7,7 +7,7 @@ from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
 from route.route_geo import RouteGeo
 from route.get_list import List
-from route.filter import Filter
+from route.route_filter import RouteFilter
 import app.api.Log
 
 from api.google.helpers.google import Google
@@ -41,7 +41,7 @@ class Index(Resource):
 api.add_resource(Index, '/')
 api.add_resource(RouteGeo, '/geo')
 api.add_resource(List, '/list')
-api.add_resource(Filter, '/filter')
+api.add_resource(RouteFilter, '/filter')
 #api.add_resource(Test, '/testing')
 
 if __name__ == '__main__':
