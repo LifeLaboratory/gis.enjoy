@@ -282,7 +282,7 @@ class Path:
             answer['route'].append(
                 {"name": [''], "time": [0], "descr": [None], "Y": [touch_be[0][1]], "type": [], "X": [touch_be[0][0]]})
             for touch in route['path']:
-                if touch == 0 or touch == N:
+                if touch == 0 or touch == N + 2:
                     continue
                 current_info = result_coord[id_list[touch - 1]]
                 # print(touch, "current_info: ", current_info)
@@ -369,7 +369,7 @@ class Path:
 
         if begin_point == current_point:
             current_path = ([0], time[0])
-            visited = [0] * (end_point)
+            visited = [0] * (end_point + 1)
 
         if end_point == current_point:
             if current_path[1] <= max_time \
@@ -385,9 +385,8 @@ class Path:
         visited[current_point] = 1
 
         for i in range(begin_point, end_point):
-            if i == 20:
-                a = 1
-            if graph[current_point][i][1] and visited[graph[current_point][i][0]] == 0:
+            if graph[current_point][i][1] \
+                    and visited[graph[current_point][i][0]] == 0:
                 tmp = deepcopy(current_path)
                 tmp[0].append(graph[current_point][i][0])
                 tmp = (tmp[0], tmp[1] + graph[current_point][i][1] + time[graph[current_point][i][0]])
@@ -395,11 +394,10 @@ class Path:
                     return 0
                 if tmp[1] <= max_time:
                     if self.longest_paths(
-                            begin_point, end_point, graph[current_point][i][0],
-                            graph, time, max_time,
-                            visited, tmp) == 1:
+                        begin_point, end_point, graph[current_point][i][0],
+                        graph, time, max_time,
+                        visited, tmp) == 1:
                         return 1
-
         visited[current_point] = 0
         return 0
 
@@ -414,6 +412,7 @@ class Path:
 if __name__ == '__main__':
     start = time.time()
     print('Start')
-
-    print(Path((55.7464017,37.6206682), (55.7464017,37.6206682), 1000).result)
+    d = Path((55.7464017, 37.6206682), (55.7464017, 37.6206682), 1000).result
+    for i in d['route']:
+        print(i)
     print(time.time() - start)
