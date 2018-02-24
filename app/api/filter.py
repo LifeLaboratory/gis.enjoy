@@ -12,11 +12,12 @@ class Filter:
         get_sql = """
             with
             filter as (
-    SELECT DISTINCT type FROM geo
+    SELECT DISTINCT id, type FROM geo
     )
     SELECT * FROM filter
         """
-        self.dict_type = Sql.exec(get_sql)
-        for i in self.dict_type:
-            self.__list_type.append(i['type'])
-        return self.__list_type
+        dict_type = Sql.exec(get_sql)
+        result = dict()
+        for filter_type in dict_type:
+            result[filter_type['type']] = filter_type['id']
+        return result

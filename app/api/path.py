@@ -1,20 +1,22 @@
 import math
-from pprint import pprint
-from multiprocessing import Pool
+
 from operator import itemgetter
 from copy import deepcopy
 from api.helpers.sql import Sql
 from api.google.helpers.google import Google
-#from config import INDEXES
+from api.filter import Filter
 import time
 __author__ = 'ar.chusovitin'
 DELTA = 0.0005
 
+top_paths = []
+top_count = 5
 
 
 class Path:
     def __init__(self, start, finish, user_time):
         self.google = Google((start, finish))
+        self.INDEXES = Filter().get_filter()
         self.dict_graph = {}
         self.list_distance = []
         self.list_coords = []
@@ -26,7 +28,7 @@ class Path:
         self.finish = finish
         self.user_time = user_time
         self.new_graph = {}
-        self.select_path()
+        self.result = self.select_path()
 
     def select_path(self):
         start = time.time()
@@ -110,7 +112,7 @@ class Path:
         return result
 
     def get_coord(self):
-        temp_id = list()
+        temp_id = []
         for touch in self.list_coords:
             id_coord = touch.get('id')
             time_coord = touch.get('time')
@@ -182,7 +184,6 @@ class Path:
         print('one_to_one = ', time.time() - start)
         N = len(self.dict_graph) - 1
         for i in range(len(answer['s'])):
-            self.dict_graph[i] = {i: 0}
             self.dict_graph[0][i + 1] = answer['s'][i]
             self.dict_graph[i + 1][0] = answer['s'][i]
             self.dict_graph[N][i + 1] = answer['f'][i]
@@ -191,24 +192,20 @@ class Path:
         self.dict_graph[0][N] = answer['o']
 
     def filtered_graph(self):
-        for i in range(len(self.dict_graph)):
-            if 57 < i < 81:
-                continue
+        for i in self.dict_graph:
             self.new_graph[i] = []
-            for j in range(len(self.dict_graph[i])):
+            for j in self.dict_graph[i]:
                 if j == 0:
                     self.new_graph[i].append((j, self.dict_graph[i][j], 0, 0))
-                elif j == len(self.dict_graph) - 1:
+                elif j == len(self.dict_graph[i]) - 1:
                     self.new_graph[i].append((j, self.dict_graph[i][j], 0, 0))
-                elif j > 0:
-                    if 57 < i < 81:
-                        continue
+                elif 0 < j < len(self.dict_graph[i]):
                     # print(len(self.dict_coords), j)
-                    # tyobj = INDEXES.get(self.dict_coords[j]['Type'], 0)
+                    tyobj = self.INDEXES.get(self.dict_coords[self.id_list[j - 1]]['Type'], 0)
                     # print(tyobj)
                     try:
-                        # new_graph[i].append((j, self.dict_graph[i][j], tyobj, self.dict_coords[j]['Rating']))
-                        self.new_graph[i].append((j, self.dict_graph[i][j], self.dict_coords[j]['Rating']))
+                        self.new_graph[i].append((j, self.dict_graph[i][j], tyobj, self.dict_coords[self.id_list[j]]['Rating']))
+                        #self.new_graph[i].append((j, self.dict_graph[i][j], self.dict_coords[j]['Rating']))
                     except:
                         pass
 
@@ -340,8 +337,6 @@ class Path:
         res = sorted(res, key=itemgetter('point'))
         return res
 
-    top_paths = []
-    top_count = 5
 
     def longest_paths(
             self, begin_point, end_point, current_point,
@@ -369,7 +364,7 @@ class Path:
 
         if begin_point == current_point:
             current_path = ([0], time[0])
-            visited = [0] * (end_point + 1)
+            visited = [0] * (end_point)
 
         if end_point == current_point:
             if current_path[1] <= max_time \
@@ -383,7 +378,10 @@ class Path:
                 return 0
 
         visited[current_point] = 1
-        for i in range(begin_point, end_point + 1):
+
+        for i in range(begin_point, end_point):
+            if i == 20:
+                a = 1
             if graph[current_point][i][1] and visited[graph[current_point][i][0]] == 0:
                 tmp = deepcopy(current_path)
                 tmp[0].append(graph[current_point][i][0])
@@ -411,5 +409,6 @@ class Path:
 if __name__ == '__main__':
     start = time.time()
     print('Start')
-    Path((54.9870301969, 82.8739339379), (55.0666090889, 82.9952098502), 800)
+
+    print(Path((56.8362039, 60.617562), (56.8362039, 60.617562), 1000).result)
     print(time.time() - start)
