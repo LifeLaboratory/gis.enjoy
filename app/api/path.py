@@ -55,7 +55,7 @@ class Path:
         self.filtered_graph()
         # Не могу понять откуда брать массив со списком приоритетов от пользователя
         # Поэтому вставил свой кастомный массив
-        self.new_graph = self.normalize_point_data(["Парк", "Музей"])
+        self.normalize_graph_coefficient()
         result = self.get_top_paths(self.new_graph, self.list_time, self.user_time)
         result = self.generate_answer(
             result, self.dict_coords,
@@ -261,7 +261,7 @@ class Path:
         return result_matrix
 
     def normalize_graph_coefficient(self):
-        # coefficiet_graph = normalize_point_data(new_graph, priority)
+        coefficiet_graph = self.normalize_point_data(["Парк", "Музей"])
 
         # print("!", coefficiet_graph)
         def new_element(l, element):
@@ -269,10 +269,10 @@ class Path:
             new_l.append(element)
             return tuple(new_l)
 
-        # for i in range(len(coefficiet_graph)):
-        #    for j in range(len(coefficiet_graph[i])):
-        #        self.new_graph[i][j] = new_element(self.new_graph[i][j], coefficiet_graph[i][j][1])
-        #    self.new_graph[i] = sorted(self.new_graph[i], key=lambda x: (x[1], x[4]))
+        for i in range(len(coefficiet_graph)):
+            for j in range(len(coefficiet_graph[i])):
+                self.new_graph[i][j] = new_element(self.new_graph[i][j], coefficiet_graph[i][j][1])
+            self.new_graph[i] = sorted(self.new_graph[i], key=lambda x: (x[1], x[4]))
 
     def generate_answer(self, result, result_coord, id_list, N, touch_be):
         answer = {'route': []}
