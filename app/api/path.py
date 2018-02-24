@@ -55,7 +55,7 @@ class Path:
         self.filtered_graph()
         # Не могу понять откуда брать массив со списком приоритетов от пользователя
         # Поэтому вставил свой кастомный массив
-        self.new_graph = self.normalize_point_data(self.new_graph, ["Парк", "Музей"])
+        self.new_graph = self.normalize_point_data(["Парк", "Музей"])
         result = self.get_top_paths(self.new_graph, self.list_time, self.user_time)
         result = self.generate_answer(
             result, self.dict_coords,
@@ -232,8 +232,12 @@ class Path:
         # Определение максимально приоритета
         max_priority = len(priority)
 
-        time_per_priority = sum(self.new_graph, key=lambda x: x[1])[1] / len(self.new_graph[0]) / max_priority # Соотношение количества времени к 1 условной единице приоритета
-        time_per_estimate = sum(self.new_graph, key=lambda x: x[1])[1] / len(self.new_graph[0]) / 100 # Соотношение количества времени к 1 условной единице общей оценки
+        summ = 0
+        for element in self.new_graph[0]:
+            summ += element[1]
+
+        time_per_priority = summ / len(self.new_graph[0]) / max_priority # Соотношение количества времени к 1 условной единице приоритета
+        time_per_estimate = summ / len(self.new_graph[0]) / 100 # Соотношение количества времени к 1 условной единице общей оценки
 
         for key_dist, dist in self.new_graph.items():
             matrix_row = []
