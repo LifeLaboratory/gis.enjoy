@@ -21,7 +21,9 @@ class Google:
         self.distance_from_end = []
         # Не уверен, что прокинется как ссылка на память (!!!)
         self.key = Google.set_google_key()
-        self.record = {}
+        self.record = {'s': [],
+                       'f': [],
+                       'o': None}
         #self._generate_dist()
 
     def _generate_dist(self):
@@ -91,17 +93,15 @@ class Google:
             str_origin, str_destinations, self.key)
         answer = s.get(url)
 
-        answer = converter(answer.text)['rows']  # [0]['elements']#[0]['duration']['text'].split()
-        record_s = []
+        answer = converter(answer.text)['rows']
         for dist in answer[0]['elements']:
-            record_s.append(dist['duration']['value'] // 60)
+            self.record['s'].append(dist['duration']['value'] // 60)
 
-        record_f = []
         for dist in answer[0]['elements']:
-            record_f.append(dist['duration']['value'] // 60)
+            self.record['f'].append(dist['duration']['value'] // 60)
         record_o = answer[0]['elements'][len(answer[0]['elements'])-1]['duration']['value']
-        self.record['s'] = record_s
-        self.record['f'] = record_f
+        self.record['s'] = self.record['s']
+        self.record['f'] = self.record['f']
         self.record['o'] = record_o
         return self.record
 
