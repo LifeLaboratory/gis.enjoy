@@ -415,5 +415,5 @@ if __name__ == '__main__':
     start = time.time()
     print('Start')
 
-    print(Path((56.8362039, 60.617562), (56.8362039, 60.617562), 1000).result)
+    print(Path((55.7464017,37.6206682), (55.7464017,37.6206682), 1000).result)
     print(time.time() - start)
