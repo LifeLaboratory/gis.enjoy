@@ -53,6 +53,9 @@ class Path:
         print('modif_graph = ', time.time() - start)
         a = 1
         self.filtered_graph()
+        # Не могу понять откуда брать массив со списком приоритетов от пользователя
+        # Поэтому вставил свой кастомный массив
+        self.new_graph = self.normalize_point_data(self.new_graph, ["Парк", "Музей"])
         result = self.get_top_paths(self.new_graph, self.list_time, self.user_time)
         result = self.generate_answer(
             result, self.dict_coords,
@@ -209,7 +212,7 @@ class Path:
                     except:
                         pass
 
-    def normalize_point_data(self, distances, priority):
+    def normalize_point_data(self, priority):
         '''
         Данный метод приводит 4 параметра, характеризующих точку матрицы @distances
         (номер точки, время до точки, тип точки, общая оценка точки),к одной единице измерения - времени.
@@ -217,8 +220,6 @@ class Path:
         готов потратить, чтобы перейти к более приоритетному типу достопримечательности,
         или к месту, с более высокой общей оценкой.
 
-        :param distances: Матрица, каждый элемент которой представляется кортежем из:
-        (время пути до точки, тип точки, общая оценка точки)
         :param priority: Интексы типы выбранных достопримечательностей (из INDEXES), с учётом приоритета
         пользователя
         :return: Матрица взвешанных путей между точками, отсортированная по убыванию
@@ -231,21 +232,21 @@ class Path:
         # Определение максимально приоритета
         max_priority = len(priority)
 
-        time_per_priority = sum(distances, key=lambda x: x[1])[1] / len(distances[0]) / max_priority # Соотношение количества времени к 1 условной единице приоритета
-        time_per_estimate = sum(distances, key=lambda x: x[1])[1] / len(distances[0]) / 100 # Соотношение количества времени к 1 условной единице общей оценки
+        time_per_priority = sum(self.new_graph, key=lambda x: x[1])[1] / len(self.new_graph[0]) / max_priority # Соотношение количества времени к 1 условной единице приоритета
+        time_per_estimate = sum(self.new_graph, key=lambda x: x[1])[1] / len(self.new_graph[0]) / 100 # Соотношение количества времени к 1 условной единице общей оценки
 
-        for key_dist, dist in distances.items():
+        for key_dist, dist in self.new_graph.items():
             matrix_row = []
 
             for point in dist:
                 # Перевод приоритета во время
                 try:
-                    priority_to_time = (max_priority - priority.index(INDEXES.get(point[2], 0))) * self.time_per_priority
+                    priority_to_time = (max_priority - priority.index(self.INDEXES.get(point[2], 0))) * time_per_priority
                 except:
                     priority_to_time = 0
 
                 # Перевод оценки во время
-                estimate_to_time = point[3] * self.time_per_estimate
+                estimate_to_time = point[3] * time_per_estimate
 
                 norm_point = (point[0], point[1], point[1] - priority_to_time - estimate_to_time)
 
