@@ -56,7 +56,7 @@ class Path:
         # Не могу понять откуда брать массив со списком приоритетов от пользователя
         # Поэтому вставил свой кастомный массив
         self.new_graph = self.normalize_point_data(["Парк", "Музей"])
-        result = self.get_top_paths(self.new_graph, self.list_time, self.user_time)
+        result = self.get_top_paths(self.list_time, self.user_time)
         result = self.generate_answer(
             result, self.dict_coords,
             self.id_list,
@@ -345,14 +345,12 @@ class Path:
 
     def longest_paths(
             self, begin_point, end_point, current_point,
-            graph, time, max_time, visited=None, current_path=None):
+            time, max_time, visited=None, current_path=None):
         '''
         Данный рекурсивный метод возвращает top_count маршрутов
         :param begin_point: Индекс начальной точки
         :param end_point: Индекс конечной точки
         :param current_point: Текущая точка
-        :param graph: Матрица точек, каждый элемент которой представлен
-        в виде кортежа (индекс точки, предобработанное время до точки)
         :param time: Массив времён, которое пользователь может провести на
         каждом из мест
         :param max_time: Максимальное время, которое есть у пользователя в
@@ -385,27 +383,27 @@ class Path:
         visited[current_point] = 1
 
         for i in range(begin_point, end_point):
-            if graph[current_point][i][1] \
-                    and visited[graph[current_point][i][0]] == 0:
+            if self.new_graph[current_point][i][1] \
+                    and visited[self.new_graph[current_point][i][0]] == 0:
                 tmp = deepcopy(current_path)
-                tmp[0].append(graph[current_point][i][0])
-                tmp = (tmp[0], tmp[1] + graph[current_point][i][1] + time[graph[current_point][i][0]])
+                tmp[0].append(self.new_graph[current_point][i][0])
+                tmp = (tmp[0], tmp[1] + self.new_graph[current_point][i][1] + time[self.new_graph[current_point][i][0]])
                 if max_time < tmp[1]:
                     return 0
                 if tmp[1] <= max_time:
                     if self.longest_paths(
-                        begin_point, end_point, graph[current_point][i][0],
-                        graph, time, max_time,
+                        begin_point, end_point, self.new_graph[current_point][i][0],
+                        time, max_time,
                         visited, tmp) == 1:
                         return 1
         visited[current_point] = 0
         return 0
 
-    def get_top_paths(self, graph, time, max_time):
+    def get_top_paths(self, time, max_time):
         global top_paths
         global top_count
         top_paths = []
-        self.longest_paths(0, len(graph) - 1, 0, graph, time, max_time)
+        self.longest_paths(0, len(self.new_graph) - 1, 0, time, max_time)
         return sorted(top_paths, key=itemgetter('point'))
 
 
