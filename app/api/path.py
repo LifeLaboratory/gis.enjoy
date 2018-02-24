@@ -55,7 +55,7 @@ class Path:
         self.filtered_graph()
         # Не могу понять откуда брать массив со списком приоритетов от пользователя
         # Поэтому вставил свой кастомный массив
-        self.normalize_graph_coefficient()
+        self.new_graph = self.normalize_point_data(["Парк", "Музей"])
         result = self.get_top_paths(self.new_graph, self.list_time, self.user_time)
         result = self.generate_answer(
             result, self.dict_coords,
