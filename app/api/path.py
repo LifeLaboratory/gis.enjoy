@@ -33,24 +33,24 @@ class Path:
     def select_path(self):
         start = time.time()
         self.list_coords = self.set_touch()
-        print('set_touch = ', time.time() - start)
+        #print('set_touch = ', time.time() - start)
 
         start = time.time()
         self.id_list = self.get_coord()
 
-        print('get_coord = ', time.time() - start)
+        #print('get_coord = ', time.time() - start)
         start = time.time()
         self.get_pair_touch()
 
-        print('get_pair_touch = ', time.time() - start)
+        #print('get_pair_touch = ', time.time() - start)
         start = time.time()
         self.set_graph()
 
-        print('set_graph = ', time.time() - start)
+        #print('set_graph = ', time.time() - start)
         start = time.time()
         self.modif_graph()
 
-        print('modif_graph = ', time.time() - start)
+        #print('modif_graph = ', time.time() - start)
         a = 1
         self.filtered_graph()
         # Не могу понять откуда брать массив со списком приоритетов от пользователя
@@ -184,7 +184,7 @@ class Path:
         start = time.time()
         t = self.google.get_one_to_one(self.start, self.finish)
         '''
-        print('one_to_one = ', time.time() - start)
+        #print('one_to_one = ', time.time() - start)
         N = len(self.dict_graph) - 1
         for i in range(len(answer['s'])):
             self.dict_graph[0][i + 1] = answer['s'][i]
@@ -261,7 +261,7 @@ class Path:
         return result_matrix
 
     def normalize_graph_coefficient(self):
-        coefficiet_graph = self.normalize_point_data(["Парк", "Музей"])
+        coefficiet_graph = self.normalize_point_data(["площадь", "парк"])
 
         # print("!", coefficiet_graph)
         def new_element(l, element):
@@ -410,7 +410,7 @@ class Path:
 if __name__ == '__main__':
     start = time.time()
     print('Start')
-    d = Path((55.7464017, 37.6206682), (55.7464017, 37.6206682), 1000).result
+    d = Path((55.7464017, 37.6206682), (55.7464017, 37.6206682), 5000).result
     for i in d['route']:
         print(i)
     print(time.time() - start)
