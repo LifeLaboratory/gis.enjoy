@@ -21,6 +21,7 @@ class Google:
         self.distance_from_end = []
         # Не уверен, что прокинется как ссылка на память (!!!)
         self.key = Google.set_google_key()
+        self.record = {}
         #self._generate_dist()
 
     def _generate_dist(self):
@@ -80,17 +81,29 @@ class Google:
         return result
 
     def get_fast(self, start, finish, list_coord):
-        manager = Manager()
-        record = manager.dict()
-        jobs = []
-        s_l = Process(target=self.get_one_to_many, args=(start, list_coord, 's', record))
-        s_l.start()
-        e_l = Process(target=self.get_one_to_many, args=(finish, list_coord, 'f', record))
-        e_l.start()
-        s_f = Process(target=self.get_one_to_one, args=(start, finish, 'o', record))
-        s_f.start()
-        s_f.join()
-        return record
+        str_destinations = ""
+        for coord in list_coord:
+            str_destinations += str(coord['x']) + ", " + str(coord['y']) + "|"
+        str_destinations += str(finish[0]) + ", " + str(finish[1])
+        str_origin = str(start[0]) + ", " + str(start[1]) + "|" + str(finish[0]) + ", " + str(finish[1])
+        s = req.Session()
+        url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins={}&destinations={}&key={}&mode=walking".format(
+            str_origin, str_destinations, self.key)
+        answer = s.get(url)
+
+        answer = converter(answer.text)['rows']  # [0]['elements']#[0]['duration']['text'].split()
+        record_s = []
+        for dist in answer[0]['elements']:
+            record_s.append(dist['duration']['value'] // 60)
+
+        record_f = []
+        for dist in answer[0]['elements']:
+            record_f.append(dist['duration']['value'] // 60)
+        record_o = answer[0]['elements'][len(answer[0]['elements'])-1]['duration']['value']
+        self.record['s'] = record_s
+        self.record['f'] = record_f
+        self.record['o'] = record_o
+        return self.record
 
     @staticmethod
     def set_google_key():
