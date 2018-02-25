@@ -5,6 +5,7 @@ from app.api.get_many_google import get_many
 #from config import INDEXES
 from api.helpers.json import converter
 from api.path import Path
+from api.filter import Filter
 
 class RouteGeo(Resource):
     def __init__(self):
@@ -21,6 +22,7 @@ class RouteGeo(Resource):
         self.__data_origin_Y = None
         self.__data_destination_X = None
         self.__data_destination_Y = None
+        self.INDEXES = Filter().get_filter()
 
     def parse_data(self):
         data = self.__args.get('data', None)
@@ -52,8 +54,8 @@ class RouteGeo(Resource):
         self.__data_destination = (float(self.__data_destination_X), float(self.__data_destination_Y))
         self.__datas = (self.__data_origin, self.__data_destination)
 
-        #for i in range(len(self.__priority)):
-        #    self.__index_priority.append(INDEXES.get(self.__priority[i], 0))
+        for i in range(len(self.__priority)):
+            self.__index_priority.append(self.INDEXES.get(self.__priority[i], 0))
 
     def switch(self):
         print(self.__datas[0], self.__datas[1], self.__time, self.__index_priority)
