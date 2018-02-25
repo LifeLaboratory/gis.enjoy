@@ -108,8 +108,8 @@ class Path:
                 point[2],
                 point[3]
             )
-
-            get_sql = "SELECT * FROM Geo"
+            print(get_sql)
+            #get_sql = "SELECT * FROM Geo"
             result = Sql.exec(get_sql)
             trying = trying + 1
         return result
@@ -138,11 +138,14 @@ class Path:
         :param coords: кортеж ID координат
         """
         get_sql = """
-            with 
+            with
+        elements as (
+          select unnest('{%s}'::integer[]) as id
+        ),
         get_pair as (
           select a.id as a_p, b.id as b_p 
-          from geo a, geo b 
-          where b.id <> a.id
+          from geo a, elements b
+          where a.id <> b.id
         ),
         get_coord as (
           select d.id, d.point_1, d.point_2, d.distance 
@@ -152,7 +155,12 @@ class Path:
         )
         select * from get_coord;
         """
-        self.dict_pair_touch = Sql.exec(get_sql)
+        text = ''
+        for i in self.id_list:
+            text += '{}, '.format(i) if i != self.id_list[-1] else '{}'.format(i)
+
+        print(get_sql % text)
+        self.dict_pair_touch = Sql.exec(get_sql % text)
 
     def set_distance(self):
         pass
