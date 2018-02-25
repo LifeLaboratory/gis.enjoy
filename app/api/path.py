@@ -236,7 +236,10 @@ class Path:
         for element in self.new_graph[0]:
             summ += element[1]
 
-        time_per_priority = summ / len(self.new_graph[0]) / max_priority # Соотношение количества времени к 1 условной единице приоритета
+        try:
+            time_per_priority = summ / len(self.new_graph[0]) / max_priority # Соотношение количества времени к 1 условной единице приоритета
+        except:
+            time_per_priority = 0
         time_per_estimate = summ / len(self.new_graph[0]) / 100 # Соотношение количества времени к 1 условной единице общей оценки
 
         for key_dist, dist in self.new_graph.items():
