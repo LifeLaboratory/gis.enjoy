@@ -4,7 +4,7 @@ from flask_restful import Resource, reqparse
 from app.api.get_many_google import get_many
 #from config import INDEXES
 from api.helpers.json import converter
-
+from api.path import Path
 
 class RouteGeo(Resource):
     def __init__(self):
@@ -52,11 +52,13 @@ class RouteGeo(Resource):
         self.__data_destination = (float(self.__data_destination_X), float(self.__data_destination_Y))
         self.__datas = (self.__data_origin, self.__data_destination)
 
-        for i in range(len(self.__priority)):
-            self.__index_priority.append(INDEXES.get(self.__priority[i], 0))
+        #for i in range(len(self.__priority)):
+        #    self.__index_priority.append(INDEXES.get(self.__priority[i], 0))
 
     def switch(self):
-        answer = get_many(self.__datas, self.__time, self.__index_priority)
+        print(self.__datas[0], self.__datas[1], self.__time, self.__index_priority)
+        answer = Path(self.__datas[0], self.__datas[1], self.__time, self.__index_priority).result
+        #answer = get_many(self.__datas, self.__time, self.__index_priority)
         return answer
 
     def get(self):

@@ -14,9 +14,10 @@ top_count = 5
 
 
 class Path:
-    def __init__(self, start, finish, user_time):
+    def __init__(self, start, finish, user_time, user_filter):
         self.google = Google((start, finish))
         self.INDEXES = Filter().get_filter()
+        self.user_filter = user_filter
         self.dict_graph = {}
         self.list_distance = []
         self.list_coords = []
@@ -55,7 +56,7 @@ class Path:
         self.filtered_graph()
         # Не могу понять откуда брать массив со списком приоритетов от пользователя
         # Поэтому вставил свой кастомный массив
-        self.new_graph = self.normalize_point_data(["Парк", "Музей"])
+        self.new_graph = self.normalize_point_data(self.user_filter)
         result = self.get_top_paths(self.list_time, self.user_time)
         result = self.generate_answer(
             result, self.dict_coords,
@@ -410,7 +411,7 @@ class Path:
 if __name__ == '__main__':
     start = time.time()
     print('Start')
-    d = Path((55.7464017, 37.6206682), (55.7464017, 37.6206682), 5000).result
+    d = Path((55.7464017, 37.6206682), (55.7464017, 37.6206682), 5000, ['Парк', 'Музей']).result
     for i in d['route']:
         print(i)
     print(time.time() - start)
