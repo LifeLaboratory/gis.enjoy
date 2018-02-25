@@ -5,6 +5,7 @@ from copy import deepcopy
 from api.helpers.sql import Sql
 from api.google.helpers.google import Google
 from api.filter import Filter
+from numpy import std
 import time
 __author__ = 'ar.chusovitin'
 DELTA = 0.0005
@@ -233,15 +234,18 @@ class Path:
         # Определение максимально приоритета
         max_priority = len(priority)
 
-        summ = 0
+        sko_array = []
+        sko = 0
         for element in self.new_graph[0]:
-            summ += element[1]
+            sko_array.append(element[1])
+
+        sko = std(sko_array)
 
         try:
-            time_per_priority = summ / len(self.new_graph[0]) / max_priority # Соотношение количества времени к 1 условной единице приоритета
+            time_per_priority = sko / len(self.new_graph[0]) / max_priority # Соотношение количества времени к 1 условной единице приоритета
         except:
             time_per_priority = 0
-        time_per_estimate = summ / len(self.new_graph[0]) / 100 # Соотношение количества времени к 1 условной единице общей оценки
+        time_per_estimate = sko / len(self.new_graph[0]) / 100 # Соотношение количества времени к 1 условной единице общей оценки
 
         for key_dist, dist in self.new_graph.items():
             matrix_row = []
