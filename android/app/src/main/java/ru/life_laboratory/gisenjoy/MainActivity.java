@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -21,6 +22,21 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import ru.life_laboratory.gisenjoy.request.Constants;
+import ru.life_laboratory.gisenjoy.request.Routes;
+import ru.life_laboratory.gisenjoy.request.Server;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,7 +60,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // подгрузка карты
-
         mapFragment = SupportMapFragment.newInstance();
         getSupportFragmentManager().beginTransaction().add(R.id.map_fragment, mapFragment).commit();
         mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -53,7 +68,7 @@ public class MainActivity extends AppCompatActivity
                 googleMap.getUiSettings().setCompassEnabled(true);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
                 googleMap.getUiSettings().setCompassEnabled(true);
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(55.0291462,82.9242635), 16));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(55.7536207,37.6204141), 16));
                 Snackbar.make(mapFragment.getView(), "Карта загружена", Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
                 if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -64,6 +79,64 @@ public class MainActivity extends AppCompatActivity
                 googleMap.setMyLocationEnabled(true);
             }
         });
+
+        // пример получения маршрутов
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(Constants.ServerAddr).
+                addConverterFactory(GsonConverterFactory.create()).client(Constants.okHttpClient).build();
+        Server routes = retrofit.create(Server.class);
+
+        try {
+            JSONObject data = new JSONObject();
+
+            JSONObject origin = new JSONObject();
+            origin.put("X", 55.76721929882096);
+            origin.put("Y", 37.5531281614891);
+
+            JSONObject destination = new JSONObject();
+            destination.put("X", 55.75408367251468);
+            destination.put("Y", 37.6190461302391);
+
+            ArrayList<String> priority = new ArrayList<String>();
+            priority.add("Памятник");
+            priority.add("Театр");
+            priority.add("Музей");
+            priority.add("Парк");
+            priority.add("Галерея");
+
+            data.put("origin", origin);
+            data.put("destination", destination);
+            data.put("time", 480);
+            data.put("priority", priority);
+
+            Call<Routes> routesCall = routes.getRoutes(data);
+            routesCall.enqueue(new Callback<Routes>() {
+                @Override
+                public void onResponse(Call<Routes> call, Response<Routes> response) {
+                    if(response.body() != null) {
+                        Log.d(Constants.TAG, response.body().toString());
+                        Routes body = response.body();
+                        if (!body.getMessage().equals("ok")) {
+                            for (Routes.Route route : body.getRoutes()) {
+                                for (String name : route.getNames()) {
+                                    Log.i(Constants.TAG, name);
+                                }
+                            }
+                        } else {
+                            Snackbar.make(mapFragment.getView(), body.getMessage(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                        }
+                    } else {
+                        Snackbar.make(mapFragment.getView(), "Нет соединения с сервером", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    }
+                }
+                @Override
+                public void onFailure(Call<Routes> call, Throwable t) {
+                    Snackbar.make(mapFragment.getView(), t.toString(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                }
+            });
+        } catch (JSONException e) {
+            Log.e(Constants.TAG, e.toString());
+        }
+
     }
 
     // обработка нажатия кнопки "назад"
