@@ -388,7 +388,7 @@ class Path:
         global top_count
         top_paths = []
         self.longest_paths(0, len(self.new_graph) - 1, 0, time, max_time)
-        return sorted(top_paths, key=itemgetter('point'))
+        return sorted(top_paths, key=itemgetter('point'), reverse=True)
 
 
 if __name__ == '__main__':
