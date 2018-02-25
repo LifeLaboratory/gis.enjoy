@@ -1,18 +1,13 @@
 # coding=utf-8
-import json
 import sys
 import os
 sys.path.append(os.getcwd())
-from flask import Flask, request, jsonify
+from flask import Flask, request
 from flask_restful import Resource, Api
 from route.route_geo import RouteGeo
 from route.get_list import List
 from route.route_filter import RouteFilter
 import app.api.Log
-
-from api.google.helpers.google import Google
-from timeit import default_timer as timer
-#from route.testing import Test
 _app = Flask(__name__)
 _app.config['JSON_AS_ASCII'] = False
 api = Api(_app)
@@ -23,6 +18,7 @@ config = {
     'google': 'init_google',
     'nso': 'init_nso'
 }
+
 
 @_app.errorhandler(404)
 def not_found(error):
@@ -42,7 +38,6 @@ api.add_resource(Index, '/')
 api.add_resource(RouteGeo, '/geo')
 api.add_resource(List, '/list')
 api.add_resource(RouteFilter, '/filter')
-#api.add_resource(Test, '/testing')
 
 if __name__ == '__main__':
     try:

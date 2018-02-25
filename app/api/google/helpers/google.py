@@ -24,11 +24,6 @@ class Google:
         self.record = {'s': [],
                        'f': [],
                        'o': None}
-        #self._generate_dist()
-
-    def _generate_dist(self):
-        self.distance_from_start = self.get_one_to_many(self.start)
-        self.distance_from_end = self.get_one_to_many(self.end)
 
     def get_one_to_one(self, start, finish, op=None, record=None):
         start = '{},{}'.format(start[0], start[1])

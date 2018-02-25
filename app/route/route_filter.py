@@ -1,5 +1,5 @@
 # coding=utf-8
-from flask_restful import Resource, reqparse
+from flask_restful import Resource
 from api.filter import Filter
 
 __author__ = 'RaldenProg'
