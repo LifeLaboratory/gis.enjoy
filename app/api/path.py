@@ -1,5 +1,4 @@
 import math
-
 from operator import itemgetter
 from copy import deepcopy
 from api.helpers.sql import Sql
@@ -7,9 +6,10 @@ from api.google.helpers.google import Google
 from api.filter import Filter
 from numpy import std
 import time
-__author__ = 'ar.chusovitin'
-DELTA = 0.0005
 
+__author__ = 'ar.chusovitin'
+
+DELTA = 0.0005
 top_paths = []
 top_count = 5
 
@@ -55,8 +55,6 @@ class Path:
         #print('modif_graph = ', time.time() - start)
         a = 1
         self.filtered_graph()
-        # Не могу понять откуда брать массив со списком приоритетов от пользователя
-        # Поэтому вставил свой кастомный массив
         self.new_graph = self.normalize_point_data(self.user_filter)
         result = self.get_top_paths(self.list_time, self.user_time)
         result = self.generate_answer(
@@ -165,28 +163,12 @@ class Path:
             helper[self.id_list[i]] = i + 1
         for i in range(len(self.id_list) + 2):
             self.dict_graph[i] = {i: 0}
-        # pprint(helper)
-        # print(graph)
-        a =1
         for pair in self.dict_pair_touch:
             self.dict_graph[helper[pair['point_1']]][helper[pair['point_2']]] = pair['distance']
             self.dict_graph[helper[pair['point_2']]][helper[pair['point_1']]] = pair['distance']
-        # print(graph)
 
     def modif_graph(self):
-
-        start = time.time()
         answer = self.google.get_fast(self.start, self.finish, self.list_coords)
-        '''
-        list_touch_start_to_all = self.google.get_one_to_many(self.start, self.list_coords)
-        print('start = ', time.time() - start)
-        start = time.time()
-        list_touch_finish_to_all = self.google.get_one_to_many(self.finish, self.list_coords)
-        print('finish = ', time.time() - start)
-        start = time.time()
-        t = self.google.get_one_to_one(self.start, self.finish)
-        '''
-        #print('one_to_one = ', time.time() - start)
         N = len(self.dict_graph) - 1
         for i in range(len(answer['s'])):
             self.dict_graph[0][i + 1] = answer['s'][i]
@@ -205,17 +187,14 @@ class Path:
                 elif j == len(self.dict_graph[i]) - 1:
                     self.new_graph[i].append((j, self.dict_graph[i][j], 0, 0))
                 elif 0 < j < len(self.dict_graph[i]):
-                    # print(len(self.dict_coords), j)
                     tyobj = self.INDEXES.get(self.dict_coords[self.id_list[j - 1]]['Type'], 0)
-                    # print(tyobj)
                     try:
                         self.new_graph[i].append((j, self.dict_graph[i][j], tyobj, self.dict_coords[self.id_list[j]]['Rating']))
-                        #self.new_graph[i].append((j, self.dict_graph[i][j], self.dict_coords[j]['Rating']))
                     except:
                         pass
 
     def normalize_point_data(self, priority):
-        '''
+        """
         Данный метод приводит 4 параметра, характеризующих точку матрицы @distances
         (номер точки, время до точки, тип точки, общая оценка точки),к одной единице измерения - времени.
         Другими словами, определяет какое приемлемое количество времени пользователь
@@ -227,7 +206,7 @@ class Path:
         :return: Матрица взвешанных путей между точками, отсортированная по убыванию
         взвешанных весов, где каждый элемент представлен в виде кортежа
         (номер точки, время до точки, нормализованное время до точки)
-        '''
+        """
 
         result_matrix = []
 
@@ -284,7 +263,6 @@ class Path:
 
     def generate_answer(self, result, result_coord, id_list, N, touch_be):
         answer = {'route': []}
-        # print("result: ", result)
         ch = 0
         for route in result:
             answer['route'].append(
@@ -293,7 +271,6 @@ class Path:
                 if touch == 0 or touch == N + 2:
                     continue
                 current_info = result_coord[id_list[touch - 1]]
-                # print(touch, "current_info: ", current_info)
                 answer['route'][ch]['name'].append(current_info['Name'])
                 answer['route'][ch]['time'].append(current_info['Time'])
                 answer['route'][ch]['descr'].append(current_info['Descr'])
@@ -350,7 +327,6 @@ class Path:
         res = sorted(res, key=itemgetter('point'))
         return res
 
-
     def longest_paths(
             self, begin_point, end_point, current_point,
             time, max_time, visited=None, current_path=None):
@@ -400,9 +376,9 @@ class Path:
                     return 0
                 if tmp[1] <= max_time:
                     if self.longest_paths(
-                        begin_point, end_point, self.new_graph[current_point][i][0],
-                        time, max_time,
-                        visited, tmp) == 1:
+                            begin_point, end_point, self.new_graph[current_point][i][0],
+                            time, max_time,
+                            visited, tmp) == 1:
                         return 1
         visited[current_point] = 0
         return 0
