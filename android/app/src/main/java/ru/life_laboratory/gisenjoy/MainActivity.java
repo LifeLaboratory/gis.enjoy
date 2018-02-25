@@ -35,6 +35,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.life_laboratory.gisenjoy.request.Constants;
+import ru.life_laboratory.gisenjoy.request.Filter;
 import ru.life_laboratory.gisenjoy.request.Routes;
 import ru.life_laboratory.gisenjoy.request.Server;
 
@@ -85,58 +86,37 @@ public class MainActivity extends AppCompatActivity
                 addConverterFactory(GsonConverterFactory.create()).client(Constants.okHttpClient).build();
         Server routes = retrofit.create(Server.class);
 
-        try {
-            JSONObject data = new JSONObject();
+        Filter data = new Filter();
+        data.setOrigin(55.76721929882096,37.5531281614891);
+        data.setDestination(55.75408367251468,37.6190461302391);
+        data.setPriority("Памятник","Театр","Музей","Парк","Галерея");
+        data.setTime(480);
 
-            JSONObject origin = new JSONObject();
-            origin.put("X", 55.76721929882096);
-            origin.put("Y", 37.5531281614891);
-
-            JSONObject destination = new JSONObject();
-            destination.put("X", 55.75408367251468);
-            destination.put("Y", 37.6190461302391);
-
-            ArrayList<String> priority = new ArrayList<String>();
-            priority.add("Памятник");
-            priority.add("Театр");
-            priority.add("Музей");
-            priority.add("Парк");
-            priority.add("Галерея");
-
-            data.put("origin", origin);
-            data.put("destination", destination);
-            data.put("time", 480);
-            data.put("priority", priority);
-
-            Call<Routes> routesCall = routes.getRoutes(data);
-            routesCall.enqueue(new Callback<Routes>() {
-                @Override
-                public void onResponse(Call<Routes> call, Response<Routes> response) {
-                    if(response.body() != null) {
-                        Log.d(Constants.TAG, response.body().toString());
-                        Routes body = response.body();
-                        if (!body.getMessage().equals("ok")) {
-                            for (Routes.Route route : body.getRoutes()) {
-                                for (String name : route.getNames()) {
-                                    Log.i(Constants.TAG, name);
-                                }
+        Call<Routes> routesCall = routes.getRoutes(data.getData());
+        routesCall.enqueue(new Callback<Routes>() {
+            @Override
+            public void onResponse(Call<Routes> call, Response<Routes> response) {
+                if(response.body() != null) {
+                    Log.d(Constants.TAG, response.body().toString());
+                    Routes body = response.body();
+                    if (!body.getMessage().equals("ok")) {
+                        for (Routes.Route route : body.getRoutes()) {
+                            for (String name : route.getNames()) {
+                                Log.i(Constants.TAG, name);
                             }
-                        } else {
-                            Snackbar.make(mapFragment.getView(), body.getMessage(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
                         }
                     } else {
-                        Snackbar.make(mapFragment.getView(), "Нет соединения с сервером", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                        Snackbar.make(mapFragment.getView(), body.getMessage(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     }
+                } else {
+                    Snackbar.make(mapFragment.getView(), "Нет соединения с сервером", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
-                @Override
-                public void onFailure(Call<Routes> call, Throwable t) {
-                    Snackbar.make(mapFragment.getView(), t.toString(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                }
-            });
-        } catch (JSONException e) {
-            Log.e(Constants.TAG, e.toString());
-        }
-
+            }
+            @Override
+            public void onFailure(Call<Routes> call, Throwable t) {
+                Snackbar.make(mapFragment.getView(), t.toString(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            }
+        });
     }
 
     // обработка нажатия кнопки "назад"
