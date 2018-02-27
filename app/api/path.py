@@ -9,7 +9,7 @@ import time
 
 __author__ = 'ar.chusovitin'
 
-DELTA = 0.0005
+DELTA = 0.05
 top_paths = []
 top_count = 5
 
@@ -108,8 +108,8 @@ class Path:
                 point[2],
                 point[3]
             )
-
-            get_sql = "SELECT * FROM Geo"
+            print(get_sql)
+            #get_sql = "SELECT * FROM Geo"
             result = Sql.exec(get_sql)
             trying = trying + 1
         return result
@@ -138,11 +138,15 @@ class Path:
         :param coords: кортеж ID координат
         """
         get_sql = """
-            with 
+            with
+        elements as (
+          select unnest('{%s}'::integer[]) as id
+        ),
         get_pair as (
           select a.id as a_p, b.id as b_p 
-          from geo a, geo b 
-          where b.id <> a.id
+          from geo a, elements b
+          where a.id <> b.id
+           and a.id = any('{%s}')
         ),
         get_coord as (
           select d.id, d.point_1, d.point_2, d.distance 
@@ -152,7 +156,12 @@ class Path:
         )
         select * from get_coord;
         """
-        self.dict_pair_touch = Sql.exec(get_sql)
+        text = ''
+        for i in self.id_list:
+            text += '{}, '.format(i) if i != self.id_list[-1] else '{}'.format(i)
+
+        print(get_sql % (text, text))
+        self.dict_pair_touch = Sql.exec(get_sql % (text, text))
 
     def set_distance(self):
         pass
@@ -166,7 +175,7 @@ class Path:
         for pair in self.dict_pair_touch:
             self.dict_graph[helper[pair['point_1']]][helper[pair['point_2']]] = pair['distance']
             self.dict_graph[helper[pair['point_2']]][helper[pair['point_1']]] = pair['distance']
-
+                
     def modif_graph(self):
         answer = self.google.get_fast(self.start, self.finish, self.list_coords)
         N = len(self.dict_graph) - 1
@@ -394,7 +403,7 @@ class Path:
 if __name__ == '__main__':
     start = time.time()
     print('Start')
-    d = Path((55.7464017, 37.6206682), (55.7464017, 37.6206682), 5000, ['Парк', 'Музей']).result
+    d = Path((55.7529412, 37.6153825), (55.7529412, 37.6153825), 5000, ['Парк', 'Музей']).result
     for i in d['route']:
         print(i)
     print(time.time() - start)
