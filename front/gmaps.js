@@ -26,7 +26,7 @@ function initMap() {
     var nsk = new google.maps.LatLng(55.027978, 82.951315);
     var mapOptions = {
         zoom:14,
-        center: nsk
+        center: ekb
     };
 
     map = new google.maps.Map(document.getElementById('map'), mapOptions);
@@ -138,7 +138,7 @@ function calculateAndDisplayRoute(id, directionsService, directionsDisplay) {
             icon: image
         });
         console.log("desct log");
-        console.log(routes.route.descr);
+        console.log(routes.route[id].descr);
         infoWindows[i] = new google.maps.InfoWindow({
             content: routes.route[id].descr[i]
         });

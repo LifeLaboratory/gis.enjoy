@@ -48,16 +48,16 @@ function createCORSRequest(method, url) {
     return xhr;
 }
 
-function showRoutes() {
+function showRoutes(from) {
     document.getElementById("routes-block").classList.toggle("disabled-block");
-    document.getElementById("menu").classList.toggle("disabled-block");
     document.getElementById("filters").style.left = "-300px";
     var str = "";
 
     for (var i = 0; i < routesList.length; i++) {
         str+= '<div class="routes__one-route" id="routes__one-route' + i + '">';
+
         for (var j = 0; j < routesList[i].length; j++) {
-            if (i+1 < routesList[i].length) {
+            if (j+1 < routesList[i].length) {
                 str+= routesList[i][j] + " -> ";
             } else {
                 str+= routesList[i][j];
@@ -65,26 +65,47 @@ function showRoutes() {
         }
         str+= '</div>'
     }
-    str+= '<div class="routes__back-link" id="routes__back-link">Назад</div>';
     document.getElementById("routes-block").innerHTML = str;
 
     for (var i = 0; i < routesList.length; i++) {
         setActionForRoute(i);
     }
 
-    document.getElementById("routes__back-link").onclick = function () {
-        document.getElementById("routes-block").classList.toggle("disabled-block");
-        document.getElementById("menu").classList.toggle("disabled-block");
-        document.getElementById("filters").style.left = "0";
-        document.getElementById("hint").classList.toggle("disabled-block");
-    };
+    switch (from) {
+        case 'build-route':
+            document.getElementById("routes__back-link").onclick = function () {
+                document.getElementById("routes-block").classList.toggle("disabled-block");
+                document.getElementById("filters").style.left = "0";
+                document.getElementById("hint").classList.toggle("disabled-block");
+                selectMenu("main-menu");
+            };
+            break;
+
+        case 'change-route':
+            document.getElementById("routes__back-link").onclick = function () {
+                document.getElementById("routes-block").classList.toggle("disabled-block");
+                document.getElementById("filters").style.left = "0";
+                document.getElementById("hint").classList.toggle("disabled-block");
+            };
+            break;
+
+        default:
+            document.getElementById("routes__back-link").onclick = function () {
+                document.getElementById("routes-block").classList.toggle("disabled-block");
+                document.getElementById("filters").style.left = "0";
+                document.getElementById("hint").classList.toggle("disabled-block");
+            };
+            break;
+    }
+
+
 }
 
 function setActionForRoute(id) {
     document.getElementById("routes__one-route" + id).onclick = function () {
         selectedRoute = id;
         document.getElementById("routes-block").classList.toggle("disabled-block");
-        document.getElementById("route-menu").classList.toggle("disabled-block");
+        selectMenu("route-menu");
         calculateAndDisplayRoute(id, directionsService, directionsDisplay);
     };
 }
@@ -99,7 +120,7 @@ function makeList() {
     console.log("routes list: ");
     console.log(routesList);
     makeCordArray();
-    showRoutes();
+    showRoutes("build-route");
 }
 
 function makeCordArray() {
@@ -117,6 +138,21 @@ function makeCordArray() {
     console.log(routeCordArray);
 }
 
+function selectMenu(activeMenu) {
+    //if (!activeMenu) return 0;
+
+    console.log(activeMenu);
+
+    document.getElementById("main-menu").classList.add("disabled-block");
+    document.getElementById("route-menu").classList.add("disabled-block");
+    document.getElementById("change-route-menu").classList.add("disabled-block");
+    document.getElementById("select-route-menu").classList.add("disabled-block");
+
+    var elem = document.getElementById(activeMenu);
+    //if (elem.classList.contains("disabled-block"))
+
+        elem.classList.remove("disabled-block");
+}
 
 $(document).ready(function(){
     var isok = true;
@@ -132,7 +168,7 @@ $(document).ready(function(){
     }
 
     //тест
-/*
+
     var answ = {
         "route": [
             {
@@ -150,17 +186,81 @@ $(document).ready(function(){
                 "X": [56.845229, 56.839619, 56.841996, 56.840200],
                 "type": ["park", "galery", "park", "park"],
                 "Y": [60.645281, 60.647116, 60.658903, 60.654428]
+            },
+            {
+                "name": ["Lenina", "duck", "fuck", "ducken"],
+                "time": [20, 30, 40, 35],
+                "descr": ["descr_lenina", "discr_duck", "discr_fuck", "duckduck"],
+                "X": [56.845229, 56.839619, 56.840200, 56.841996],
+                "type": ["park", "galery", "park", "park"],
+                "Y": [60.645281, 60.647116, 60.654428, 60.658903]
+            },
+            {
+                "name": ["Lenina", "duck", "fuck", "ducken"],
+                "time": [20, 30, 40, 35],
+                "descr": ["descr_lenina", "discr_duck", "discr_fuck", "duckduck"],
+                "X": [56.845229, 56.839619, 56.840200, 56.841996],
+                "type": ["park", "galery", "park", "park"],
+                "Y": [60.645281, 60.647116, 60.654428, 60.658903]
+            },
+            {
+                "name": ["Lenina", "duck", "fuck", "ducken"],
+                "time": [20, 30, 40, 35],
+                "descr": ["descr_lenina", "discr_duck", "discr_fuck", "duckduck"],
+                "X": [56.845229, 56.839619, 56.840200, 56.841996],
+                "type": ["park", "galery", "park", "park"],
+                "Y": [60.645281, 60.647116, 60.654428, 60.658903]
+            },
+            {
+                "name": ["Lenina", "duck", "fuck", "ducken"],
+                "time": [20, 30, 40, 35],
+                "descr": ["descr_lenina", "discr_duck", "discr_fuck", "duckduck"],
+                "X": [56.845229, 56.839619, 56.840200, 56.841996],
+                "type": ["park", "galery", "park", "park"],
+                "Y": [60.645281, 60.647116, 60.654428, 60.658903]
+            },
+            {
+                "name": ["Lenina", "duck", "fuck", "ducken"],
+                "time": [20, 30, 40, 35],
+                "descr": ["descr_lenina", "discr_duck", "discr_fuck", "duckduck"],
+                "X": [56.845229, 56.839619, 56.840200, 56.841996],
+                "type": ["park", "galery", "park", "park"],
+                "Y": [60.645281, 60.647116, 60.654428, 60.658903]
+            },
+            {
+                "name": ["Lenina", "duck", "fuck", "ducken"],
+                "time": [20, 30, 40, 35],
+                "descr": ["descr_lenina", "discr_duck", "discr_fuck", "duckduck"],
+                "X": [56.845229, 56.839619, 56.840200, 56.841996],
+                "type": ["park", "galery", "park", "park"],
+                "Y": [60.645281, 60.647116, 60.654428, 60.658903]
+            },
+            {
+                "name": ["Lenina", "duck", "fuck", "ducken"],
+                "time": [20, 30, 40, 35],
+                "descr": ["descr_lenina", "discr_duck", "discr_fuck", "duckduck"],
+                "X": [56.845229, 56.839619, 56.840200, 56.841996],
+                "type": ["park", "galery", "park", "park"],
+                "Y": [60.645281, 60.647116, 60.654428, 60.658903]
+            },
+            {
+                "name": ["Lenina", "duck", "fuck", "ducken"],
+                "time": [20, 30, 40, 35],
+                "descr": ["descr_lenina", "discr_duck", "discr_fuck", "duckduck"],
+                "X": [56.845229, 56.839619, 56.840200, 56.841996],
+                "type": ["park", "galery", "park", "park"],
+                "Y": [60.645281, 60.647116, 60.654428, 60.658903]
             }
         ]
     };
     results = JSON.stringify(answ);
     routes = JSON.parse(results);
-*/
+
 
 
 
     document.getElementById("build-route").onclick = function () {
-
+/*
         var time = Number($("#hours").val())*60 + Number($("#minutes").val());
         document.getElementById("placeholder").classList.toggle("disabled-block");
         results = {
@@ -181,8 +281,9 @@ $(document).ready(function(){
         console.log("sending start");
         console.log();
 
-        //var httpRequest = "http://10.33.79.37:13451/geo?data=" + JSON.stringify(results);
-		var httpRequest = "http://localhost:13451/geo?data=" + JSON.stringify(results);
+        var httpRequest = "http://localhost:13451/list?data=" + JSON.stringify(results);
+        //var httpRequest = "http://localhost:13451/geo?data=" + JSON.stringify(results);
+
         var xhr = createCORSRequest('GET', httpRequest);
         xhr.send(); //отправка даты
 
@@ -192,7 +293,7 @@ $(document).ready(function(){
             console.log(this.responseText);
 
             routes = $.parseJSON(this.responseText);
-            //routes = JSON.parse(routes);
+            routes = JSON.parse(routes);
             console.log(routes);
 
             makeList();
@@ -203,22 +304,27 @@ $(document).ready(function(){
             //console.log('error ' + this.status);
             document.getElementById("placeholder").classList.toggle("disabled-block");
         };
-
         document.getElementById("hint").classList.toggle("disabled-block");
+*/
 
-        //makeList(); //ДЛЯ ТЕСТА, ПОТОМ УБРАТЬ
+        selectMenu("select-route-menu");
+        makeList(); //ДЛЯ ТЕСТА, ПОТОМ УБРАТЬ
     };
 
 
     document.getElementById("change-route").onclick = function () {
+        selectMenu("change-route-menu");
         removeRoute();
-        document.getElementById("routes-block").classList.toggle("disabled-block");
-        document.getElementById("route-menu").classList.toggle("disabled-block");
+        showRoutes("change-route");
+
     };
 
     document.getElementById("change-parameters").onclick = function () {
-        document.getElementById("menu").classList.toggle("disabled-block");
+        selectMenu("main-menu");
+        removeRoute();
+
         document.getElementById("hint").classList.toggle("disabled-block");
+
         markerA.setMap(null);
         markerB.setMap(null);
 

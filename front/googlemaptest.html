@@ -29,19 +29,33 @@
 <div class="hint" id="hint">Выберите исходную точку</div>
 
 <div class="routes disabled-block" id="routes-block">
-    <div class="routes__back-link" id="routes__back-link">Назад</div>
-</div>
 
-<div class="menu disabled-block" id="route-menu">
-    <div id="change-route" class="menu__element">Другой маршрут</div>
-    <div id="change-parameters" class="menu__element">Изменить параметры</div>
 </div>
 
 <div class="menu" id="menu">
-    <div id="build-route" class="menu__element">Построить маршрут</div>
-    <div class="menu__element">Авторские маршруты</div>
-    <div class="menu__element">Приключение</div>
+    <div id="main-menu">
+        <div id="build-route" class="menu__element">Построить маршрут</div>
+        <div class="menu__element">Авторские маршруты</div>
+        <div class="menu__element">Приключение</div>
+    </div>
+
+    <div class="disabled-block" id="route-menu">
+        <div id="change-route" class="menu__element">Другой маршрут</div>
+        <div id="change-parameters" class="menu__element">Изменить параметры</div>
+    </div>
+
+    <div class="disabled-block" id="change-route-menu">
+        <div class="menu__element">Выбрать заново точки</div>
+        <div class="menu__element">Назад</div>
+    </div>
+
+    <div class="disabled-block" id="select-route-menu">
+        <div class="menu__element">Выбрать случайный путь</div>
+        <div class="menu__element" id="routes__back-link">Назад</div>
+    </div>
 </div>
+
+
 
 <div id="map">
 </div>
@@ -100,11 +114,11 @@
 
 <script src="https://yandex.st/jquery/2.2.3/jquery.min.js" type="text/javascript"></script>
 <script src="user-interface.js" type="text/javascript"></script>
+
 <script src="gmaps.js" type="text/javascript"></script>
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIv-So_me7cBT7C2nUbPEyll_4pNq8iD4&callback=initMap">
 </script>
-
 
 </body>
 </html>
