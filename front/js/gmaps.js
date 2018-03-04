@@ -26,7 +26,7 @@ function initMap() {
     var nsk = new google.maps.LatLng(55.027978, 82.951315);
     var mapOptions = {
         zoom:14,
-        center: nsk
+        center: ekb
     };
 
     map = new google.maps.Map(document.getElementById('map'), mapOptions);
@@ -70,8 +70,10 @@ function initMap() {
                     infowindow.open(map, markerA);
                 });
 
-                document.getElementById("hint").innerHTML = "Выберите конечную точку точку";
+                hint.setHint('finish-point');
+
                 document.getElementById("search-address").placeholder = "Адрес прибытия";
+
                 break;
             case 1:
                 setPoints++;
@@ -91,8 +93,10 @@ function initMap() {
                     title: 'Конец пути',
                     label: 'B'
                 });
-                document.getElementById("hint").innerHTML = "Выберите интересующие вас категории и нажмите \"Построить маршрут\" <br> Для сброса точек кликните на карту";
-                document.getElementById("filters").style.left = "0";
+
+                hint.setHint('select-category');
+
+                document.getElementById("left-menu").classList.remove("left-menu--hide");
                 document.getElementById("parameters").style.display = "none";
                 document.getElementById("build-route").classList.toggle("menu__element--main-point");
                 break;
@@ -101,9 +105,10 @@ function initMap() {
                 setPoints = 0 ;
                 markerA.setMap(null);
                 markerB.setMap(null);
-                document.getElementById("hint").innerHTML = "Выберите исходную точку точку";
+                hint.setHint('start-point');
+
                 document.getElementById("search-address").placeholder = "Адрес отправления";
-                document.getElementById("filters").style.left = "-300px";
+                document.getElementById("left-menu").classList.add("left-menu--hide");
                 document.getElementById("build-route").classList.toggle("menu__element--main-point");
                 document.getElementById("parameters").style.display = "flex";
                 break;
@@ -138,7 +143,7 @@ function calculateAndDisplayRoute(id, directionsService, directionsDisplay) {
             icon: image
         });
         console.log("desct log");
-        console.log(routes.route.descr);
+        console.log(routes.route[id].descr);
         infoWindows[i] = new google.maps.InfoWindow({
             content: routes.route[id].descr[i]
         });
@@ -166,14 +171,20 @@ function addWindowActionForMarker(i) {
     });
 }
 
+function removeWindowActionForMarker() {
+    for (var i = 0; i < markersCords.length; i ++) {
+        markers[i].setMap(null);
+        delete markers[i];
+    }
+
+    markers.length = 0;
+}
+
 function removeRoute() {
     directionsDisplay.setDirections({routes: []});
 }
 
-// Create a <script> tag and set the USGS URL as the source.
+
 var script = document.createElement('script');
-// This example uses a local copy of the GeoJSON stored at
-// http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojsonp
-//script.src = 'https://developers.google.com/maps/documentation/javascript/examples/json/earthquake_GeoJSONP.js';
 
 document.getElementsByTagName('head')[0].appendChild(script);

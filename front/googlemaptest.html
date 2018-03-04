@@ -17,34 +17,59 @@
     </style>
 </head>
 <body>
-<div class="filters filters--hide" id="filters">
-    <div toDataBase="Парк" class="filters__title">Куда вы хотите зайти:</div>
-    <div toDataBase="Парк" id="filters__category0" class="filters__category">Парки</div>
-    <div toDataBase="Памятник" id="filters__category1" class="filters__category">Памятники</div>
-    <div toDataBase="Театр" id="filters__category2" class="filters__category">Театры</div>
-    <div toDataBase="Музей" id="filters__category3" class="filters__category">Музеи</div>
-    <div toDataBase="Галерея" id="filters__category4" class="filters__category">Галереи</div>
-<!--    <div id="filters__category5" class="filters__category">Фонтан</div> -->
+
+<div class="left-menu left-menu--hide" id="left-menu">
+
+    <div class="" id="filters">
+        <div toDataBase="Парк" class="left-menu__title">Куда вы хотите зайти:</div>
+        <div toDataBase="Парк" id="filters__category0" class="left-menu__category">Парки</div>
+        <div toDataBase="Памятник" id="filters__category1" class="left-menu__category">Памятники</div>
+        <div toDataBase="Театр" id="filters__category2" class="left-menu__category">Театры</div>
+        <div toDataBase="Музей" id="filters__category3" class="left-menu__category">Музеи</div>
+        <div toDataBase="Галерея" id="filters__category4" class="left-menu__category">Галереи</div>
+    <!--    <div id="filters__category5" class="filters__category">Фонтан</div> -->
+    </div>
+
+    <div class="debug-menu disabled-block">
+        <div class="left-menu__title">Привет бэку!</div>
+    </div>
+
 </div>
+
 <div class="hint" id="hint">Выберите исходную точку</div>
 
 <div class="routes disabled-block" id="routes-block">
-    <div class="routes__back-link" id="routes__back-link">Назад</div>
-</div>
 
-<div class="menu disabled-block" id="route-menu">
-    <div id="change-route" class="menu__element">Другой маршрут</div>
-    <div id="change-parameters" class="menu__element">Изменить параметры</div>
 </div>
 
 <div class="menu" id="menu">
-    <div id="build-route" class="menu__element">Построить маршрут</div>
-    <div class="menu__element">Авторские маршруты</div>
-    <div class="menu__element">Приключение</div>
+    <div id="main-menu">
+        <div id="build-route" class="menu__element">Построить маршрут</div>
+        <div class="menu__element">Авторские маршруты</div>
+        <div class="menu__element">Приключение</div>
+    </div>
+
+    <div class="disabled-block" id="route-menu">
+        <div id="change-route" class="menu__element">Другой маршрут</div>
+        <div id="change-parameters" class="menu__element">Изменить параметры</div>
+    </div>
+
+    <div class="disabled-block" id="change-route-menu">
+        <div id="reselect-points" class="menu__element">Выбрать заново точки</div>
+        <div class="menu__element" id="back-to-route-on-map-link">Назад</div>
+    </div>
+
+    <div class="disabled-block" id="select-route-menu">
+        <div class="menu__element" id="random-route">Выбрать случайный путь</div>
+        <div class="menu__element" id="back-to-set-parameters-link">Назад</div>
+    </div>
 </div>
+
+
 
 <div id="map">
 </div>
+
 <div class="parameters" id="parameters">
     <div class="parameters__search">
         <input type="text" id="search-address" class="time-select__select-input" placeholder="Адрес отправления">
@@ -99,11 +124,16 @@
 </div>
 
 <script src="https://yandex.st/jquery/2.2.3/jquery.min.js" type="text/javascript"></script>
-<script src="user-interface.js" type="text/javascript"></script>
-<script src="gmaps.js" type="text/javascript"></script>
+
+<script src="js/hint.js" type="text/javascript"></script>
+<script src="js/user-interface.js" type="text/javascript"></script>
+
+<script src="js/gmaps.js" type="text/javascript"></script>
+
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIv-So_me7cBT7C2nUbPEyll_4pNq8iD4&callback=initMap">
 </script>
+<script src="js/debug.js" type="text/javascript"></script>
 
 
 </body>
