@@ -50,11 +50,11 @@ class Path:
 
         #print('set_graph = ', time.time() - start)
         start = time.time()
-        self.modif_graph()
+        #self.modif_graph()
 
         #print('modif_graph = ', time.time() - start)
         a = 1
-        self.filtered_graph()
+        #self.filtered_graph()
         self.new_graph = self.normalize_point_data(self.user_filter)
         result = self.get_top_paths(self.list_time, self.user_time)
         result = self.generate_answer(
