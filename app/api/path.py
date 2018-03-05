@@ -158,17 +158,75 @@ class Path:
         pass
 
     def set_graph(self):
+
+        '''
+        Вспомогательный массив, который задаёт правило определения точки (достопримечательности)
+        в матрице путей по её ID и наоборот
+        '''
         helper = dict()
         for i in range(len(self.id_list)):
             helper[self.id_list[i]] = i + 1
-        for i in range(len(self.id_list) + 2):
-            self.dict_graph[i] = {i: 0}
+
+        matrix_range = len(self.id_list) + 2
+        self.dict_graph = [[[] for x in range(matrix_range)] for y in range(matrix_range)]
+        '''
+        Заполняем элементы матрицы путей - только достопримечательности
+        '''
         for pair in self.dict_pair_touch:
-            self.dict_graph[helper[pair['point_1']]][helper[pair['point_2']]] = pair['distance']
-            self.dict_graph[helper[pair['point_2']]][helper[pair['point_1']]] = pair['distance']
+            i = helper[pair['point_1']]
+            j = helper[pair['point_2']]
+            try:
+                tyobj = self.INDEXES.get(self.dict_coords[self.id_list[j-1]]['Type'], 0)
+                self.dict_graph[i][j] = [j, pair['distance'], tyobj,
+                                         self.dict_coords[self.id_list[j-1]]['Rating']]
+            except:
+                print("{} {} tyobj Error".format(i,j))
+                pass
+
+            try:
+                tyobj = self.INDEXES.get(self.dict_coords[self.id_list[i-1]]['Type'], 0)
+                self.dict_graph[j][i] = [i, pair['distance'], tyobj,
+                                         self.dict_coords[self.id_list[i-1]]['Rating']]
+            except:
+                print("{} {} tyobj Error".format(j, i))
+                pass
+        '''
+        Получение расстояния от начала и конца пути до всех выбранных достопримечательностей
+        '''
+        answer = self.google.get_fast(self.start, self.finish, self.list_coords)
+
+        '''
+        Заполнение оставшихся элементов матрицы путей
+        '''
+        N = len(self.dict_graph) - 1
+        for i in range(len(answer['s'])):
+            try:
+                tyobj = self.INDEXES.get(self.dict_coords[self.id_list[i + 1]]['Type'], 0)
+                self.dict_graph[N][i + 1] = [i + 1, answer['f'][i], tyobj,
+                                             self.dict_coords[self.id_list[i + 1]]['Rating']]
+            except:
+                print("{} {} tyobj Error".format(0,i + 1))
+                pass
+
+            try:
+                tyobj = self.INDEXES.get(self.dict_coords[self.id_list[i + 1]]['Type'], 0)
+                self.dict_graph[i + 1][N] = [N, answer['f'][i], tyobj,
+                                             self.dict_coords[self.id_list[i + 1]]['Rating']]
+            except:
+                print("{} {} tyobj Error".format(0, i + 1))
+                pass
+
+            self.dict_graph[i + 1][0] = [i + 1, answer['s'][i], 0, 0]
+            self.dict_graph[0][i + 1] = [0, answer['s'][i], 0, 0]
+
+        self.dict_graph[N][0] = [0, answer['o'], 0, 0]
+        self.dict_graph[0][N] = [N, answer['o'], 0, 0]
+
+        print(self.dict_graph)
 
     def modif_graph(self):
         answer = self.google.get_fast(self.start, self.finish, self.list_coords)
+
         N = len(self.dict_graph) - 1
         for i in range(len(answer['s'])):
             self.dict_graph[0][i + 1] = answer['s'][i]
@@ -215,18 +273,18 @@ class Path:
 
         sko_array = []
         sko = 0
-        for element in self.new_graph[0]:
+        for element in self.dict_graph[0]:
             sko_array.append(element[1])
 
         sko = std(sko_array)
 
         try:
-            time_per_priority = sko / len(self.new_graph[0]) / max_priority # Соотношение количества времени к 1 условной единице приоритета
+            time_per_priority = sko / len(self.dict_graph[0]) / max_priority # Соотношение количества времени к 1 условной единице приоритета
         except:
             time_per_priority = 0
-        time_per_estimate = sko / len(self.new_graph[0]) / 100 # Соотношение количества времени к 1 условной единице общей оценки
+        time_per_estimate = sko / len(self.dict_graph[0]) / 100 # Соотношение количества времени к 1 условной единице общей оценки
 
-        for key_dist, dist in self.new_graph.items():
+        for key_dist, dist in self.dict_graph.items():
             matrix_row = []
 
             for point in dist:
