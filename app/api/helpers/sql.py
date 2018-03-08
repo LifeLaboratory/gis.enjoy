@@ -58,8 +58,10 @@ class Sql:
         result = None
         try:
             current_connect.execute(query)
-        except:
-            pass
+        except psycopg2.Error as e:
+            print(e.pgerror)
+            print(e.diag.message_primary)
+            print(psycopg2.errorcodes.lookup(e.pgcode))
         finally:
             try:
                 result = current_connect.fetchall()
