@@ -1,12 +1,10 @@
-from api.sql import SqlQuery
 HEADER = {'Access-Control-Allow-Origin': '*'}
 DATABASE = {
     "dbname": "life_game_service",
-    "user": "dev",
-    "host": "lifetestdb.ckhzdqomzqdq.eu-west-2.rds.amazonaws.com",
-    "password": "PINLOXPINLOX"
+    "user": "life_dev",
+    "host": "90.189.132.25",
+    "password": "PINLOX!@#"
 }
-
 """
 INDEXES = {"Парк": 0,
            "Памятник": 1,
