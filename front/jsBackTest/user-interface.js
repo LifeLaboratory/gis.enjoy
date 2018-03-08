@@ -310,7 +310,7 @@ $(document).ready(function(){
             console.log(this.responseText);
 
             routes = $.parseJSON(this.responseText);
-            routes = JSON.parse(routes);
+            //routes = JSON.parse(routes);
             console.log(routes);
 
             makeList();
