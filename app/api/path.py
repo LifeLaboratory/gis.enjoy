@@ -153,8 +153,8 @@ class Path:
         for i in self.id_list:
             text += '{}, '.format(i) if i != self.id_list[-1] else '{}'.format(i)
 
-        print(get_sql % (text, text))
-        self.dict_pair_touch = Sql.exec(get_sql % (text, text))
+        print(get_sql % (text))
+        self.dict_pair_touch = Sql.exec(get_sql % (text))
 
     def set_distance(self):
         pass
