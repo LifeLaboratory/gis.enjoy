@@ -2,10 +2,14 @@ package ru.life_laboratory.gisenjoy.request;
 
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import ru.life_laboratory.gisenjoy.utils.Constants;
 
 public class Filter {
     private JSONObject origin;
@@ -19,19 +23,19 @@ public class Filter {
         priority = new ArrayList<String>();
     }
 
-    public void setOrigin(double X, double Y){
+    public void setOrigin(LatLng point){
         try {
-            this.origin.put("X", X);
-            this.origin.put("Y", Y);
+            this.origin.put("X", point.latitude);
+            this.origin.put("Y", point.longitude);
         } catch (Exception e){
             Log.e(Constants.TAG, e.toString());
         }
     }
 
-    public void setDestination(double X, double Y){
+    public void setDestination(LatLng point){
         try {
-            this.destination.put("X", X);
-            this.destination.put("Y", Y);
+            this.destination.put("X", point.latitude);
+            this.destination.put("Y", point.longitude);
         } catch (Exception e){
             Log.e(Constants.TAG, e.toString());
         }
