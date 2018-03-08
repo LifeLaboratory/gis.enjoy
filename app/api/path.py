@@ -9,7 +9,7 @@ import time
 
 __author__ = 'ar.chusovitin'
 
-DELTA = 0.0005
+DELTA = 0.05
 top_paths = []
 top_count = 5
 
@@ -48,13 +48,7 @@ class Path:
         start = time.time()
         self.set_graph()
 
-        #print('set_graph = ', time.time() - start)
-        start = time.time()
-        #self.modif_graph()
-
-        #print('modif_graph = ', time.time() - start)
         a = 1
-        #self.filtered_graph()
         self.new_graph = self.normalize_point_data(self.user_filter)
         result = self.get_top_paths(self.list_time, self.user_time)
         result = self.generate_answer(
@@ -108,8 +102,8 @@ class Path:
                 point[2],
                 point[3]
             )
-
-            get_sql = "SELECT * FROM Geo"
+            #print(get_sql)
+            #get_sql = "SELECT * FROM Geo"
             result = Sql.exec(get_sql)
             trying = trying + 1
         return result
@@ -138,11 +132,15 @@ class Path:
         :param coords: кортеж ID координат
         """
         get_sql = """
-            with 
+            with
+        elements as (
+          select unnest('{%s}'::integer[]) as id
+        ),
         get_pair as (
           select a.id as a_p, b.id as b_p 
-          from geo a, geo b 
-          where b.id <> a.id
+          from geo a, elements b
+          where a.id <> b.id
+           and a.id = any('{%s}')
         ),
         get_coord as (
           select d.id, d.point_1, d.point_2, d.distance 
@@ -152,7 +150,12 @@ class Path:
         )
         select * from get_coord;
         """
-        self.dict_pair_touch = Sql.exec(get_sql)
+        text = ''
+        for i in self.id_list:
+            text += '{}, '.format(i) if i != self.id_list[-1] else '{}'.format(i)
+
+        print(get_sql % (text, text))
+        self.dict_pair_touch = Sql.exec(get_sql % (text, text))
 
     def set_distance(self):
         pass
@@ -171,6 +174,7 @@ class Path:
         self.dict_graph = [[[] for x in range(matrix_range)] for y in range(matrix_range)]
         '''
         Заполняем элементы матрицы путей - только достопримечательности
+        Другими словами - кроме первых и последних столбцов и строк матрицы
         '''
         for pair in self.dict_pair_touch:
             i = helper[pair['point_1']]
@@ -180,7 +184,7 @@ class Path:
                 self.dict_graph[i][j] = [j, pair['distance'], tyobj,
                                          self.dict_coords[self.id_list[j-1]]['Rating']]
             except:
-                print("{} {} tyobj Error".format(i,j))
+                print("{} {} tyobj Error 1".format(i,j))
                 pass
 
             try:
@@ -188,7 +192,7 @@ class Path:
                 self.dict_graph[j][i] = [i, pair['distance'], tyobj,
                                          self.dict_coords[self.id_list[i-1]]['Rating']]
             except:
-                print("{} {} tyobj Error".format(j, i))
+                print("{} {} tyobj Error 2".format(j, i))
                 pass
         '''
         Получение расстояния от начала и конца пути до всех выбранных достопримечательностей
@@ -196,60 +200,44 @@ class Path:
         answer = self.google.get_fast(self.start, self.finish, self.list_coords)
 
         '''
-        Заполнение оставшихся элементов матрицы путей
+        Заполнение первых и последних строк и столбцов матрицы
         '''
         N = len(self.dict_graph) - 1
-        for i in range(len(answer['s'])):
+        for i in range(len(answer['s']) - 1):
             try:
-                tyobj = self.INDEXES.get(self.dict_coords[self.id_list[i + 1]]['Type'], 0)
+                tyobj = self.INDEXES.get(self.dict_coords[self.id_list[i]]['Type'], 0)
                 self.dict_graph[N][i + 1] = [i + 1, answer['f'][i], tyobj,
-                                             self.dict_coords[self.id_list[i + 1]]['Rating']]
+                                             self.dict_coords[self.id_list[i]]['Rating']]
+                self.dict_graph[0][i + 1] = [i + 1, answer['f'][i], tyobj,
+                                             self.dict_coords[self.id_list[i]]['Rating']]
             except:
-                print("{} {} tyobj Error".format(0,i + 1))
+                print("{} {} tyobj Error 3".format(N,i + 1))
                 pass
 
             try:
-                tyobj = self.INDEXES.get(self.dict_coords[self.id_list[i + 1]]['Type'], 0)
+                tyobj = self.INDEXES.get(self.dict_coords[self.id_list[i]]['Type'], 0)
                 self.dict_graph[i + 1][N] = [N, answer['f'][i], tyobj,
-                                             self.dict_coords[self.id_list[i + 1]]['Rating']]
+                                             self.dict_coords[self.id_list[i]]['Rating']]
+                self.dict_graph[i + 1][0] = [0, answer['f'][i], tyobj,
+                                             self.dict_coords[self.id_list[i]]['Rating']]
             except:
-                print("{} {} tyobj Error".format(0, i + 1))
+                print("{} {} tyobj Error 4".format(i + 1, N))
                 pass
-
-            self.dict_graph[i + 1][0] = [i + 1, answer['s'][i], 0, 0]
-            self.dict_graph[0][i + 1] = [0, answer['s'][i], 0, 0]
 
         self.dict_graph[N][0] = [0, answer['o'], 0, 0]
         self.dict_graph[0][N] = [N, answer['o'], 0, 0]
+        self.dict_graph[0][0] = [0] * 4
+        self.dict_graph[N][N] = [0] * 4
 
-        print(self.dict_graph)
+        '''
+        Заполнение диагонали матрицы 
+        '''
+        for i in range(N):
+            if i == 0:
+                continue
 
-    def modif_graph(self):
-        answer = self.google.get_fast(self.start, self.finish, self.list_coords)
-
-        N = len(self.dict_graph) - 1
-        for i in range(len(answer['s'])):
-            self.dict_graph[0][i + 1] = answer['s'][i]
-            self.dict_graph[i + 1][0] = answer['s'][i]
-            self.dict_graph[N][i + 1] = answer['f'][i]
-            self.dict_graph[i + 1][N] = answer['f'][i]
-        self.dict_graph[N][0] = answer['o']
-        self.dict_graph[0][N] = answer['o']
-
-    def filtered_graph(self):
-        for i in self.dict_graph:
-            self.new_graph[i] = []
-            for j in self.dict_graph[i]:
-                if j == 0:
-                    self.new_graph[i].append((j, self.dict_graph[i][j], 0, 0))
-                elif j == len(self.dict_graph[i]) - 1:
-                    self.new_graph[i].append((j, self.dict_graph[i][j], 0, 0))
-                elif 0 < j < len(self.dict_graph[i]):
-                    tyobj = self.INDEXES.get(self.dict_coords[self.id_list[j - 1]]['Type'], 0)
-                    try:
-                        self.new_graph[i].append((j, self.dict_graph[i][j], tyobj, self.dict_coords[self.id_list[j]]['Rating']))
-                    except:
-                        pass
+            tyobj = self.INDEXES.get(self.dict_coords[self.id_list[i - 1]]['Type'], 0)
+            self.dict_graph[i][i] = [i, 0, tyobj, self.dict_coords[self.id_list[i - 1]]['Rating']]
 
     def normalize_point_data(self, priority):
         """
@@ -284,7 +272,7 @@ class Path:
             time_per_priority = 0
         time_per_estimate = sko / len(self.dict_graph[0]) / 100 # Соотношение количества времени к 1 условной единице общей оценки
 
-        for key_dist, dist in self.dict_graph.items():
+        for dist in self.dict_graph:
             matrix_row = []
 
             for point in dist:
@@ -305,19 +293,6 @@ class Path:
             result_matrix.append(matrix_row)
         return result_matrix
 
-    def normalize_graph_coefficient(self):
-        coefficiet_graph = self.normalize_point_data(["площадь", "парк"])
-
-        # print("!", coefficiet_graph)
-        def new_element(l, element):
-            new_l = list(l)
-            new_l.append(element)
-            return tuple(new_l)
-
-        for i in range(len(coefficiet_graph)):
-            for j in range(len(coefficiet_graph[i])):
-                self.new_graph[i][j] = new_element(self.new_graph[i][j], coefficiet_graph[i][j][1])
-            self.new_graph[i] = sorted(self.new_graph[i], key=lambda x: (x[1], x[4]))
 
     def generate_answer(self, result, result_coord, id_list, N, touch_be):
         answer = {'route': []}
@@ -424,7 +399,7 @@ class Path:
 
         visited[current_point] = 1
 
-        for i in range(begin_point, end_point):
+        for i in range(begin_point, end_point + 1):
             if self.new_graph[current_point][i][1] \
                     and visited[self.new_graph[current_point][i][0]] == 0:
                 tmp = deepcopy(current_path)
@@ -452,7 +427,7 @@ class Path:
 if __name__ == '__main__':
     start = time.time()
     print('Start')
-    d = Path((55.7464017, 37.6206682), (55.7464017, 37.6206682), 5000, ['Парк', 'Музей']).result
+    d = Path((55.760040, 37.587127), (55.743115, 37.604391), 5000, ['Парк', 'Музей']).result
     for i in d['route']:
         print(i)
     print(time.time() - start)
