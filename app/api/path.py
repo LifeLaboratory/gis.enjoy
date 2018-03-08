@@ -137,10 +137,9 @@ class Path:
           select unnest('{%s}'::integer[]) as id
         ),
         get_pair as (
-          select a.id as a_p, b.id as b_p 
-          from geo a, elements b
-          where a.id <> b.id
-           and a.id = any('{%s}')
+          select b1.id as a_p, b2.id as b_p 
+          from elements b1, elements b2
+          where b1.id <> b2.id
         ),
         get_coord as (
           select d.id, d.point_1, d.point_2, d.distance 
