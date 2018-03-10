@@ -86,11 +86,19 @@ class Google:
         s = req.Session()
         url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins={}&destinations={}&key={}&mode=walking".format(
             str_origin, str_destinations, self.key)
-        answer = s.get(url)
+        answer = None
+        for i in range(len(key)):
+            try:
+                answer = s.get(url)
+                #print(answer.text)
 
-        answer = converter(answer.text)['rows']
-        for dist in answer[0]['elements']:
-            self.record['s'].append(dist['duration']['value'] // 60)
+                answer = converter(answer.text)['rows']
+                for dist in answer[0]['elements']:
+                    self.record['s'].append(dist['duration']['value'] // 60)
+                break
+            except:
+                self.key = Google.set_google_key()
+
 
         for dist in answer[0]['elements']:
             self.record['f'].append(dist['duration']['value'] // 60)
