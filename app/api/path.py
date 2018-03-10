@@ -15,9 +15,9 @@ top_count = 5
 
 
 class Path:
-    def __init__(self, start, finish, user_time, user_filter):
+    def __init__(self, start, finish, user_time, user_filter, INDEXES):
         self.google = Google((start, finish))
-        self.INDEXES = Filter().get_filter()
+        self.INDEXES = INDEXES
         self.user_filter = user_filter
         self.dict_graph = {}
         self.list_distance = []
@@ -35,20 +35,20 @@ class Path:
     def select_path(self):
         start = time.time()
         self.list_coords = self.set_touch()
-        #print('set_touch = ', time.time() - start)
+        print('set_touch = ', time.time() - start)
 
         start = time.time()
         self.id_list = self.get_coord()
+        print('get_coord = ', time.time() - start)
 
-        #print('get_coord = ', time.time() - start)
         start = time.time()
         self.get_pair_touch()
 
-        #print('get_pair_touch = ', time.time() - start)
+        print('get_pair_touch = ', time.time() - start)
         start = time.time()
         self.set_graph()
+        print('set_graph = ', time.time() - start)
 
-        a = 1
         self.new_graph = self.normalize_point_data(self.user_filter)
         result = self.get_top_paths(self.list_time, self.user_time)
         result = self.generate_answer(
@@ -292,7 +292,6 @@ class Path:
             result_matrix.append(matrix_row)
         return result_matrix
 
-
     def generate_answer(self, result, result_coord, id_list, N, touch_be):
         answer = {'route': []}
         ch = 0
@@ -422,7 +421,7 @@ class Path:
         self.longest_paths(0, len(self.new_graph) - 1, 0, time, max_time)
         return sorted(top_paths, key=itemgetter('point'), reverse=True)
 
-
+"""
 if __name__ == '__main__':
     start = time.time()
     print('Start')
@@ -430,3 +429,4 @@ if __name__ == '__main__':
     for i in d['route']:
         print(i)
     print(time.time() - start)
+"""

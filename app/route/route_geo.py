@@ -3,6 +3,7 @@ from flask_restful import Resource, reqparse
 from api.helpers.json import converter
 from api.path import Path
 from api.filter import Filter
+from time import time
 
 
 class RouteGeo(Resource):
@@ -57,7 +58,9 @@ class RouteGeo(Resource):
 
     def switch(self):
         print(self.__datas[0], self.__datas[1], self.__time, self.__index_priority)
-        answer = Path(self.__datas[0], self.__datas[1], self.__time, self.__index_priority).result
+        start = time()
+        answer = Path(self.__datas[0], self.__datas[1], self.__time, self.__index_priority, self.INDEXES).result
+        print('end = ', time() - start)
         return answer
 
     def get(self):
