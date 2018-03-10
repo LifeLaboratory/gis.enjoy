@@ -2,3 +2,4 @@ flask
 flask-restful
 numpy
 psycopg2
+psycopg2-binary
