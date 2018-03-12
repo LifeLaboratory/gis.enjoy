@@ -42,6 +42,7 @@ import ru.life_laboratory.gisenjoy.request.Filter;
 import ru.life_laboratory.gisenjoy.request.Routes;
 import ru.life_laboratory.gisenjoy.request.Server;
 import ru.life_laboratory.gisenjoy.utils.RouteListDialog;
+import ru.life_laboratory.gisenjoy.utils.Utilities;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -65,6 +66,8 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Utilities.checkLocationPermissions(this, 0);
 
         // подгрузка карты
         mapFragment = SupportMapFragment.newInstance();
