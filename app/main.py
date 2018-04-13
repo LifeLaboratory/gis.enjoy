@@ -7,6 +7,9 @@ from flask_restful import Resource, Api
 from route.route_geo import RouteGeo
 from route.get_list import List
 from route.route_filter import RouteFilter
+from route.Authentication import Authentication
+from route.Registration import Registration
+from route.Logout import Logout
 import api.Log
 _app = Flask(__name__)
 _app.config['JSON_AS_ASCII'] = False
@@ -38,6 +41,9 @@ api.add_resource(Index, '/')
 api.add_resource(RouteGeo, '/geo')
 api.add_resource(List, '/list')
 api.add_resource(RouteFilter, '/filter')
+api.add_resource(Authentication, '/auth')
+api.add_resource(Registration, '/registration')
+api.add_resource(Logout, '/logout')
 
 if __name__ == '__main__':
     try:

@@ -60,7 +60,6 @@ class Path:
         return result
 
     def set_touch(self):
-        get_sql = ""
         result = ()
         dynamic_delta = 3 * DELTA * math.sqrt(2)
         trying = 1
@@ -259,7 +258,6 @@ class Path:
         max_priority = len(priority)
 
         sko_array = []
-        sko = 0
         for element in self.dict_graph[0]:
             sko_array.append(element[1])
 
