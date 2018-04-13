@@ -1,7 +1,6 @@
 import pprint
 from operator import itemgetter
 from copy import deepcopy
-from api.sql import SqlQuery
 
 def generate_roads(graph, time=None, max_time=None):
     dist = {}
