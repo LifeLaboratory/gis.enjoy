@@ -4,7 +4,8 @@ var routes;
 var selectedRoute;
 var routesList = new Array();
 
-var hint = new Hint();
+var hint;
+var leftMenu;
 
 function addActionForParameters(id) {
     document.getElementById("filters__category" + id).onclick = function () {
@@ -153,7 +154,9 @@ function selectMenu(activeMenu) {
 }
 
 $(document).ready(function(){
-    
+    hint = new Hint();
+    //leftMenu = new LeftMenu();
+
     function start() {
         selectMenu("main-menu");
         removeRoute();
@@ -170,8 +173,7 @@ $(document).ready(function(){
         document.getElementById("build-route").classList.toggle("menu__element--main-point");
         document.getElementById("routes-block").classList.add("disabled-block");
     }
-    
-    
+
     var isok = true;
 
     for (var i = 0; isok != false; i++) {
@@ -295,11 +297,14 @@ $(document).ready(function(){
         results = JSON.stringify(results);
         results = JSON.parse(results);
 
+
+        console.log(JSON.stringify(results));
+
         console.log("sending start");
         console.log();
 
-        var httpRequest = "http://localhost:13451/list?data=" + JSON.stringify(results);
-        //var httpRequest = "http://localhost:13451/geo?data=" + JSON.stringify(results);
+        //var httpRequest = "http://localhost:13451/list?data=" + JSON.stringify(results);
+        var httpRequest = "http://90.189.132.25:13451/geo?data=" + JSON.stringify(results);
 
         var xhr = createCORSRequest('GET', httpRequest);
         xhr.send(); //отправка даты
@@ -309,8 +314,8 @@ $(document).ready(function(){
             console.log("полученные данные");
             console.log(this.responseText);
 
-            routes = $.parseJSON(this.responseText);
-            routes = JSON.parse(routes);
+            //routes = $.parseJSON(this.responseText);
+            routes = JSON.parse(this.responseText);
             console.log(routes);
 
             makeList();
@@ -326,7 +331,6 @@ $(document).ready(function(){
         selectMenu("select-route-menu");
         //makeList(); //ДЛЯ ТЕСТА, ПОТОМ УБРАТЬ
     };
-
 
     document.getElementById("change-route").onclick = function () {
         selectMenu("change-route-menu");
