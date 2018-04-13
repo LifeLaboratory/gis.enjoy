@@ -5,7 +5,8 @@ import pymysql
 import wget
 import re
 from pprint import pprint
-from api.sql import SqlQuery, converter
+from api.helpers.sql import Sql
+from api.helpers.json import converter
 from app.api.get_google_dist import get_google
 
 url_gov = "http://maps.nso.ru/232/getcsv.php?file=%D0%9E%D0%B1%D1%8A%D0%B5%D0%BA%D1%82%D1%8B%20%D0%BA%D1%83%D0%BB%D1%8C%D1%82%D1%83%D1%80%D0%BD%D0%BE%D0%B3%D0%BE%20%D0%BD%D0%B0%D1%81%D0%BB%D0%B5%D0%B4%D0%B8%D1%8F.csv"
@@ -113,13 +114,13 @@ def add_new_point(new_point):
     sql = " INSERT INTO Geo (Name, X, Y, Type, Descript, Rating, Time) VALUES (\'{}\', {}, {}, \'{}\', \'{}\', {}, {})".format(
         new_point["Name"], float(new_point["X"]), float(new_point["Y"]), new_point["Type"], new_point["Description"], int(new_point["Rating"]), int(new_point["Time"]))
     print(sql)
-    SqlQuery(sql)
+    Sql.exec(sql)
 
     sql = "SELECT id FROM Geo WHERE X={} AND Y={}".format(new_point["X"], new_point["Y"])
-    new_point["id"] = SqlQuery(sql)
+    new_point["id"] = Sql.exec(sql)
     new_point["id"] = int(new_point["id"][0]['id'])
     #print(new_point["id"][0]['id'])
-    points = SqlQuery("SELECT id, x, y FROM Geo WHERE id <> (SELECT last_value from geo_id_seq)")
+    points = Sql.exec("SELECT id, x, y FROM Geo WHERE id <> (SELECT last_value from geo_id_seq)")
     for i in range(len(points)):
         data = []
         disti = ""
@@ -137,9 +138,9 @@ def add_new_point(new_point):
                 new_point['id'],
                 answer)
         #print(sql)
-        SqlQuery(sql)
+        Sql.exec(sql)
 
-        SqlQuery("INSERT INTO geo_distance (point_1, point_2, distance)" \
+        Sql.exec("INSERT INTO geo_distance (point_1, point_2, distance)" \
                  " VALUES ({}, {}, {})".format(
             new_point['id'],
             points[i]['id'],
