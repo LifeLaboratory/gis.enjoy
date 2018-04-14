@@ -1,7 +1,7 @@
 __author__ = 'RaldenProg'
 
 import requests as req
-from api.helpers.json1 import converter
+from api.helpers.json import converter
 from api.helpers.sql import Sql
 from app.api.get_google_dist import get_google
 

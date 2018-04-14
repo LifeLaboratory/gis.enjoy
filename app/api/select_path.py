@@ -1,5 +1,5 @@
 import math
-from api.sql import SqlQuery
+from api.helpers.sql import Sql
 from timeit import default_timer as timer
 
 delta = 0.0005
@@ -54,7 +54,7 @@ def select_avalible_points(start_point, finish_point):
             )
         #print(get_sql)
         get_sql = "SELECT * FROM Geo"
-        result = SqlQuery(get_sql)
+        result = Sql(get_sql)
         #print("SQLQUERY", result)
         #if result is not ():
             #for event in result:

@@ -6,6 +6,7 @@ import api.auth.auth as auth
 #from api.helpers.json import converter
 from api.helpers.sql import Gis as gs
 
+
 class Authentication(Resource):
     def __init__(self):
         self.__parser = reqparse.RequestParser()
