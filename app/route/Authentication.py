@@ -5,6 +5,7 @@ from flask_restful import Resource, reqparse
 import api.auth.auth as auth
 from api.helpers.json import converter
 
+
 class Authentication(Resource):
     def __init__(self):
         self.__parser = reqparse.RequestParser()
@@ -28,7 +29,7 @@ class Authentication(Resource):
             answer = converter(converter(auth.get_user_name(self.data["id_user"])))
             return answer
         else:
-            answer = auth.login_verification(self.data)
+            answer = converter(auth.login_verification(self.data))
             return answer
 
     def get(self):
