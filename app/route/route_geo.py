@@ -1,6 +1,6 @@
 # coding=utf-8
 from flask_restful import Resource, reqparse
-from api.helpers.sql import Gis as gs
+from api.helpers.service import Gis as gs
 from api.path import Path
 from api.filter import Filter
 from time import time

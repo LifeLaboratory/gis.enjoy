@@ -3,8 +3,7 @@
 from flask_restful import Resource, reqparse
 
 import api.auth.auth as auth
-#from api.helpers.json import converter
-from api.helpers.sql import Gis as gs
+from api.helpers.service import Gis as gs
 
 
 class Authentication(Resource):
