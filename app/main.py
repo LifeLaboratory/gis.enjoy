@@ -10,6 +10,7 @@ from route.route_filter import RouteFilter
 from route.Authentication import Authentication
 from route.Registration import Registration
 from route.Logout import Logout
+from route.Routes import Route
 from route.route_debug import Debug
 import api.Log
 _app = Flask(__name__)
@@ -46,6 +47,7 @@ api.add_resource(Authentication, '/auth')
 api.add_resource(Registration, '/registration')
 api.add_resource(Debug, '/debug')
 api.add_resource(Logout, '/logout')
+api.add_resource(Route, '/route')
 
 if __name__ == '__main__':
     try:
