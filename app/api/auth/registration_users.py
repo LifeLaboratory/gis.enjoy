@@ -3,8 +3,7 @@ import hashlib
 import logging
 import uuid
 import api.base_name as names
-from api.helpers.sql import Gis as gs
-
+from api.helpers.sql import Gis as gis
 
 def registration_user(user_data):
     """
