@@ -88,9 +88,10 @@ def auth_user(user_data):
     password_hash.update(user_data[names.PASSWORD].encode())
     user_data[names.PASSWORD] = password_hash.hexdigest()
     try:
-        sql = "SELECT id_user FROM Auth WHERE Login = '{}' and Password = '{}'".format(user_data[names.LOGIN],
+        sql = "SELECT id_user FROM Auth_gis WHERE Login = '{}' and Password = '{}'".format(user_data[names.LOGIN],
                                                                                        user_data[names.PASSWORD])
         result = Sql.exec(sql)
+        print(sql)
     except:
         return {names.ANSWER: "Ошибка запроса к базе данных"}
     try:
