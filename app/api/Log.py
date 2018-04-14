@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime
 import os
+import api.base_name as names
 
 __author__ = 'RaldenProg'
 
@@ -21,7 +22,7 @@ def debug_write(graph, result):
     if not os.path.exists("Debug_files/" + date_now.split(":")[0]):
         os.mkdir("Debug_files/" + date_now.split(":")[0])
     if not os.path.exists("Debug_files/" + date_now.split(":")[0] + "/" + date_now):
-        print(directory)
+       # print(directory)
         os.mkdir(directory)
     f = open(directory+'/graph.txt', 'w')
     f.write(graph)
@@ -30,14 +31,19 @@ def debug_write(graph, result):
     f.write(result)
     f.close()
 
-def debug_read(arg, dir=None):
+def debug_read(arg=None, dir=None):
     os.chdir("Debug_files")
-    if arg == 0:
-        return os.listdir()
-    if arg == 1 and dir is not None:
+    if arg is None:
+        answer = os.listdir()
+        os.chdir("..")
+        return {names.ANSWER: names.SUCCESS, names.DATA: answer}
+    if arg == '1' and dir is not None:
         os.chdir(dir)
-        return os.listdir()
-    if arg == 2 and dir is not None:
+        answer = os.listdir()
+        os.chdir("..")
+        os.chdir("..")
+        return {names.ANSWER: names.SUCCESS, names.DATA: answer}
+    if arg == '2' and dir is not None:
         os.chdir(dir.split(":")[0])
         os.chdir(dir)
         f = open('result.txt')
@@ -46,6 +52,7 @@ def debug_read(arg, dir=None):
         f = open('graph.txt')
         graph = f.read()
         f.close()
-        return graph, result
-
-#print(debug_read(2, "2018.04.14:09.31.18"))
+        os.chdir("..")
+        os.chdir("..")
+        os.chdir("..")
+        return {names.ANSWER: names.SUCCESS, names.DATA: {"graph":graph, "result": result}}
