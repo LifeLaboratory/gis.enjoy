@@ -73,7 +73,7 @@ def login_verification(user_data):
         else:
             user_info[data] = user_data[data]
     if error:
-        return {names.ANSWER: names.WARNING, names.DATA: user_info}
+        return {names.ANSWER: names.WARNING, names.DATA: {"user_info": user_info}}
     #return {names.Answer: 'Ok'}
     return auth_user(user_info)
 
@@ -96,12 +96,12 @@ def auth_user(user_data):
         return {names.ANSWER: "Ошибка запроса к базе данных"}
     try:
         if len(result) == 0:
-            return {names.ANSWER: names.WARNING, names.DATA: "Данного пользователя нет в базе данных"}
+            return {names.ANSWER: names.WARNING, names.DATA: {"error_info":"Данного пользователя нет в базе данных"}}
     except:
-        return {names.ANSWER: names.WARNING, names.DATA: "Логин или пароль не правильные"}
+        return {names.ANSWER: names.WARNING, names.DATA: {"error_info":"Логин или пароль не правильные"}}
     answer = input_session_table(result[0].get(names.ID_USER))
     if answer.get(names.ANSWER) is not names.SUCCESS:
-        return {names.ANSWER: names.WARNING, names.DATA: "Ошибка запроса к базе данных. Неудача"}
+        return {names.ANSWER: names.WARNING, names.DATA: {"error_info":"Ошибка запроса к базе данных. Неудача"}}
     return answer
 
 
@@ -117,6 +117,6 @@ def logout_user(session):
         return {names.ANSWER: "Ошибка запроса к базе данных"}
     try:
         if len(result) == 0:
-            return {names.ANSWER: names.WARNING, names.DATA: "Такой сессии нет в базе"}
+            return {names.ANSWER: names.WARNING, names.DATA: {"error_info":"Такой сессии нет в базе"}}
     except:
-        return {names.ANSWER: names.WARNING, names.DATA: "Сессия неверная"}
+        return {names.ANSWER: names.WARNING, names.DATA: {"error_info": "Сессия неверная"}}
