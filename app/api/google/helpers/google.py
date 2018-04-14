@@ -1,6 +1,6 @@
 # coding=utf-8
 import requests as req
-from api.helpers.json import converter
+from api.helpers.json1 import converter
 from .key import key
 from multiprocessing import Manager, Process
 __author__ = 'RaldenProg'

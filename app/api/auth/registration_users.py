@@ -53,7 +53,7 @@ def input_auth_table(user_data):
             Login=user_data.get(names.LOGIN),
             Password=user_data.get(names.PASSWORD))
     try:
-        id_user = Sql.exec(sql)[0]['id_user']
+        id_user = gs.SqlQuery(sql)[0]['id_user']
     except:
         logging.error('error: Ошибка запроса к базе данных. Возможно такой пользователь уже есть')
         return {names.ANSWER: names.WARNING,
@@ -74,7 +74,7 @@ def input_user_table(id_user, user_data):
             '{Sex}','{City}')"""\
         .format(**user_data)
     try:
-        Sql.exec(sql)
+        gs.SqlQuery(sql)
     except:
         logging.error('error: Ошибка запроса к базе данных')
         return {names.ANSWER: names.WARNING, names.DATA: "Ошибка запроса к базе данных"}
@@ -91,7 +91,7 @@ def input_session_table(id_user):
     sql = """INSERT INTO Session_gis (id_user, uuid)
             VALUES ({id}, '{UUID}')""".format(id=id_user, UUID=UUID)
     try:
-        Sql.exec(sql)
+        gs.SqlQuery(sql)
     except:
         logging.error('error: Ошибка запроса к базе данных')
         return {names.ANSWER: names.WARNING, names.DATA: "Ошибка запроса к базе данных"}
