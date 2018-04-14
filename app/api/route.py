@@ -48,3 +48,23 @@ def add_router(user_data):
         return {names.ANSWER: names.ERROR}
     return {names.ANSWER: names.SUCCESS, names.DATA: result[0]}
 
+
+
+def get_router(param=None, data=None):
+    if data is None:
+        sql = """SELECT routes_gis.id_route, routes_gis.route, routes_gis.name, users_gis.name, routes_gis.score 
+                FROM routes_gis INNER JOIN users_gis
+                ON routes_gis.id_user = users_gis.id_user where routes_gis.is_private=false"""
+        result = gs.SqlQuery(sql)
+        return {names.ANSWER: names.SUCCESS, names.DATA: result}
+    if param == "get_route":
+        sql = """select route from routes_gis where id_route={}""".format(data["id_route"])
+        result = gs.SqlQuery(sql)
+        return {names.ANSWER: names.SUCCESS, names.DATA: result}
+    if param == "get_usr":
+        sql = "select route from routes_gis where id_user={}".format(data[names.ID])
+        result = gs.SqlQuery(sql)
+        return {names.ANSWER: names.SUCCESS, names.DATA: result}
+
+
+

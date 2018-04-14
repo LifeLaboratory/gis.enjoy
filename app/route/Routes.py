@@ -3,8 +3,8 @@
 import api.base_name as names
 from flask_restful import Resource, reqparse
 from api.helpers.service import Gis as gs
-from api.route import add_router, validate_router
-import json
+from api.route import add_router, validate_router, get_router
+import api.auth.auth as auth
 
 class Route(Resource):
     def __init__(self):
@@ -19,33 +19,34 @@ class Route(Resource):
         self.param = self.__args.get('param', None)
         print("param:", self.param)
         print(self.data)
-        self.data = gs.converter(self.data)
-        print("data: ", self.data)
+        if self.data is not None:
+            self.data = gs.converter(self.data)
+            print("data: ", self.data)
         return
 
-    def check_data(self):
-        if self.data[names.UUID] is None:
-            return False
-        if self.data[names.NAME] is None:
-            return False
-        return True
 
     def switch(self):
         if self.param == "add" and self.data is not None:
             answer = validate_router(self.data)
             return answer
+        if self.param == "get" and self.data is None:
+            answer = get_router()
+            return answer
+        if self.param == "get_route" and self.data is not None:
+            answer = get_router(self.data)
+            return answer
+        if self.param == "get_usr" and self.data is not None:
+            self.data[names.ID_USER] = auth.session_verification(self.data[names.UUID])
+            answer = get_router(self.data[names.ID_USER])
+            return answer
 
 
     def get(self):
-        try:
-            print("Route")
-            self.parse_data()
-            check = self.check_data()
-            print(check)
-            if check:
-                answer = self.switch()
-                print("answer: ", answer)
-                return answer, 200, {'Access-Control-Allow-Origin': '*'}
-            return "Error", 200, {'Access-Control-Allow-Origin': '*'}
-        except:
-            return "Error", 200, {'Access-Control-Allow-Origin': '*'}
+
+        print("Route")
+        self.parse_data()
+        answer = self.switch()
+        print("answer: ", answer)
+        return answer, 200, {'Access-Control-Allow-Origin': '*'}
+        #except:
+         #   return "Error", 200, {'Access-Control-Allow-Origin': '*'}
