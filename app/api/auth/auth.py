@@ -29,7 +29,7 @@ def get_login(id_user):
     :return: str Логин пользователя
     """
     try:
-        sql = "SELECT Login FROM Auth WHERE User = '{}'".format(id_user)
+        sql = "SELECT Login FROM Auth_gis WHERE User = '{}'".format(id_user)
         result = Sql.exec(sql)
     except:
         return None
@@ -47,7 +47,7 @@ def get_user_name(id_user):
     :param id_user: int, id пользователя
     :return:
     """
-    sql = """Select name from users where id_user = {id_user}""".format(id_user=id_user)
+    sql = """Select name from users_gis where id_user = {id_user}""".format(id_user=id_user)
     print(sql)
     try:
         result = Sql.exec(sql)
@@ -88,9 +88,10 @@ def auth_user(user_data):
     password_hash.update(user_data[names.PASSWORD].encode())
     user_data[names.PASSWORD] = password_hash.hexdigest()
     try:
-        sql = "SELECT id_user FROM Auth WHERE Login = '{}' and Password = '{}'".format(user_data[names.LOGIN],
+        sql = "SELECT id_user FROM Auth_gis WHERE Login = '{}' and Password = '{}'".format(user_data[names.LOGIN],
                                                                                        user_data[names.PASSWORD])
         result = Sql.exec(sql)
+        print(sql)
     except:
         return {names.ANSWER: "Ошибка запроса к базе данных"}
     try:
@@ -110,7 +111,7 @@ def logout_user(session):
     :param session: UUID сессии, которую нужно закрыть
     """
     try:
-        sql = "DELETE FROM Session WHERE UUID = '{}'".format(session)
+        sql = "DELETE FROM Session_gis WHERE UUID = '{}'".format(session)
         result = Sql.exec(sql)
     except:
         return {names.ANSWER: "Ошибка запроса к базе данных"}
