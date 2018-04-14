@@ -2,7 +2,7 @@
 from flask_restful import Resource, reqparse
 import api.auth.registration_users as reg
 import api.base_name as names
-from api.helpers.json import converter
+from api.helpers.json1 import converter
 
 
 class Registration(Resource):

@@ -1,6 +1,6 @@
 # coding=utf-8
 from flask_restful import Resource, reqparse
-from api.helpers.json import converter
+from api.helpers.sql import Gis as gs
 from api.path import Path
 from api.filter import Filter
 from time import time
@@ -25,7 +25,7 @@ class RouteGeo(Resource):
 
     def parse_data(self):
         data = self.__args.get('data', None)
-        data = converter(data)
+        data = gs.converter(data)
         self.__data_origin_X = data["origin"]["X"]
         self.__data_origin_Y = data["origin"]['Y']
         self.__data_destination_X = data["destination"]["X"]

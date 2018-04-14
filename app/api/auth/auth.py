@@ -2,6 +2,7 @@ from api.helpers.sql import Sql
 import hashlib
 import api.base_name as names
 from api.auth.registration_users import *
+from api.helpers.sql import Gis as gs
 def session_verification(session):
     """
     Метод проверяет, существует ли пользовательская сессия
@@ -9,9 +10,9 @@ def session_verification(session):
     :return: int Возвращает ID пользователя
     """
     try:
-        sql = "SELECT id_user FROM Session WHERE UUID = '{}'".format(session)
+        sql = "SELECT id_user FROM Session_gis WHERE UUID = '{}'".format(session)
         #print(sql)
-        result = Sql.exec(sql)
+        result = gs.SqlQuery(sql)
     except:
         return None
     try:
@@ -30,7 +31,7 @@ def get_login(id_user):
     """
     try:
         sql = "SELECT Login FROM Auth_gis WHERE User = '{}'".format(id_user)
-        result = Sql.exec(sql)
+        result = gs.SqlQuery(sql)
     except:
         return None
     try:
@@ -50,7 +51,7 @@ def get_user_name(id_user):
     sql = """Select name from users_gis where id_user = {id_user}""".format(id_user=id_user)
     print(sql)
     try:
-        result = Sql.exec(sql)
+        result = gs.SqlQuery(sql)
     except:
         return {names.ANSWER: names.ERROR}
     return {names.ANSWER: names.SUCCESS, names.DATA: result[0]}
@@ -90,7 +91,7 @@ def auth_user(user_data):
     try:
         sql = "SELECT id_user FROM Auth_gis WHERE Login = '{}' and Password = '{}'".format(user_data[names.LOGIN],
                                                                                        user_data[names.PASSWORD])
-        result = Sql.exec(sql)
+        result = gs.SqlQuery(sql)
         print(sql)
     except:
         return {names.ANSWER: "Ошибка запроса к базе данных"}
@@ -112,7 +113,7 @@ def logout_user(session):
     """
     try:
         sql = "DELETE FROM Session_gis WHERE UUID = '{}'".format(session)
-        result = Sql.exec(sql)
+        result = gs.SqlQuery(sql)
     except:
         return {names.ANSWER: "Ошибка запроса к базе данных"}
     try:
