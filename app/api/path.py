@@ -1,11 +1,11 @@
 import math
 from operator import itemgetter
 from copy import deepcopy
-from api.helpers.sql import Sql
 from api.google.helpers.google import Google
 from api.filter import Filter
 from numpy import std
 import time
+from api.helpers.service import Gis as gs
 
 __author__ = 'ar.chusovitin'
 
@@ -60,7 +60,6 @@ class Path:
         return result
 
     def set_touch(self):
-        get_sql = ""
         result = ()
         dynamic_delta = 3 * DELTA * math.sqrt(2)
         trying = 1
@@ -104,7 +103,7 @@ class Path:
             )
             #print(get_sql)
             #get_sql = "SELECT * FROM Geo"
-            result = Sql.exec(get_sql)
+            result = gs.SqlQuery(get_sql)
             trying = trying + 1
         return result
 
@@ -154,7 +153,7 @@ class Path:
             text += '{}, '.format(i) if i != self.id_list[-1] else '{}'.format(i)
 
         print(get_sql % (text))
-        self.dict_pair_touch = Sql.exec(get_sql % (text))
+        self.dict_pair_touch = gs.SqlQuery(get_sql % (text))
 
     def set_distance(self):
         pass
@@ -259,7 +258,6 @@ class Path:
         max_priority = len(priority)
 
         sko_array = []
-        sko = 0
         for element in self.dict_graph[0]:
             sko_array.append(element[1])
 

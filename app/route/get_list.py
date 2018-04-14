@@ -1,8 +1,6 @@
 # coding=utf-8
-import json
-from flask_restful import Resource, reqparse
-from flask import request
-from api.helpers.json import converter
+from flask_restful import Resource
+from api.helpers.service import Gis as gs
 
 class List(Resource):
     def get(self):
@@ -36,7 +34,7 @@ class List(Resource):
         #print("OK SEND")
         #answer = json.dumps(answer)
         """
-        answer = converter({
+        answer = gs.converter({
                     "route": [
                         {
                             "name": ["Lenina", "duck", "fuck", "ducken"],

@@ -1,8 +1,7 @@
 # coding=utf-8
 import requests as req
-from api.helpers.json import converter
+from api.helpers.service import Gis as gs
 from .key import key
-from multiprocessing import Manager, Process
 __author__ = 'RaldenProg'
 
 GET_TOUCH_FROM_MANY = "https://maps.googleapis.com/maps/api/distancematrix/" \
@@ -32,7 +31,7 @@ class Google:
         url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking&origins={}&destinations={}&key={}".format(
             start, finish, self.key)
         answer = s.get(url)
-        answer = converter(answer.text)['rows'][0]['elements'][0]['duration']['text'].split()
+        answer = gs.converter(answer.text)['rows'][0]['elements'][0]['duration']['text'].split()
 
         if len(answer) > 2:
             if op:
@@ -68,7 +67,7 @@ class Google:
 
     def _get_distance(self):
         result = []
-        distance = converter(self.distance)
+        distance = gs.converter(self.distance)
         for i in range(len(distance["rows"][0]["elements"])):
             times = distance["rows"][0]["elements"][i]['duration']['text'].split()
             if len(times) > 2:
@@ -92,7 +91,7 @@ class Google:
                 answer = s.get(url)
                 #print(answer.text)
 
-                answer = converter(answer.text)['rows']
+                answer = gs.converter(answer.text)['rows']
                 for dist in answer[0]['elements']:
                     self.record['s'].append(dist['duration']['value'] // 60)
                 break
@@ -120,7 +119,7 @@ class Google:
         s = req.Session()
         for k in key:
             answer = s.get(url.format(k))
-            answer = converter(answer.text)
+            answer = gs.converter(answer.text)
             if answer["status"] == "OK":
                 return k
         return "key not found"
