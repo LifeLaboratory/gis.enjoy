@@ -33,12 +33,12 @@ def add_router(user_data):
     """
     user_data[names.ID_USER] = auth.session_verification(user_data[names.UUID])
     sql = """INSERT INTO routes_gis (id_user, is_private, score, name, route) VALUES
-        ({id_user}, {is_private}, {score}, '{name}', {route}) RETURNING id_route
+        ({id_user}, {is_private}, {score}, '{name}', '{route}') RETURNING id_route
         """.format(id_user=user_data[names.ID_USER],
                    is_private=user_data[names.IS_PRIVATE],
                    score=user_data[names.SCORE],
                    name=user_data[names.NAME],
-                   route=user_data[names.ROUTE])
+                   route=gs.converter(user_data[names.ROUTE]))
 
     print(sql)
     try:

@@ -32,21 +32,20 @@ class Route(Resource):
 
     def switch(self):
         if self.param == "add" and self.data is not None:
-            answer = gs.converter(validate_router(self.data))
+            answer = validate_router(self.data)
             return answer
 
 
     def get(self):
-
-
-        print("Route")
-        self.parse_data()
-        check = self.check_data()
-        print(check)
-        if check:
-            answer = self.switch()
-            print("answer: ", answer)
-            return answer, 200, {'Access-Control-Allow-Origin': '*'}
-        return "Error", 200, {'Access-Control-Allow-Origin': '*'}
-        #except:
-         #   return "Error", 200, {'Access-Control-Allow-Origin': '*'}
+        try:
+            print("Route")
+            self.parse_data()
+            check = self.check_data()
+            print(check)
+            if check:
+                answer = self.switch()
+                print("answer: ", answer)
+                return answer, 200, {'Access-Control-Allow-Origin': '*'}
+            return "Error", 200, {'Access-Control-Allow-Origin': '*'}
+        except:
+            return "Error", 200, {'Access-Control-Allow-Origin': '*'}
