@@ -2,8 +2,7 @@
 from flask_restful import Resource, reqparse
 import api.auth.registration_users as reg
 import api.base_name as names
-from api.helpers.json1 import converter
-
+from api.helpers.service import Gis as gs
 
 class Registration(Resource):
     def __init__(self):
@@ -14,7 +13,7 @@ class Registration(Resource):
 
     def parse_data(self):
         self.data = self.__args.get('data', None)
-        self.data = converter(self.data)
+        self.data = gs.converter(self.data)
         print("data: ", self.data)
 
         return

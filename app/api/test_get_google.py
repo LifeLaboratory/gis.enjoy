@@ -2,7 +2,7 @@ __author__ = 'RaldenProg'
 
 from app.api.get_google_dist import get_google
 from api.get_and_parse_data import db_connect
-from api.helpers.sql import Sql
+from api.helpers.service import Sql
 import time
 from multiprocessing import Process
 #print(get_google(["54.9870301969,82.8739339379", "55.0666090889,82.9952098502"]))
