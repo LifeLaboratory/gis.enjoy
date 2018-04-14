@@ -1,4 +1,4 @@
-from api.helpers.sql import Sql
+from api.helpers.service import Gis as gs
 
 __author__ = 'RaldenProg'
 
@@ -10,7 +10,7 @@ class Filter:
 
     def get_filter(self):
         get_sql = "select distinct type FROM geo"
-        dict_type = Sql.exec(get_sql)
+        dict_type = gs.SqlQuery(get_sql)
         result = []
         for d in dict_type:
             result.append(d["type"])

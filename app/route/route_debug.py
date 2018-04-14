@@ -1,8 +1,6 @@
 # coding=utf-8
 from flask_restful import Resource, reqparse
-from api.helpers.json1 import converter
-from api.Log import Debug
-
+from api.helpers.json import converter
 
 
 class RouteDebug(Resource):
@@ -22,9 +20,8 @@ class RouteDebug(Resource):
 
 
     def switch(self):
-        answer = Debug.read()
-        print(answer)
-        return answer
+        if self.param is None:
+
 
     def get(self):
         self.parse_data()

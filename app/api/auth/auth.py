@@ -1,8 +1,7 @@
-from api.helpers.sql import Sql
-import hashlib
-import api.base_name as names
 from api.auth.registration_users import *
-from api.helpers.sql import Gis as gs
+from api.helpers.service import Gis as gs
+
+
 def session_verification(session):
     """
     Метод проверяет, существует ли пользовательская сессия

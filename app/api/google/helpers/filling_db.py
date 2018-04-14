@@ -1,10 +1,8 @@
 __author__ = 'RaldenProg'
 
 import requests as req
-from api.helpers.json import converter
-from api.helpers.sql import Sql
 from app.api.get_google_dist import get_google
-
+from api.helpers.service import Gis as gs
 
 class Filling():
     def __init__(self):
@@ -14,7 +12,7 @@ class Filling():
         s = req.Session()
         url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query={}&key={}&language=ru".format(query, self.key)
         answer = s.get(url)
-        answer = converter(answer.text)['results']
+        answer = gs.converter(answer.text)['results']
         js = {}
         for res in answer:
             js = {"name": res["name"], "description": res["place_id"], "x": None, "y": None, "rating": 0,
@@ -31,7 +29,7 @@ class Filling():
 
     def check(self, new_point):
         sql = "SELECT * FROM Geo where x={} AND y={}".format(float(new_point["x"]), float(new_point["y"]))
-        return Sql.exec(sql)
+        return gs.SqlQuery(sql)
 
     def input_base(self, result):
         for new_point in result:
@@ -41,13 +39,13 @@ class Filling():
                     new_point["name"], float(new_point["x"]), float(new_point["y"]), new_point["type"],
                     new_point["description"], int(new_point["rating"]), int(new_point["time"]))
                 print(sql)
-                Sql.exec(sql)
+                gs.SqlQuery(sql)
 
                 sql = "SELECT id FROM Geo WHERE X={} AND Y={}".format(new_point["x"], new_point["y"])
-                new_point["id"] = SqlQuery(sql)
+                new_point["id"] = gs.SqlQuery(sql)
                 new_point["id"] = int(new_point["id"][0]['id'])
                 # print(new_point["id"][0]['id'])
-                points = Sql.exec("SELECT id, x, y FROM Geo WHERE id <> (SELECT last_value from geo_id_seq)")
+                points = gs.SqlQuery("SELECT id, x, y FROM Geo WHERE id <> (SELECT last_value from geo_id_seq)")
                 for i in range(len(points)):
                     data = []
                     disti = ""
@@ -65,9 +63,9 @@ class Filling():
                         new_point['id'],
                         answer)
                     # print(sql)
-                    Sql.exec(sql)
+                    gs.SqlQuery(sql)
 
-                    Sql.exec("INSERT INTO geo_distance (point_1, point_2, distance)" \
+                    gs.SqlQuery("INSERT INTO geo_distance (point_1, point_2, distance)" \
                              " VALUES ({}, {}, {})".format(
                         new_point['id'],
                         points[i]['id'],
