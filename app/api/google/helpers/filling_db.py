@@ -74,6 +74,14 @@ class Filling():
 
 
 filling = Filling()
-list = filling.get("достопримечательности+Москвы")
+list = filling.get("памятники+Барнаул")
+for l in list:
+    l["type"] = 'памятник'
+    l["rating"] = 4
+    l["time"] = 10
 print(list)
-print(filling.input_base(list))
+listing = []
+listing.append(list[4])
+print(listing)
+
+print(filling.input_base(listing))
