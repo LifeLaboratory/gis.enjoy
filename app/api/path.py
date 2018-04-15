@@ -6,6 +6,7 @@ from api.filter import Filter
 from numpy import std
 import time
 from api.helpers.service import Gis as gs
+from api.Log import debug_write
 
 __author__ = 'ar.chusovitin'
 
@@ -31,6 +32,7 @@ class Path:
         self.user_time = user_time
         self.new_graph = {}
         self.result = self.select_path()
+        self.touches = None
 
     def select_path(self):
         start = time.time()
@@ -57,6 +59,7 @@ class Path:
             len(self.id_list) - 1,
             (self.start, self.finish)
         )
+        debug_write(str(self.touches), str(result))
         return result
 
     def set_touch(self):
@@ -104,6 +107,7 @@ class Path:
             #print(get_sql)
             #get_sql = "SELECT * FROM Geo"
             result = gs.SqlQuery(get_sql)
+            self.touches = result
             trying = trying + 1
         return result
 
