@@ -55,7 +55,7 @@ def add_router(user_data):
 
 def get_router(param=None, data=None):
     if data is None:
-        sql = """SELECT users_gis.name, routes_gis.id_route, routes_gis.route, routes_gis.name, routes_gis.score 
+        sql = """SELECT users_gis.name as username, routes_gis.id_route, routes_gis.route, routes_gis.name, routes_gis.score 
                 FROM routes_gis INNER JOIN users_gis
                 ON routes_gis.id_user = users_gis.id_user where routes_gis.is_private=false"""
         result = gs.SqlQuery(sql)
