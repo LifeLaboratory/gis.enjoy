@@ -18,7 +18,7 @@ class Route(Resource):
         self.data = self.__args.get('data', None)
         self.param = self.__args.get('param', None)
         print("param:", self.param)
-        print(self.data)
+        print("not conv data: ", self.data)
         if self.data is not None:
             self.data = gs.converter(self.data)
             print("data: ", self.data)
@@ -37,6 +37,8 @@ class Route(Resource):
             return answer
         if self.param == "get_usr" and self.data is not None:
             self.data[names.ID_USER] = auth.session_verification(self.data[names.UUID])
+            if self.data[names.ID_USER] is None:
+                return {names.ANSWER: "UUID not found"}
             answer = get_router(self.data[names.ID_USER])
             return answer
 
