@@ -24,9 +24,11 @@ function initMap() {
 
     var ekb = new google.maps.LatLng(56.845417, 60.645740);
     var nsk = new google.maps.LatLng(55.027978, 82.951315);
+    var barn = new google.maps.LatLng(53.349651, 83.769287);
+
     var mapOptions = {
         zoom:14,
-        center: ekb
+        center: barn
     };
 
     map = new google.maps.Map(document.getElementById('map'), mapOptions);

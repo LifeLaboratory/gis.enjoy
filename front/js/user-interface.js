@@ -4,7 +4,68 @@ var routes;
 var selectedRoute;
 var routesList = new Array();
 
-var hint = new Hint();
+var hint;
+var leftMenu;
+
+function createCORSRequest(method, url) {
+    var xhr = new XMLHttpRequest();
+    if ("withCredentials" in xhr) {
+        xhr.open(method, url, true);
+    } else if (typeof XDomainRequest != "undefined") {
+        xhr = new XDomainRequest();
+        xhr.open(method, url);
+    } else {
+        xhr = null;
+    }
+    return xhr;
+}
+
+function getFilters() {
+    var httpRequest = 'http://90.189.132.25:13451/filter';
+
+    var xhr = createCORSRequest('GET', httpRequest);
+    xhr.send(); //отправка даты
+
+    xhr.onload = function () {
+        document.getElementById("placeholder").classList.add("disabled-block");
+        console.log("фильтры");
+
+        var filters = JSON.parse(this.responseText);
+        console.log(routes);
+
+        var filtersContainer = document.getElementById('filters');
+
+        for (var i = 0; i < filters.data.length; i++) {
+            var name = filters.data[i];
+
+            filtersContainer.innerHTML += '<div todatabase="' + name + '" id="filters__category' + i + '" ' +
+                'class="left-menu__category">' + name + '</div>'
+        }
+
+
+        setTimeout(setFiltersAction(), 4000);
+
+    };
+
+    xhr.onerror = function () {
+        document.getElementById("placeholder").classList.add("disabled-block");
+    };
+
+}
+
+function setFiltersAction() {
+    var isok = true;
+
+    for (var i = 0; isok != false; i++) {
+        var element = document.getElementById("filters__category" + i);
+
+        if (element) {
+            addActionForParameters(i);
+        } else {
+            isok = false;
+        }
+    }
+}
 
 function addActionForParameters(id) {
     document.getElementById("filters__category" + id).onclick = function () {
@@ -32,19 +93,6 @@ function addActionForParameters(id) {
         console.log("После");
         console.log(priority);
     };
-}
-
-function createCORSRequest(method, url) {
-    var xhr = new XMLHttpRequest();
-    if ("withCredentials" in xhr) {
-        xhr.open(method, url, true);
-    } else if (typeof XDomainRequest != "undefined") {
-        xhr = new XDomainRequest();
-        xhr.open(method, url);
-    } else {
-        xhr = null;
-    }
-    return xhr;
 }
 
 function showRoutes(from) {
@@ -153,7 +201,10 @@ function selectMenu(activeMenu) {
 }
 
 $(document).ready(function(){
-    
+    hint = new Hint();
+    //leftMenu = new LeftMenu();
+    getFilters();
+
     function start() {
         selectMenu("main-menu");
         removeRoute();
@@ -170,19 +221,8 @@ $(document).ready(function(){
         document.getElementById("build-route").classList.toggle("menu__element--main-point");
         document.getElementById("routes-block").classList.add("disabled-block");
     }
-    
-    
-    var isok = true;
 
-    for (var i = 0; isok != false; i++) {
-        var element = document.getElementById("filters__category" + i);
 
-        if (element) {
-            addActionForParameters(i);
-        } else {
-            isok = false;
-        }
-    }
 
     //тест
 /*
@@ -295,11 +335,16 @@ $(document).ready(function(){
         results = JSON.stringify(results);
         results = JSON.parse(results);
 
+
+        console.log(JSON.stringify(results));
+
         console.log("sending start");
         console.log();
 
-        var httpRequest = "http://localhost:13451/list?data=" + JSON.stringify(results);
-        //var httpRequest = "http://localhost:13451/geo?data=" + JSON.stringify(results);
+        //var httpRequest = "http://localhost:13451/list?data=" + JSON.stringify(results);
+        //var httpRequest = "http://90.189.132.25:13451/geo?data=" + JSON.stringify(results);
+        //const httpRequest = 'http://90.189.132.25:13451/geo?data={"origin":{"X":53.341805,"Y":83.751245},"destination":{"X":53.344153,"Y":83.783141},"time":480,"priority":["парк","музей","памятник","кинотеатр"]}';
+        var httpRequest = 'http://90.189.132.25:13451/geo?data=' + JSON.stringify(results);
 
         var xhr = createCORSRequest('GET', httpRequest);
         xhr.send(); //отправка даты
@@ -309,8 +354,8 @@ $(document).ready(function(){
             console.log("полученные данные");
             console.log(this.responseText);
 
-            routes = $.parseJSON(this.responseText);
-            routes = JSON.parse(routes);
+            //routes = $.parseJSON(this.responseText);
+            routes = JSON.parse(this.responseText);
             console.log(routes);
 
             makeList();
@@ -326,7 +371,6 @@ $(document).ready(function(){
         selectMenu("select-route-menu");
         //makeList(); //ДЛЯ ТЕСТА, ПОТОМ УБРАТЬ
     };
-
 
     document.getElementById("change-route").onclick = function () {
         selectMenu("change-route-menu");
