@@ -46,6 +46,8 @@ def add_router(user_data):
         print(result)
     except:
         return {names.ANSWER: names.ERROR}
+    if result is None:
+        return {names.ANSWER: names.ERROR}
     return {names.ANSWER: names.SUCCESS, names.DATA: result[0]}
 
 
