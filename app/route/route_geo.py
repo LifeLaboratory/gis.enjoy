@@ -25,6 +25,7 @@ class RouteGeo(Resource):
 
     def parse_data(self):
         data = self.__args.get('data', None)
+        print(data)
         data = gs.converter(data)
         self.__data_origin_X = data["origin"]["X"]
         self.__data_origin_Y = data["origin"]['Y']
@@ -69,5 +70,6 @@ class RouteGeo(Resource):
         if check:
             self.assemly_data()
             answer = self.switch()
+            print("ans: ", answer)
             return answer, 200, {'Access-Control-Allow-Origin': '*'}
         return "Error",  200, {'Access-Control-Allow-Origin': '*'}

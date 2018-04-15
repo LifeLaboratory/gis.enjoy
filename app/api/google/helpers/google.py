@@ -83,16 +83,17 @@ class Google:
         str_destinations += str(finish[0]) + ", " + str(finish[1])
         str_origin = str(start[0]) + ", " + str(start[1]) + "|" + str(finish[0]) + ", " + str(finish[1])
         s = req.Session()
-        url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins={}&destinations={}&key={}&mode=walking".format(
-            str_origin, str_destinations, self.key)
-        answer = None
-        for i in range(len(key)):
+        for k in key:
             try:
+                url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins={}&destinations={}&key={}&mode=walking".format(
+                    str_origin, str_destinations, k)
+                answer = None
                 answer = s.get(url)
-                print(url)
-              #  print(answer.text)
-
+                #print(url)
                 answer = gs.converter(answer.text)['rows']
+                print("answer:", answer)
+                if answer == []: #hot fix
+                    return 123
                 for dist in answer[0]['elements']:
                     self.record['s'].append(dist['duration']['value'] // 60)
                 break

@@ -41,7 +41,7 @@ def add_router(user_data):
                    name=user_data[names.NAME],
                    route=gs.converter(user_data[names.ROUTE]))
 
-    print(sql)
+    #print(sql)
     try:
         result = gs.SqlQuery(sql)
         print(result)

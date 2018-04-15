@@ -38,7 +38,7 @@ class Filling():
                 sql = " INSERT INTO Geo (Name, X, Y, Type, Descript, Rating, Time) VALUES (\'{}\', {}, {}, \'{}\', \'{}\', {}, {})".format(
                     new_point["name"], float(new_point["x"]), float(new_point["y"]), new_point["type"],
                     new_point["description"], int(new_point["rating"]), int(new_point["time"]))
-                print(sql)
+                #print(sql)
                 gs.SqlQuery(sql)
 
                 sql = "SELECT id FROM Geo WHERE X={} AND Y={}".format(new_point["x"], new_point["y"])
@@ -74,14 +74,11 @@ class Filling():
 
 
 filling = Filling()
-list = filling.get("памятники+Барнаул")
+list = filling.get("достопримечательности+Барнаул")
 for l in list:
-    l["type"] = 'памятник'
+    if l["type"] == 'museum':
+        l["type"] = 'музей'
     l["rating"] = 4
-    l["time"] = 10
+    l["time"] = 30
 print(list)
-listing = []
-listing.append(list[4])
-print(listing)
-
-print(filling.input_base(listing))
+print(filling.input_base(list))

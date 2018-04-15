@@ -73,7 +73,7 @@ def create_table_geo():
           "Time int(11) " \
           ") " \
           "ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;"
-    print(sql)
+    #print(sql)
     try:
         current_connect.execute(sql)
         connect.commit()
@@ -96,7 +96,7 @@ def add_json_to_sql(json_data):
             json.loads(json_data_single)['Y'],
             json.loads(json_data_single)['Type']
         )
-        print(sql)
+        #print(sql)
         try:
             current_connect.execute(sql)
             connect.commit()
@@ -111,7 +111,7 @@ def add_json_to_sql(json_data):
 def add_new_point(new_point):
     sql = " INSERT INTO Geo (Name, X, Y, Type, Descript, Rating, Time) VALUES (\'{}\', {}, {}, \'{}\', \'{}\', {}, {})".format(
         new_point["Name"], float(new_point["X"]), float(new_point["Y"]), new_point["Type"], new_point["Description"], int(new_point["Rating"]), int(new_point["Time"]))
-    print(sql)
+    #print(sql)
     gs.SqlQuery(sql)
 
     sql = "SELECT id FROM Geo WHERE X={} AND Y={}".format(new_point["X"], new_point["Y"])

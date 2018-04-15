@@ -48,7 +48,7 @@ def get_user_name(id_user):
     :return:
     """
     sql = """Select name from users_gis where id_user = {id_user}""".format(id_user=id_user)
-    print(sql)
+    #print(sql)
     try:
         result = gs.SqlQuery(sql)
     except:
@@ -91,7 +91,7 @@ def auth_user(user_data):
         sql = "SELECT id_user FROM Auth_gis WHERE Login = '{}' and Password = '{}'".format(user_data[names.LOGIN],
                                                                                        user_data[names.PASSWORD])
         result = gs.SqlQuery(sql)
-        print(sql)
+        #print(sql)
     except:
         return {names.ANSWER: "Ошибка запроса к базе данных"}
     try:

@@ -66,7 +66,7 @@ def generate_distance():
                 result[i]['id'],
                 result[j]['id'],
                 answer)
-            print(sql)
+            #print(sql)
             Process(target=insert_db, args=(sql, )).start()
             count+=1
             #print(sql)
