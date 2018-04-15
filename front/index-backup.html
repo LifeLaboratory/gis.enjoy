@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>gis enjoy!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<body>
+
+<div class="select-options__logo" alt=""></div>
+
+<div id="select-options" class="select-options">
+    <!--<div class="select-options__logo" alt=""></div>-->
+
+    <div class="time-select--container" id="step0">
+        <div class="time-select__title">Сколько времени у вас есть?</div>
+        <select id="hours" class="time-select__select-input">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+            <option>9</option>
+            <option>10</option>
+            <option>11</option>
+            <option>12</option>
+            <option>13</option>
+            <option>14</option>
+            <option>15</option>
+            <option>16</option>
+            <option>17</option>
+            <option>18</option>
+            <option>19</option>
+            <option>20</option>
+            <option>21</option>
+            <option>22</option>
+            <option>23</option>
+            <option>24</option>
+        </select> Часов
+        <select id="minutes" class="time-select__select-input">
+            <option>0</option>
+            <option>5</option>
+            <option>10</option>
+            <option>15</option>
+            <option>20</option>
+            <option>25</option>
+            <option>30</option>
+            <option>35</option>
+            <option>40</option>
+            <option>45</option>
+            <option>50</option>
+            <option>55</option>
+        </select> Минут
+        <br><br><br><br><br>
+        <div>
+            <div style="display: flex; justify-content: space-between; max-width: 420px; margin: 0 auto; align-items: center; margin-bottom: 20px;">
+                <div style="font-size: 18px; font-family: 'FuturaNewBook', sans-serif;">Адрес отправления: </div>
+                <input type="text" id="start-address" class="time-select__select-input" placeholder="Адрес отправления">
+            </div>
+            <div style="display: flex; justify-content: space-between; max-width: 420px; margin: 0 auto; align-items: center; margin-bottom: 20px">
+                <div style="font-size: 18px; font-family: 'FuturaNewBook', sans-serif;">Адрес прибытия:</div>
+                <input type="text" id="end-address" class="time-select__select-input" placeholder="Адрес прибытия">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="place-select--container disabled-block" id="step1">
+
+        <div class="place-select__title">Расставьте приоритеты для достопримечательностей</div>
+        <div class="place-select__description">5 - максимальный приоритет, 0 - минимельный</div>
+
+        <div class="place-select__option-block" >
+            <div class="place-select__option-title" id="option3">Парк</div>
+            <div class="stars">
+                <select id="rating3" class="place-select__select-input">
+                    <option>0</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="place-select__option-block" >
+            <div class="place-select__option-title" id="option2">Памятники</div>
+            <div class="stars">
+                <select id="rating2" class="place-select__select-input">
+                    <option>0</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="place-select__option-block" >
+            <div class="place-select__option-title" id="option4">Театры</div>
+            <div class="stars">
+                <select id="rating4" class="place-select__select-input">
+                    <option>0</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="place-select__option-block">
+            <div class="place-select__option-title" id="option5">Музеи</div>
+            <div class="stars">
+                <select id="rating5" class="place-select__select-input">
+                    <option>0</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="place-select__option-block" >
+            <div class="place-select__option-title" id="option0">Галереи</div>
+            <div class="stars">
+                <select id="rating0" class="place-select__select-input">
+                    <option>0</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="place-select__option-block" >
+            <div class="place-select__option-title" id="option1">Фонтаны</div>
+            <div class="stars">
+                <select id="rating1" class="place-select__select-input">
+                    <option>0</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="select-options__steps-buttons-container">
+        <div id="prev">
+            <button id="prev-step" class="select-options__prev-button">Назад</button>
+        </div>
+        <div id="next">
+            <button id="next-step" class="select-options__next-button">Далее</button>
+        </div>
+    </div>
+</div>
+
+<div id="routes" class="route--container disabled-block">
+    <div id="route0" class="route">
+        <div class="route__point">Первая точка</div>
+        <div class="route__arrow"> --> </div>
+        <div class="route__point">вторая точка</div>
+    </div>
+    <div id="route1" class="route">
+        <div class="route__point">Первая точка</div>
+        <div class="route__arrow"> --> </div>
+        <div class="route__point">вторая точка</div>
+    </div>
+</div>
+
+<div id="map-container" class="routes-map disabled-block">
+    <div class="routes-map__header-container">
+        <button onclick="otherWay();" class="routes-map__change-rout-button">Выбрать другой путь</button>
+        <button onclick="otherPriotity();" class="routes-map__change-priority-button">Расставить заново приоритеты</button>
+    </div>
+    <div id="map" class="routes-map__map"></div>
+</div>
+
+<script src="https://api-maps.yandex.ru/1.1/index.xml" type="text/javascript"></script>
+<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+<script src="https://yandex.st/jquery/2.2.3/jquery.min.js" type="text/javascript"></script>
+
+<script src="js-backup/routes.js" type="text/javascript"></script>
+<script src="js-backup/index.js" type="text/javascript"></script>
+<!--<script src="js/steps.js" type="text/javascript"></script>-->
+<script src="js-backup/maproutes.js" type="text/javascript" defer></script>
+</body>
+</html>

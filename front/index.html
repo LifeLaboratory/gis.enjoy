@@ -22,18 +22,19 @@
 
     <div class="" id="filters">
         <div toDataBase="Парк" class="left-menu__title">Куда вы хотите зайти:</div>
+
+        <!--
         <div toDataBase="Парк" id="filters__category0" class="left-menu__category">Парки</div>
         <div toDataBase="Памятник" id="filters__category1" class="left-menu__category">Памятники</div>
         <div toDataBase="Театр" id="filters__category2" class="left-menu__category">Театры</div>
         <div toDataBase="Музей" id="filters__category3" class="left-menu__category">Музеи</div>
         <div toDataBase="Галерея" id="filters__category4" class="left-menu__category">Галереи</div>
-    <!--    <div id="filters__category5" class="filters__category">Фонтан</div> -->
+        -->
     </div>
 
     <div class="debug-menu disabled-block">
         <div class="left-menu__title">Привет бэку!</div>
     </div>
-
 </div>
 
 <div class="hint" id="hint">Выберите исходную точку</div>
@@ -45,8 +46,8 @@
 <div class="menu" id="menu">
     <div id="main-menu">
         <div id="build-route" class="menu__element">Построить маршрут</div>
-        <div class="menu__element">Авторские маршруты</div>
-        <div class="menu__element">Приключение</div>
+        <!--<div class="menu__element">Авторские маршруты</div>
+        <div class="menu__element">Приключение</div>-->
     </div>
 
     <div class="disabled-block" id="route-menu">
@@ -66,9 +67,11 @@
 </div>
 
 
-
-<div id="map">
+<div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;">
+    <div id="map">
+    </div>
 </div>
+
 
 <div class="parameters" id="parameters">
     <div class="parameters__search">
