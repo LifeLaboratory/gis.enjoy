@@ -282,13 +282,14 @@ class Path:
                     priority_to_time = (max_priority - priority.index(self.INDEXES.get(point[2], 0))) * time_per_priority
                 except:
                     priority_to_time = 0
-
+                #print(point)
                 # Перевод оценки во время
-                estimate_to_time = point[3] * time_per_estimate
+                if point != []: # hot fix
+                    estimate_to_time = point[3] * time_per_estimate
 
-                norm_point = (point[0], point[1], point[1] - priority_to_time - estimate_to_time)
+                    norm_point = (point[0], point[1], point[1] - priority_to_time - estimate_to_time)
 
-                matrix_row.append(norm_point)
+                    matrix_row.append(norm_point)
 
             matrix_row = sorted(matrix_row, key=lambda x: x[2])
             result_matrix.append(matrix_row)
