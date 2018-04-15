@@ -40,7 +40,7 @@ def from_csv_to_json():
                 "Time":''
             })
         )
-    print(json_res)
+    #print(json_res)
     return json_res
 
 
@@ -129,7 +129,7 @@ def add_new_point(new_point):
         data.append(distj)
         #print(data)
         answer = get_google(data)
-        print(points[i]['id'], new_point['id'], answer)
+        #print(points[i]['id'], new_point['id'], answer)
         sql = "INSERT INTO geo_distance (point_1, point_2, distance)" \
                   " VALUES ({}, {}, {})".format(
                 points[i]['id'],

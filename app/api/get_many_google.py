@@ -1,7 +1,6 @@
 __author__ = 'RaldenProg'
 
 import json
-from timeit import default_timer as timer
 
 import requests as req
 
@@ -51,16 +50,12 @@ def normalize_point_data(distances, priority):
 
 
 def get_many(touch, max_time, priority):
-    start = timer()
     google_key = Google.set_google_key()
-    end = timer()
-    print("google_key", end - start)
 
     graph, result_coord, id_list, time = get_distance(touch)
 
     #print("result_coord: ", result_coord)
     #print(graph)
-    start = timer()
     touch_list = ""
     for i in id_list:
        touch_list += str(result_coord[i]['X']) + "," + str(result_coord[i]['Y']) + "%7C"
@@ -68,11 +63,8 @@ def get_many(touch, max_time, priority):
     touch0 = str(touch[0][0]) + ',' + str(touch[0][1])
     #print(touch0)
 
-    end = timer()
-    print("touch_list", end - start)
     count0_0 = 0
     count0_1 = 0
-    start = timer()
     while(1):
         if count0_0 == 10:
             google_key = Google.set_google_key()
@@ -96,11 +88,8 @@ def get_many(touch, max_time, priority):
         else:
             result0.append(int(answ[0]))
 
-    end = timer()
-    print("google_query_1", end - start)
     touch1 = str(touch[1][0]) + ',' + str(touch[1][1])
 
-    start = timer()
     # print(touch1)
     while (1):
         if count0_0 == 10:
@@ -126,8 +115,6 @@ def get_many(touch, max_time, priority):
             result1.append(int(answ[0]) * 60 + int(answ[2]))
         else:
             result1.append(int(answ[0]))
-    end = timer()
-    print("google_query_2", end - start)
     N = len(graph) - 1
     for i in range(len(result0)):
         graph[0][i + 1] = result0[i]

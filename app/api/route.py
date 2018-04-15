@@ -32,7 +32,7 @@ def add_router(user_data):
     :return: router_id - идентификатор маршрута
     """
     user_data[names.ID_USER] = auth.session_verification(user_data[names.UUID])
-    pprint(user_data)
+    #pprint(user_data)
     sql = """INSERT INTO routes_gis (id_user, is_private, score, name, route) VALUES
         ({id_user}, {is_private}, {score}, '{name}', '{route}') RETURNING id_route
         """.format(id_user=user_data[names.ID_USER],

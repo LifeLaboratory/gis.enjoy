@@ -91,13 +91,14 @@ class Google:
                 answer = s.get(url)
                 #print(url)
                 answer = gs.converter(answer.text)['rows']
-                print("answer:", answer)
+                #print("answer:", answer)
                 if answer == []: #hot fix
                     return 123
                 for dist in answer[0]['elements']:
                     self.record['s'].append(dist['duration']['value'] // 60)
                 break
             except:
+                return 123
                 self.key = Google.set_google_key()
 
         for dist in answer[0]['elements']:

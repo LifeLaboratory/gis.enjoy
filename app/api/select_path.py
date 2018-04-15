@@ -1,6 +1,5 @@
 import math
 from api.helpers.service import Gis as gs
-from timeit import default_timer as timer
 
 delta = 0.0005
 #delta = 0.000000005
@@ -141,29 +140,17 @@ select * from get_coord;
 def get_distance(touch):
     result_coord = dict()
     time = [0]
-    start = timer()
     coord = select_avalible_points(touch[0], touch[1])
-    end = timer()
-    print("select_avalible_points", end - start)
     #print("coord", coord)
-    start = timer()
     id_list = extract_coords(result_coord, time, coord)
-    end = timer()
-    print("extract_coords", end - start)
     #coords = genereate_pare(id_list)
     #print(id_list)
     #print("result coord", result_coord)
 
-    start = timer()
     result = get_pair_distance()#coords)
-    end = timer()
-    print("get_pair_distance", end - start)
     N = len(id_list)+1
     graph = {0: {1:1, 2:4, 3:6, 4:10}, N: {}}
-    start = timer()
     set_graph(graph, id_list, result, time)
-    end = timer()
-    print("extract_coords", end - start)
 
     #pprint(graph)
 

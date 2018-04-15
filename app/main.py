@@ -32,10 +32,10 @@ def not_found(error):
 
 class Index(Resource):
     def get(self):
-        print('GET /')
-        print(request.headers)
-        print('cookies = ', request.cookies)
-        print('ARGS = ', request.args)
+        #print('GET /')
+        #print(request.headers)
+        #print('cookies = ', request.cookies)
+        #print('ARGS = ', request.args)
         return {'testing': 'testing'}, 200, HEADER
 
 
