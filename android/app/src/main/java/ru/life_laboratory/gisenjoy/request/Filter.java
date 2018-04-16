@@ -14,7 +14,7 @@ import ru.life_laboratory.gisenjoy.utils.Constants;
 public class Filter {
     private JSONObject origin;
     private JSONObject destination;
-    private ArrayList<String> priority;
+    private ArrayList<String> priority = null;
     private int time = 999;
 
     public Filter(){
@@ -45,6 +45,15 @@ public class Filter {
         for(String pr : args) {
             this.priority.add(pr);
         }
+    }
+
+    public void addPriority(String arg){
+        if(!this.priority.contains(arg))
+            this.priority.add(arg);
+    }
+
+    public void removePriority(String arg){
+        this.priority.remove(arg);
     }
 
     public void setTime(int time){

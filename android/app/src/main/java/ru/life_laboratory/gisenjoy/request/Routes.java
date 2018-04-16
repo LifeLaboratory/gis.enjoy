@@ -1,5 +1,7 @@
 package ru.life_laboratory.gisenjoy.request;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 public class Routes {
