@@ -9,7 +9,7 @@ GET_TOUCH_FROM_MANY = "https://maps.googleapis.com/maps/api/distancematrix/" \
 
 
 class Google:
-    def __init__(self, touch, touch_list=None):
+    def __init__(self, touch=None, touch_list=None):
         self.start = str(touch[0][0]) + ',' + str(touch[0][1])
         self.end = str(touch[1][0]) + ',' + str(touch[1][1])
         self.touch_list = touch_list
@@ -89,16 +89,11 @@ class Google:
                     str_origin, str_destinations, k)
                 answer = None
                 answer = s.get(url)
-                #print(url)
                 answer = gs.converter(answer.text)['rows']
-                #print("answer:", answer)
-                if answer == []: #hot fix
-                    return 123
                 for dist in answer[0]['elements']:
                     self.record['s'].append(dist['duration']['value'] // 60)
                 break
             except:
-                return 123
                 self.key = Google.set_google_key()
 
         for dist in answer[0]['elements']:

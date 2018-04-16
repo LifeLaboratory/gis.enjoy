@@ -13,7 +13,6 @@ key = [
        "AIzaSyBkmfUmisrjEJ_FnCELQFLZ9SUdMgrPTB0",
        "AIzaSyCOxYCba7J0-5-vlwQw4iy5VgVe_r_6VKc",
        "AIzaSyB0Eqh4vo3ylR_4h_pCeOHjRRjCwprwK4s",
-       "AIzaSyDZOwzvxMlPHpUtsHMb_WpotTBv46lnOWc",
        "AIzaSyCj46NqzaZ0G0npT_6tTarewAYPgUZ3V3M",
        "AIzaSyAjTR3-ERFPdXtJxCSpfrEkQ6kE4S5mE5s",
        "AIzaSyDdrExQrPV2n8Y58q7EYwVgGog-6ph9LB8",

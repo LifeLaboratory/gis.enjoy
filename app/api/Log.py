@@ -9,7 +9,7 @@ __author__ = 'RaldenProg'
 class Log():
     logging.basicConfig(filename='logger.log',
                         format='%(filename)-12s[LINE:%(lineno)d] %(levelname)-8s %(message)s %(asctime)s ',
-                        level=logging.ERROR)
+                        level=logging.DEBUG)
 
 
 def debug_write(graph, result):

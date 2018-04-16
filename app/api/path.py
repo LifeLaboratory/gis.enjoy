@@ -1,15 +1,11 @@
+# coding=utf-8
 import math
 from operator import itemgetter
 from copy import deepcopy
 from api.google.helpers.google import Google
-from api.filter import Filter
 from numpy import std
-import time
 from api.helpers.service import Gis as gs
 from api.Log import debug_write
-from api.jsons import get_json
-
-__author__ = 'ar.chusovitin'
 
 DELTA = 0.05
 top_paths = []
@@ -39,14 +35,9 @@ class Path:
         self.list_coords = self.set_touch()
 
         self.id_list = self.get_coord()
-
         self.get_pair_touch()
+        self.set_graph()
 
-        set = self.set_graph()
-        if set == 123:
-            print("Error")
-            from api.jsons import get_json
-            return get_json()
 
         self.new_graph = self.normalize_point_data(self.user_filter)
         result = self.get_top_paths(self.list_time, self.user_time)
@@ -101,8 +92,6 @@ class Path:
                 point[2],
                 point[3]
             )
-            #print("get_sql: ",get_sql)
-            #get_sql = "SELECT * FROM Geo"
             result = gs.SqlQuery(get_sql)
             self.touches = result
             trying = trying + 1
@@ -197,9 +186,6 @@ class Path:
         Получение расстояния от начала и конца пути до всех выбранных достопримечательностей
         '''
         answer = self.google.get_fast(self.start, self.finish, self.list_coords)
-        if answer == 123:
-            return 123
-
         '''
         Заполнение первых и последних строк и столбцов матрицы
         '''

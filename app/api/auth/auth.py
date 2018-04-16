@@ -10,7 +10,6 @@ def session_verification(session):
     """
     try:
         sql = "SELECT id_user FROM Session_gis WHERE UUID = '{}'".format(session)
-        #print(sql)
         result = gs.SqlQuery(sql)
     except:
         return None
@@ -48,13 +47,11 @@ def get_user_name(id_user):
     :return:
     """
     sql = """Select name from users_gis where id_user = {id_user}""".format(id_user=id_user)
-    #print(sql)
     try:
         result = gs.SqlQuery(sql)
     except:
         return {names.ANSWER: names.ERROR}
     return {names.ANSWER: names.SUCCESS, names.DATA: result[0]}
-#print(get_user_name("9"))
 
 
 def login_verification(user_data):
@@ -74,7 +71,6 @@ def login_verification(user_data):
             user_info[data] = user_data[data]
     if error:
         return {names.ANSWER: names.WARNING, names.DATA: user_info}
-    #return {names.Answer: 'Ok'}
     return auth_user(user_info)
 
 
@@ -89,9 +85,8 @@ def auth_user(user_data):
     user_data[names.PASSWORD] = password_hash.hexdigest()
     try:
         sql = "SELECT id_user FROM Auth_gis WHERE Login = '{}' and Password = '{}'".format(user_data[names.LOGIN],
-                                                                                       user_data[names.PASSWORD])
+                                                                                           user_data[names.PASSWORD])
         result = gs.SqlQuery(sql)
-        #print(sql)
     except:
         return {names.ANSWER: "Ошибка запроса к базе данных"}
     try:
