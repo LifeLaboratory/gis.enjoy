@@ -1,14 +1,11 @@
+# coding=utf-8
 import math
 from operator import itemgetter
 from copy import deepcopy
 from api.google.helpers.google import Google
-from api.filter import Filter
 from numpy import std
-import time
 from api.helpers.service import Gis as gs
 from api.Log import debug_write
-
-__author__ = 'ar.chusovitin'
 
 DELTA = 0.05
 top_paths = []
@@ -35,21 +32,12 @@ class Path:
         self.touches = None
 
     def select_path(self):
-        start = time.time()
         self.list_coords = self.set_touch()
-        print('set_touch = ', time.time() - start)
 
-        start = time.time()
         self.id_list = self.get_coord()
-        print('get_coord = ', time.time() - start)
-
-        start = time.time()
         self.get_pair_touch()
-
-        print('get_pair_touch = ', time.time() - start)
-        start = time.time()
         self.set_graph()
-        print('set_graph = ', time.time() - start)
+
 
         self.new_graph = self.normalize_point_data(self.user_filter)
         result = self.get_top_paths(self.list_time, self.user_time)
@@ -104,8 +92,6 @@ class Path:
                 point[2],
                 point[3]
             )
-            #print(get_sql)
-            #get_sql = "SELECT * FROM Geo"
             result = gs.SqlQuery(get_sql)
             self.touches = result
             trying = trying + 1
@@ -156,7 +142,7 @@ class Path:
         for i in self.id_list:
             text += '{}, '.format(i) if i != self.id_list[-1] else '{}'.format(i)
 
-        print(get_sql % (text))
+        #print(get_sql % (text))
         self.dict_pair_touch = gs.SqlQuery(get_sql % (text))
 
     def set_distance(self):
@@ -186,7 +172,7 @@ class Path:
                 self.dict_graph[i][j] = [j, pair['distance'], tyobj,
                                          self.dict_coords[self.id_list[j-1]]['Rating']]
             except:
-                print("{} {} tyobj Error 1".format(i,j))
+                #print("{} {} tyobj Error 1".format(i,j))
                 pass
 
             try:
@@ -194,13 +180,12 @@ class Path:
                 self.dict_graph[j][i] = [i, pair['distance'], tyobj,
                                          self.dict_coords[self.id_list[i-1]]['Rating']]
             except:
-                print("{} {} tyobj Error 2".format(j, i))
+                #print("{} {} tyobj Error 2".format(j, i))
                 pass
         '''
         Получение расстояния от начала и конца пути до всех выбранных достопримечательностей
         '''
         answer = self.google.get_fast(self.start, self.finish, self.list_coords)
-
         '''
         Заполнение первых и последних строк и столбцов матрицы
         '''
@@ -213,7 +198,7 @@ class Path:
                 self.dict_graph[0][i + 1] = [i + 1, answer['f'][i], tyobj,
                                              self.dict_coords[self.id_list[i]]['Rating']]
             except:
-                print("{} {} tyobj Error 3".format(N,i + 1))
+                #print("{} {} tyobj Error 3".format(N,i + 1))
                 pass
 
             try:
@@ -223,7 +208,7 @@ class Path:
                 self.dict_graph[i + 1][0] = [0, answer['f'][i], tyobj,
                                              self.dict_coords[self.id_list[i]]['Rating']]
             except:
-                print("{} {} tyobj Error 4".format(i + 1, N))
+                #print("{} {} tyobj Error 4".format(i + 1, N))
                 pass
 
         self.dict_graph[N][0] = [0, answer['o'], 0, 0]
@@ -262,6 +247,7 @@ class Path:
         max_priority = len(priority)
 
         sko_array = []
+        #print("dict:", self.dict_graph[0])
         for element in self.dict_graph[0]:
             sko_array.append(element[1])
 
@@ -424,12 +410,3 @@ class Path:
         self.longest_paths(0, len(self.new_graph) - 1, 0, time, max_time)
         return sorted(top_paths, key=itemgetter('point'), reverse=True)
 
-"""
-if __name__ == '__main__':
-    start = time.time()
-    print('Start')
-    d = Path((55.760040, 37.587127), (55.743115, 37.604391), 5000, ['Парк', 'Музей']).result
-    for i in d['route']:
-        print(i)
-    print(time.time() - start)
-"""

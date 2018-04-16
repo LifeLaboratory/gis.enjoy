@@ -1,19 +1,19 @@
 # coding=utf-8
-import sys
-import os
-sys.path.append(os.getcwd())
-from flask import Flask, request
+import flask
 from flask_restful import Resource, Api
-from route.route_geo import RouteGeo
-from route.get_list import List
-from route.route_filter import RouteFilter
+
 from route.Authentication import Authentication
-from route.Registration import Registration
 from route.Logout import Logout
+from route.Registration import Registration
 from route.Routes import Route
+from route.get_list import List
 from route.route_debug import Debug
-import api.Log
-_app = Flask(__name__)
+from route.route_filter import RouteFilter
+from route.route_geo import RouteGeo
+
+from api.Log import Log
+
+_app = flask.Flask(__name__)
 _app.config['JSON_AS_ASCII'] = False
 api = Api(_app)
 HEADER = {'Access-Control-Allow-Origin': '*'}
@@ -32,10 +32,6 @@ def not_found(error):
 
 class Index(Resource):
     def get(self):
-        print('GET /')
-        print(request.headers)
-        print('cookies = ', request.cookies)
-        print('ARGS = ', request.args)
         return {'testing': 'testing'}, 200, HEADER
 
 

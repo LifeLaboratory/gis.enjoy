@@ -29,7 +29,7 @@ def test_geo():
     url = "http://0.0.0.0:13451/geo?data={}".format(data)
     #pprint(url)
     answer = s.get(url)
-    print(answer.text)
+    #print(answer.text)
 
 
 if __name__ == '__main__':
