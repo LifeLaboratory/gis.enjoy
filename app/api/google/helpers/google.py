@@ -77,31 +77,38 @@ class Google:
         return result
 
     def get_fast(self, start, finish, list_coord):
-        str_destinations = ""
-        for coord in list_coord:
-            str_destinations += str(coord['x']) + ", " + str(coord['y']) + "|"
-        str_destinations += str(finish[0]) + ", " + str(finish[1])
         str_origin = str(start[0]) + ", " + str(start[1]) + "|" + str(finish[0]) + ", " + str(finish[1])
-        s = req.Session()
-        for k in key:
-            try:
-                url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins={}&destinations={}&key={}&mode=walking".format(
-                    str_origin, str_destinations, k)
-                answer = None
-                answer = s.get(url)
-                answer = gs.converter(answer.text)['rows']
-                for dist in answer[0]['elements']:
-                    self.record['s'].append(dist['duration']['value'] // 60)
-                break
-            except:
-                self.key = Google.set_google_key()
-
-        for dist in answer[0]['elements']:
-            self.record['f'].append(dist['duration']['value'] // 60)
-        record_o = answer[0]['elements'][len(answer[0]['elements'])-1]['duration']['value']
-        self.record['s'] = self.record['s']
-        self.record['f'] = self.record['f']
-        self.record['o'] = record_o
+        if len(list_coord) == 48:
+            exc_range = len(list_coord) // 48 + 1
+        else:
+            exc_range = len(list_coord) // 48 + 2
+        for i in range(1, exc_range):
+            str_destinations = ""
+            if i == len(list_coord) // 48 + 1:
+                for j in range(48 * (i - 1), len(list_coord)):
+                    str_destinations += str(list_coord[j]['x']) + ", " + str(list_coord[j]['y']) + "|"
+            else:
+                for j in range(48 * (i - 1), 48 * i):
+                    str_destinations += str(list_coord[j]['x']) + ", " + str(list_coord[j]['y']) + "|"
+            s = req.Session()
+            for k in key:
+                try:
+                    url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins={}&destinations={}&key={}&mode=walking".format(
+                        str_origin, str_destinations, k)
+                    answer = None
+                    answer = s.get(url)
+                    answer = gs.converter(answer.text)['rows']
+                    for dist in answer[0]['elements']:
+                        self.record['s'].append(dist['duration']['value'] // 60)
+                    break
+                except:
+                    print('error')
+            for dist in answer[0]['elements']:
+                self.record['f'].append(dist['duration']['value'] // 60)
+            record_o = answer[0]['elements'][len(answer[0]['elements']) - 1]['duration']['value']
+            self.record['s'] = self.record['s']
+            self.record['f'] = self.record['f']
+            self.record['o'] = record_o
         return self.record
 
     @staticmethod

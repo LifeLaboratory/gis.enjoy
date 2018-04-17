@@ -83,7 +83,7 @@ class Path:
                 point[2] = self.start[1] + dynamic_delta
                 point[3] = self.start[1] - dynamic_delta
 
-            get_sql = "SELECT * FROM Geo WHERE x >= {} and x <= {} and y >= {} and y <= {} LIMIT 48".format(
+            get_sql = "SELECT * FROM Geo WHERE x >= {} and x <= {} and y >= {} and y <= {}".format(
                 point[0],
                 point[1],
                 point[2],
