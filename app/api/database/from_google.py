@@ -3,7 +3,6 @@
 import requests as req
 from api.helpers.service import Gis as gs
 
-
 def get_from_google(query):
     """
     :param query: достопримечательности+город
@@ -23,9 +22,9 @@ def get_from_google(query):
               "y": None,
               "rating": 0,
               "time": 0}
-        if js["rating"]:
-            js["rating"] = res["rating"]
-        else:
+        try:
+            js["rating"] = round(res["rating"])
+        except:
             js["rating"] = 0
         js["x"] = res["geometry"]["location"]["lat"]
         js["y"] = res["geometry"]["location"]["lng"]

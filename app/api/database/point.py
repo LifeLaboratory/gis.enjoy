@@ -2,7 +2,7 @@
 from api.helpers.service import Gis as gs
 import json
 import requests as req
-
+from api.database.from_google import get_from_google
 
 def get_google(data):
     s = req.Session()
@@ -50,3 +50,9 @@ def add_new_point(new_point):
             new_point['id'],
             points[i]['id'],
             answer))
+"""
+google_list = get_from_google("Достопримечательности+Новосибирск")
+print(google_list)
+for g in google_list:
+    print(add_new_point(g))
+"""

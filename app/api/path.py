@@ -139,7 +139,7 @@ class Path:
         for i in self.id_list:
             text += '{}, '.format(i) if i != self.id_list[-1] else '{}'.format(i)
 
-        #print(get_sql % (text))
+        # print(get_sql % (text))
         self.dict_pair_touch = gs.SqlQuery(get_sql % (text))
 
     def set_distance(self):
@@ -165,16 +165,16 @@ class Path:
             i = helper[pair['point_1']]
             j = helper[pair['point_2']]
             try:
-                tyobj = self.INDEXES.get(self.dict_coords[self.id_list[j-1]]['Type'], 0)
+                tyobj = self.INDEXES.get(self.dict_coords[self.id_list[j - 1]]['Type'], 0)
                 self.dict_graph[i][j] = [j, pair['distance'], tyobj,
-                                         self.dict_coords[self.id_list[j-1]]['Rating']]
+                                         self.dict_coords[self.id_list[j - 1]]['Rating']]
             except:
                 pass
 
             try:
-                tyobj = self.INDEXES.get(self.dict_coords[self.id_list[i-1]]['Type'], 0)
+                tyobj = self.INDEXES.get(self.dict_coords[self.id_list[i - 1]]['Type'], 0)
                 self.dict_graph[j][i] = [i, pair['distance'], tyobj,
-                                         self.dict_coords[self.id_list[i-1]]['Rating']]
+                                         self.dict_coords[self.id_list[i - 1]]['Rating']]
             except:
                 pass
         '''
@@ -208,14 +208,12 @@ class Path:
         self.dict_graph[0][N] = [N, answer['o'], 0, 0]
         self.dict_graph[0][0] = [0] * 4
         self.dict_graph[N][N] = [0] * 4
-
         '''
         Заполнение диагонали матрицы 
         '''
         for i in range(N):
             if i == 0:
                 continue
-
             tyobj = self.INDEXES.get(self.dict_coords[self.id_list[i - 1]]['Type'], 0)
             self.dict_graph[i][i] = [i, 0, tyobj, self.dict_coords[self.id_list[i - 1]]['Rating']]
 
@@ -246,10 +244,12 @@ class Path:
         sko = std(sko_array)
 
         try:
-            time_per_priority = sko / len(self.dict_graph[0]) / max_priority # Соотношение количества времени к 1 условной единице приоритета
+            time_per_priority = sko / len(
+                self.dict_graph[0]) / max_priority  # Соотношение количества времени к 1 условной единице приоритета
         except:
             time_per_priority = 0
-        time_per_estimate = sko / len(self.dict_graph[0]) / 100 # Соотношение количества времени к 1 условной единице общей оценки
+        time_per_estimate = sko / len(
+            self.dict_graph[0]) / 100  # Соотношение количества времени к 1 условной единице общей оценки
 
         for dist in self.dict_graph:
             matrix_row = []
@@ -257,12 +257,13 @@ class Path:
             for point in dist:
                 # Перевод приоритета во время
                 try:
-                    priority_to_time = (max_priority - priority.index(self.INDEXES.get(point[2], 0))) * time_per_priority
+                    priority_to_time = (max_priority - priority.index(
+                        self.INDEXES.get(point[2], 0))) * time_per_priority
                 except:
                     priority_to_time = 0
-                #print(point)
+                # print(point)
                 # Перевод оценки во время
-                if point != []: # hot fix
+                if point != []:  # hot fix
                     estimate_to_time = point[3] * time_per_estimate
 
                     norm_point = (point[0], point[1], point[1] - priority_to_time - estimate_to_time)
@@ -401,4 +402,3 @@ class Path:
         top_paths = []
         self.longest_paths(0, len(self.new_graph) - 1, 0, time, max_time)
         return sorted(top_paths, key=itemgetter('point'), reverse=True)
-

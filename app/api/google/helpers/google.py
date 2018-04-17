@@ -103,11 +103,9 @@ class Google:
                     break
                 except:
                     print('error')
-            for dist in answer[0]['elements']:
+            for dist in answer[1]['elements']:
                 self.record['f'].append(dist['duration']['value'] // 60)
             record_o = answer[0]['elements'][len(answer[0]['elements']) - 1]['duration']['value']
-            self.record['s'] = self.record['s']
-            self.record['f'] = self.record['f']
             self.record['o'] = record_o
         return self.record
 
