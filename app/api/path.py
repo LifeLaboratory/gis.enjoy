@@ -33,12 +33,9 @@ class Path:
 
     def select_path(self):
         self.list_coords = self.set_touch()
-
         self.id_list = self.get_coord()
         self.get_pair_touch()
         self.set_graph()
-
-
         self.new_graph = self.normalize_point_data(self.user_filter)
         result = self.get_top_paths(self.list_time, self.user_time)
         result = self.generate_answer(
@@ -86,7 +83,7 @@ class Path:
                 point[2] = self.start[1] + dynamic_delta
                 point[3] = self.start[1] - dynamic_delta
 
-            get_sql = "SELECT * FROM Geo WHERE x >= {} and x <= {} and y >= {} and y <= {}".format(
+            get_sql = "SELECT * FROM Geo WHERE x >= {} and x <= {} and y >= {} and y <= {} LIMIT 48".format(
                 point[0],
                 point[1],
                 point[2],
@@ -172,7 +169,6 @@ class Path:
                 self.dict_graph[i][j] = [j, pair['distance'], tyobj,
                                          self.dict_coords[self.id_list[j-1]]['Rating']]
             except:
-                #print("{} {} tyobj Error 1".format(i,j))
                 pass
 
             try:
@@ -180,7 +176,6 @@ class Path:
                 self.dict_graph[j][i] = [i, pair['distance'], tyobj,
                                          self.dict_coords[self.id_list[i-1]]['Rating']]
             except:
-                #print("{} {} tyobj Error 2".format(j, i))
                 pass
         '''
         Получение расстояния от начала и конца пути до всех выбранных достопримечательностей
@@ -198,7 +193,6 @@ class Path:
                 self.dict_graph[0][i + 1] = [i + 1, answer['f'][i], tyobj,
                                              self.dict_coords[self.id_list[i]]['Rating']]
             except:
-                #print("{} {} tyobj Error 3".format(N,i + 1))
                 pass
 
             try:
@@ -208,7 +202,6 @@ class Path:
                 self.dict_graph[i + 1][0] = [0, answer['f'][i], tyobj,
                                              self.dict_coords[self.id_list[i]]['Rating']]
             except:
-                #print("{} {} tyobj Error 4".format(i + 1, N))
                 pass
 
         self.dict_graph[N][0] = [0, answer['o'], 0, 0]
@@ -247,7 +240,6 @@ class Path:
         max_priority = len(priority)
 
         sko_array = []
-        #print("dict:", self.dict_graph[0])
         for element in self.dict_graph[0]:
             sko_array.append(element[1])
 

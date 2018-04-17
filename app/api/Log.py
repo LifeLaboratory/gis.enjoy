@@ -6,7 +6,7 @@ import api.base_name as names
 __author__ = 'RaldenProg'
 
 
-class Log():
+class Log:
     logging.basicConfig(filename='logger.log',
                         format='%(filename)-12s[LINE:%(lineno)d] %(levelname)-8s %(message)s %(asctime)s ',
                         level=logging.DEBUG)
@@ -14,7 +14,6 @@ class Log():
 
 def debug_write(graph, result):
     os.getcwd()
-    #os.chdir("api")
     date_now = datetime.now().strftime('%Y.%m.%d:%H.%M.%S')
     directory = "Debug_files/" + date_now.split(":")[0] + "/" + date_now
     if not os.path.exists("Debug_files"):
@@ -22,14 +21,14 @@ def debug_write(graph, result):
     if not os.path.exists("Debug_files/" + date_now.split(":")[0]):
         os.mkdir("Debug_files/" + date_now.split(":")[0])
     if not os.path.exists("Debug_files/" + date_now.split(":")[0] + "/" + date_now):
-       # print(directory)
         os.mkdir(directory)
-    f = open(directory+'/graph.txt', 'w')
+    f = open(directory + '/graph.txt', 'w')
     f.write(graph)
     f.close()
     f = open(directory + '/result.txt', 'w')
     f.write(result)
     f.close()
+
 
 def debug_read(arg=None, dir=None):
     os.chdir("Debug_files")
@@ -55,4 +54,4 @@ def debug_read(arg=None, dir=None):
         os.chdir("..")
         os.chdir("..")
         os.chdir("..")
-        return {names.ANSWER: names.SUCCESS, names.DATA: {"graph":graph, "result": result}}
+        return {names.ANSWER: names.SUCCESS, names.DATA: {"graph": graph, "result": result}}
