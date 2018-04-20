@@ -91,6 +91,7 @@ class Path:
             )
             result = gs.SqlQuery(get_sql)
             self.touches = result
+            print(result)
             trying = trying + 1
         return result
 

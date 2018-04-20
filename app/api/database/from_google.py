@@ -20,7 +20,7 @@ def get_from_google(query):
               "description": res["place_id"],
               "x": None,
               "y": None,
-              "rating": 0,
+              "rating": 3,
               "time": 0}
         try:
             js["rating"] = round(res["rating"])

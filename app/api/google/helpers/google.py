@@ -95,6 +95,7 @@ class Google:
                 try:
                     url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins={}&destinations={}&key={}&mode=walking".format(
                         str_origin, str_destinations, k)
+                    print(url)
                     answer = None
                     answer = s.get(url)
                     answer = gs.converter(answer.text)['rows']
