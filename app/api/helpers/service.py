@@ -2,10 +2,10 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from config import DATABASE
-import logging
 import json
 
 from datetime import date, datetime
+
 
 def db_connect_new():
     try:
@@ -14,6 +14,7 @@ def db_connect_new():
     except:
         print('Fatal error: connect database')
         raise
+
 
 class Gis:
     @staticmethod
@@ -26,7 +27,6 @@ class Gis:
         connect, current_connect = db_connect_new()
         result = None
         try:
-            #print(query)
             current_connect.execute(query)
             connect.commit()
         except psycopg2.Error as e:
@@ -55,6 +55,7 @@ class Gis:
         """
         return json.dumps(js, default=Gis.__converter_data) if isinstance(js, dict) \
             else json.loads(js)
+
 
 class Sql:
     @staticmethod

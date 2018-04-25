@@ -9,9 +9,11 @@ class Filter:
         self.__list_type = []
 
     def get_filter(self):
-        get_sql = """select distinct type FROM geo where type!='point_of_interest' and type!='church' and type !='park' and
-                type!='museum' and type!='zoo' and type!='funeral_home' and type!='premise' and type!='art_gallery'
-                """
+        get_sql = """
+select distinct type
+from geo
+where type <> all('{"point_of_interest", "church", "park", "museum", "zoo", "funeral_home", "premise", "art_gallery"}'::text[])
+"""
         dict_type = gs.SqlQuery(get_sql)
         result = []
         for d in dict_type:

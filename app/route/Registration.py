@@ -4,37 +4,35 @@ import api.auth.registration_users as reg
 import api.base_name as names
 from api.helpers.service import Gis as gs
 
+
 class Registration(Resource):
     def __init__(self):
         self.__parser = reqparse.RequestParser()
         self.__parser.add_argument('data')
         self.__args = self.__parser.parse_args()
-        self.data = None
+        self.filter_rec = None
 
     def parse_data(self):
-        self.data = self.__args.get('data', None)
-        self.data = gs.converter(self.data)
-        print("data: ", self.data)
-
-        return
+        self.filter_rec = self.__args.get('data', None)
+        self.filter_rec = gs.converter(self.filter_rec)
 
     def check_data(self):
-        if self.data[names.LOGIN] is None:
+        if self.filter_rec[names.LOGIN] is None:
             return False
-        if self.data[names.PASSWORD] is None:
+        if self.filter_rec[names.PASSWORD] is None:
             return False
-        if self.data[names.NAME] is None:
+        if self.filter_rec[names.NAME] is None:
             return False
-        if self.data[names.EMAIL] is None:
+        if self.filter_rec[names.EMAIL] is None:
             return False
-        if self.data[names.SEX] is None:
+        if self.filter_rec[names.SEX] is None:
             return False
-        if self.data[names.CITY] is None:
+        if self.filter_rec[names.CITY] is None:
             return False
         return True
 
     def switch(self):
-        answer = reg.registration_user(self.data)
+        answer = reg.registration_user(self.filter_rec)
         return answer
 
     def get(self):
