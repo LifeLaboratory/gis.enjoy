@@ -1,4 +1,4 @@
-from api.helpers.sql import Sql
+from api.helpers.service import Gis as gs
 
 __author__ = 'RaldenProg'
 
@@ -10,14 +10,12 @@ class Filter:
 
     def get_filter(self):
         get_sql = """
-            with
-            filter as (
-    SELECT DISTINCT id, type FROM geo
-    )
-    SELECT * FROM filter
-        """
-        dict_type = Sql.exec(get_sql)
-        result = dict()
-        for filter_type in dict_type:
-            result[filter_type['type']] = filter_type['id']
-        return result
+select distinct type
+from geo
+where type <> all('{"point_of_interest", "church", "park", "museum", "zoo", "funeral_home", "premise", "art_gallery"}'::text[])
+"""
+        dict_type = gs.SqlQuery(get_sql)
+        result = []
+        for d in dict_type:
+            result.append(d["type"])
+        return {"data": result}
