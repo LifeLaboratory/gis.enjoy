@@ -32,7 +32,7 @@ def registration_user(user_data):
     """
     answer = input_auth_table(registration_data)
     if answer.get(names.ANSWER) is not names.SUCCESS:
-        return {names.ANSWER: names.WARNING, names.DATA: "Ошибка запроса к базе данных"}
+        return {names.ANSWER: names.WARNING, names.DATA: {"error_info":"Ошибка запроса к базе данных"}}
     return answer
 
 
@@ -56,7 +56,7 @@ def input_auth_table(user_data):
     except:
         logging.error('error: Ошибка запроса к базе данных. Возможно такой пользователь уже есть')
         return {names.ANSWER: names.WARNING,
-                names.DATA: "Ошибка запроса к базе данных. Возможно такой пользователь уже есть"}
+                names.DATA: {"error_info":"Ошибка запроса к базе данных. Возможно такой пользователь уже есть"}}
     return input_user_table(id_user, user_data)
 
 
@@ -76,7 +76,7 @@ def input_user_table(id_user, user_data):
         gs.SqlQuery(sql)
     except:
         logging.error('error: Ошибка запроса к базе данных')
-        return {names.ANSWER: names.WARNING, names.DATA: "Ошибка запроса к базе данных"}
+        return {names.ANSWER: names.WARNING, names.DATA: {"error_info": "Ошибка запроса к базе данных"}}
     return input_session_table(id_user)
 
 
@@ -93,5 +93,5 @@ def input_session_table(id_user):
         gs.SqlQuery(sql)
     except:
         logging.error('error: Ошибка запроса к базе данных')
-        return {names.ANSWER: names.WARNING, names.DATA: "Ошибка запроса к базе данных"}
+        return {names.ANSWER: names.WARNING, names.DATA: {"error_info": "Ошибка запроса к базе данных"}}
     return {names.ANSWER: names.SUCCESS, names.DATA: {"UUID": str(UUID)}}
