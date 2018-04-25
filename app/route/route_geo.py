@@ -1,9 +1,8 @@
 # coding=utf-8
 from flask_restful import Resource, reqparse
-from api.helpers.json import converter
+from api.helpers.service import Gis as gs
 from api.path import Path
 from api.filter import Filter
-from time import time
 
 
 class RouteGeo(Resource):
@@ -25,7 +24,7 @@ class RouteGeo(Resource):
 
     def parse_data(self):
         data = self.__args.get('data', None)
-        data = converter(data)
+        data = gs.converter(data)
         self.__data_origin_X = data["origin"]["X"]
         self.__data_origin_Y = data["origin"]['Y']
         self.__data_destination_X = data["destination"]["X"]
@@ -57,10 +56,7 @@ class RouteGeo(Resource):
             self.__index_priority.append(self.INDEXES.get(self.__priority[i], 0))
 
     def switch(self):
-        print(self.__datas[0], self.__datas[1], self.__time, self.__index_priority)
-        start = time()
         answer = Path(self.__datas[0], self.__datas[1], self.__time, self.__index_priority, self.INDEXES).result
-        print('end = ', time() - start)
         return answer
 
     def get(self):
