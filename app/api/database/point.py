@@ -65,7 +65,7 @@ def check_points():
                         points[j]['id'],
                         distance)
                     Gs.SqlQuery(sql)
-                except KeyError:
+                except IndexError:
                     logging.error(points[i]['id'], points[j]['id'], [str(points[i]['x']) + ',' + str(points[i]['y']),
                                                                      str(points[j]['x']) + ',' + str(points[j]['y'])])
                     pass
