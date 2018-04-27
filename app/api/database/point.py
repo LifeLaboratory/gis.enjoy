@@ -19,7 +19,10 @@ def get_google(data):
     url = """https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking
     &origins={}&destinations={}&key={}"""
     answer = s.get(url.format(data[0], data[1], key))
-    answer = json.loads(answer.text)['rows'][0]['elements'][0]['duration']['text'].split()
+    answer = json.loads(answer.text)
+    if answer['rows'][0]['elements'][0]['status'] == 'ZERO_RESULTS':
+        return 999999
+    answer = answer['rows'][0]['elements'][0]['duration']['text'].split()
     if len(answer) > 2:
         return int(answer[0])*60+int(answer[2])
     else:
