@@ -1,6 +1,4 @@
 # coding=utf-8
-
-
 def get_from_txt(namefile):
     f = open(namefile)
     text = f.read()
