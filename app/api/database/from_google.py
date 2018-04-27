@@ -1,7 +1,7 @@
 # coding=utf8
-
 import requests as req
-from api.helpers.service import Gis as gs
+from api.helpers.service import Gis
+
 
 def get_from_google(query):
     """
@@ -12,7 +12,7 @@ def get_from_google(query):
     s = req.Session()
     url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query={}&key={}&language=ru"
     answer = s.get(url.format(query, key))
-    answer = gs.converter(answer.text)['results']
+    answer = Gis.converter(answer.text)['results']
     result = []
     for res in answer:
         js = {"name": res["name"],

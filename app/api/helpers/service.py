@@ -3,13 +3,13 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from config import DATABASE
 import json
-
 from datetime import date, datetime
 
 
 def db_connect_new():
     try:
-        connect = psycopg2.connect("dbname='{dbname}' user='{user}' host='{host}' password='{password}'".format(**DATABASE))
+        connect = psycopg2.connect(
+            "dbname='{dbname}' user='{user}' host='{host}' password='{password}'".format(**DATABASE))
         return connect, connect.cursor(cursor_factory=RealDictCursor)
     except:
         print('Fatal error: connect database')

@@ -1,5 +1,5 @@
 # encoding: utf-8
-from api.helpers.service import Gis as Gs
+from api.helpers.service import Gis
 import json
 import requests as req
 import logging
@@ -34,7 +34,7 @@ def add_new_point(new_point, town):
     sql = """select id from Geo where name='{}' or x={} or y={}""".format(new_point["name"],
                                                                           float(new_point["x"]),
                                                                           float(new_point["y"]), )
-    res = Gs.SqlQuery(sql)
+    res = Gis.SqlQuery(sql)
     if not res:
         sql = """INSERT INTO Geo (Name, X, Y, Type, Descript, Rating, Time, town)
               VALUES ('{}', {}, {}, '{}', '{}', {}, {}, '{}')""".format(new_point["name"],
@@ -45,17 +45,17 @@ def add_new_point(new_point, town):
                                                                         int(new_point["rating"]),
                                                                         int(new_point["time"]),
                                                                         town)
-        Gs.SqlQuery(sql)
+        Gis.SqlQuery(sql)
 
 
 def check_points():
     sql = """select id, x, y from geo"""
-    points = Gs.SqlQuery(sql)
+    points = Gis.SqlQuery(sql)
     for i in range(len(points)):
         for j in range(i + 1, len(points)):
             sql = """SELECT id FROM geo_distance where point_1={} and point_2={}""".format(points[i]['id'],
                                                                                            points[j]['id'], )
-            answer = Gs.SqlQuery(sql)
+            answer = Gis.SqlQuery(sql)
             if not answer:
                 try:
                     distance = get_google([str(points[i]['x']) + ',' + str(points[i]['y']),
@@ -64,7 +64,7 @@ def check_points():
                         points[i]['id'],
                         points[j]['id'],
                         distance)
-                    Gs.SqlQuery(sql)
+                    Gis.SqlQuery(sql)
                 except IndexError:
                     logging.error(points[i]['id'], points[j]['id'], [str(points[i]['x']) + ',' + str(points[i]['y']),
                                                                      str(points[j]['x']) + ',' + str(points[j]['y'])])

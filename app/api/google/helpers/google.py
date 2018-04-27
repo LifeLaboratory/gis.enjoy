@@ -1,6 +1,6 @@
 # coding=utf-8
 import requests as req
-from api.helpers.service import Gis as gs
+from api.helpers.service import Gis
 from .key import key
 __author__ = 'RaldenProg'
 
@@ -28,10 +28,12 @@ class Google:
         start = '{},{}'.format(start[0], start[1])
         finish = '{},{}'.format(finish[0], finish[1])
         s = req.Session()
-        url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking&origins={}&destinations={}&key={}".format(
-            start, finish, self.key)
+        url = """https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking&
+        origins={}&destinations={}&key={}""".format(start,
+                                                    finish,
+                                                    self.key)
         answer = s.get(url)
-        answer = gs.converter(answer.text)['rows'][0]['elements'][0]['duration']['text'].split()
+        answer = Gis.converter(answer.text)['rows'][0]['elements'][0]['duration']['text'].split()
 
         if len(answer) > 2:
             if op:
@@ -42,7 +44,7 @@ class Google:
                 record[op] = int(answer[0])
             return int(answer[0])
 
-    def get_one_to_many(self, touch, list_touch, op=None, record=None):
+    def get_one_to_many(self, list_touch, op=None, record=None):
         text_url_touch = ""
         for point in list_touch:
             text_url_touch += str(point['x']) + "," + str(point['y']) + "%7C"
@@ -67,7 +69,7 @@ class Google:
 
     def _get_distance(self):
         result = []
-        distance = gs.converter(self.distance)
+        distance = Gis.converter(self.distance)
         for i in range(len(distance["rows"][0]["elements"])):
             times = distance["rows"][0]["elements"][i]['duration']['text'].split()
             if len(times) > 2:
@@ -93,12 +95,13 @@ class Google:
             s = req.Session()
             for k in key:
                 try:
-                    url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins={}&destinations={}&key={}&mode=walking".format(
-                        str_origin, str_destinations, k)
-                    print(url)
+                    url = """https://maps.googleapis.com/maps/api/distancematrix/json?
+                    origins={}&destinations={}&key={}&mode=walking""".format(str_origin,
+                                                                             str_destinations,
+                                                                             k)
                     answer = None
                     answer = s.get(url)
-                    answer = gs.converter(answer.text)['rows']
+                    answer = Gis.converter(answer.text)['rows']
                     for dist in answer[0]['elements']:
                         self.record['s'].append(dist['duration']['value'] // 60)
                     break
@@ -112,17 +115,16 @@ class Google:
 
     @staticmethod
     def set_google_key():
-        url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101," \
-                  "-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C" \
-                  "-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C" \
-                  "-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C" \
-                  "-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C" \
-                  "-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key={}"
-
+        url = """https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101, 
+                  "-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C
+                  "-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C
+                  "-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C
+                  "-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C
+                  "-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key={}"""
         s = req.Session()
         for k in key:
             answer = s.get(url.format(k))
-            answer = gs.converter(answer.text)
+            answer = Gis.converter(answer.text)
             if answer["status"] == "OK":
                 return k
         return "key not found"
