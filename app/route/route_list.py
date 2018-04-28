@@ -7,6 +7,7 @@ from route.get_list import Test_route
 from route.route_debug import Debug
 from route.route_filter import RouteFilter
 from route.route_geo import RouteGeo
+from route.route_debug import Debug
 
 __author__ = 'ar.chusovitin'
 
@@ -19,5 +20,6 @@ ROUTES = {
     Registration: '/registration',
     Debug: '/debug',
     Logout: '/logout',
-    Route: '/route'
+    Route: '/route',
+    Debug: '/debug'
 }

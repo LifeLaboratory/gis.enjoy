@@ -16,7 +16,7 @@ TYPES = ['Парки', 'Парк', 'Сады', 'Фонтаны', 'Достопр
 
 def get_google(data):
     s = req.Session()
-    key = "AIzaSyDdrExQrPV2n8Y58q7EYwVgGog-6ph9LB8"
+    key = "AIzaSyCTVbmRU-8V3ya63Uce-gYTVaFugzkp794"
     url = """https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking
     &origins={}&destinations={}&key={}"""
     answer = s.get(url.format(data[0], data[1], key))
