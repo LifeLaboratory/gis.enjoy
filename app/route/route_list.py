@@ -20,6 +20,5 @@ ROUTES = {
     Registration: '/registration',
     Debug: '/debug',
     Logout: '/logout',
-    Route: '/route',
-    Debug: '/debug'
+    Route: '/route'
 }
