@@ -1,5 +1,6 @@
 # encoding: utf-8
 from api.helpers.service import Gis
+from api.google.helpers.google import Google
 import json
 import requests as req
 import logging
@@ -16,7 +17,8 @@ TYPES = ['Парки', 'Парк', 'Сады', 'Фонтаны', 'Достопр
 
 def get_google(data):
     s = req.Session()
-    key = "AIzaSyCTVbmRU-8V3ya63Uce-gYTVaFugzkp794"
+    key = Google.set_google_key()
+    # key = "AIzaSyCTVbmRU-8V3ya63Uce-gYTVaFugzkp794"
     url = """https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=walking
     &origins={}&destinations={}&key={}"""
     answer = s.get(url.format(data[0], data[1], key))
@@ -48,6 +50,42 @@ def add_new_point(new_point, town):
         Gis.SqlQuery(sql)
 
 
+def check_points_new():
+    sql = """
+with
+pair_point as (
+ select a.id as "a_id"
+  , a.x as "a_x"
+  , a.y as "a_y"
+  , b.id as "b_id"
+  , b.x as "b_x"
+  , b.y as "b_y"
+ from geo a
+ join geo b on a.id < b.id
+ order by a.id, b.id
+),
+intersect_points as(
+  select a.*
+  from pair_point a
+  left join geo_distance b on (b.point_1, b.point_2) = (a."a_id", a."b_id")
+  where id is null
+)
+select * from intersect_points order by a_id desc, b_id
+    """
+    points = Gis.SqlQuery(sql)
+    for point in points:
+        try:
+            distance = get_google([str(point['a_x']) + ',' + str(point['a_y']),
+                                   str(point['b_x']) + ',' + str(point['b_y'])])
+            sql = "INSERT INTO geo_distance (point_1, point_2, distance) VALUES ({}, {}, {})".format(
+                            point['a_id'],
+                            point['b_id'],
+                            distance)
+            Gis.SqlQuery(sql)
+        except Exception as e:
+            print(e)
+
+
 def check_points():
     sql = """select id, x, y from geo"""
     points = Gis.SqlQuery(sql)
@@ -71,4 +109,4 @@ def check_points():
                     pass
 
 
-check_points()
+check_points_new()
