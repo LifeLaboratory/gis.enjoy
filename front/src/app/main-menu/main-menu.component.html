@@ -1,0 +1,12 @@
+<div class="main-menu">
+  <div *ngIf="selectedMenu === 'main'">
+    <div id="build-route" class="main-menu__element main-menu__element--main-point"
+         [class.main-menu__element--disabled]="!buildRoutesButtonStatus"
+         (click)="buildRoutes()">Построить маршрут</div>
+  </div>
+
+  <div *ngIf="selectedMenu === 'route'">
+    <div (click)="selectRandomRoute()" class="main-menu__element">Выбрать случайный путь</div>
+    <div (click)="resetParameters()" class="main-menu__element">Изменить параметры</div>
+  </div>
+</div>
