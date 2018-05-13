@@ -7,7 +7,6 @@ from flask_restful import Resource, Api
 from route.route_geo import RouteGeo
 from route.get_list import List
 from route.route_filter import RouteFilter
-import app.api.Log
 _app = Flask(__name__)
 _app.config['JSON_AS_ASCII'] = False
 api = Api(_app)
