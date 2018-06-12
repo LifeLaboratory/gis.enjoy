@@ -3,3 +3,4 @@ flask-restful
 psycopg2
 psycopg2-binary
 numpy
+requests
