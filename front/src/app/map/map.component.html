@@ -1,0 +1,43 @@
+<app-left-menu [selectedMenu]="selectedLeftMenu"
+               [routes]="routes"
+               [isActive]="leftMenuIsActive"
+               (sendSelectedFilters)="getSelectedFilters($event);"
+               (selectedRoute)="selectRoute($event)">
+</app-left-menu>
+
+<app-main-menu #MainMenu
+               [buildRoutesButtonStatus]="buildRoutesButtonStatus"
+               [selectedMenu]="selectedMainMenu"
+               (getRoutes)="getRoutes();"
+               (resetParam)="resetParameters()"
+               (randomRoute)="selectRoute('random')">
+</app-main-menu>
+
+
+<agm-map class="map" (mapClick)="placeMarker($event)" [latitude]="lat" [longitude]="lng" [zoom]="13">
+
+  <agm-marker-cluster>
+    <agm-marker *ngFor="let marker of markers" [latitude]="marker.lat" [longitude]="marker.lng">
+      <agm-info-window>Lorem ipsum</agm-info-window>
+    </agm-marker>
+  </agm-marker-cluster>
+
+  <agm-direction *ngIf="direction"
+                 [waypoints]="waypoints"
+                 [origin]="direction.origin"
+                 [destination]="direction.destination"
+                 [visible]="show">
+  </agm-direction>
+</agm-map>
+
+<div class="help-menu" *ngIf="false">
+  <button type="button" (click)="showDirection()">Show</button>
+  <button type="button" (click)="removeDirection()">Hide</button>
+  <button type="button" (click)="getDirection()">Get Direction</button>
+  <button type="button" (click)="getWaypoints()">Get Waypoints</button>
+  <button type="button" (click)="clearWaypoints()">Clear Waypoints</button>
+  <button type="button" (click)="getRoutes()">Take route from server (Построить маршрут)</button>
+
+  <button type="button" (click)="selectLeftMenu('routes')">Select route menu</button>
+  <button type="button" (click)="selectLeftMenu('filters')">Select filters menu</button>
+</div>

@@ -1,0 +1,29 @@
+<div [class.left-menu--active]="isActive" class="left-menu">
+
+  <div class="" *ngIf="selectedMenu === 'filters'">
+    <div class="left-menu__title">Куда вы хотите зайти:</div>
+    <div class="left-menu__category"
+         *ngFor="let filter of filters; let i = index;"
+         [class.left-menu__category--active]="isFilterSelect(i)"
+         (click)="toggleFilter(i)">{{ filter }}
+    </div>
+  </div>
+
+  <div class="" *ngIf="selectedMenu === 'routes'">
+    <div class="left-menu__title">Выберите маршрут:</div>
+
+    <div *ngIf="routes != undefined">
+      <div class="left-menu__category"
+           *ngFor="let route of routes.route; let i = index;"
+           [class.left-menu__category--active]="isRouteSelect(i)"
+            (click)="selectRoute(i)">
+
+        <span *ngFor="let name of route.name; let j = index;">
+          {{ name }}
+          <span *ngIf="j != route.name.length-1"> -> </span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+</div>
