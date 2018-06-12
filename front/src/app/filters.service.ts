@@ -8,7 +8,7 @@ export class FiltersService {
   constructor(private http: HttpClient) {}
 
   getFilters (): Observable<Filters> {
-    const url = 'http://90.189.132.25:13451/filter';
+    const url = 'http://127.0.0.1:13451/filter';
 
     return new Observable<Filters>(observer => {
       this.http.get<Filters>(url)

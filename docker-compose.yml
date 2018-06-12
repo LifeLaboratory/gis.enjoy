@@ -1,0 +1,14 @@
+version: '2.1'
+
+services:
+  api:
+    build: app/
+    volumes:
+      - ./app/ :/app/
+    ports:
+      - "13451:13451"
+  frontend:
+    image: angular-cli
+    build: ./front/ :/front/
+    environment:
+      NODE_ENV: production
