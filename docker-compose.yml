@@ -13,6 +13,6 @@ services:
     volumes:
       - ./front/ :/front/
     ports:
-      - "13452:8000"
+      - "13452:4200"
     environment:
       NODE_ENV: production
