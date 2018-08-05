@@ -1,0 +1,33 @@
+version: '2.1'
+
+services:
+  auth:
+    build: auth/
+    volumes:
+      - ./auth/ :/auth/
+    ports:
+      - "13451:13451"
+  debug:
+    build: debug/
+    volumes:
+      - ./debug/ :/debug/
+    ports:
+      - "13451:13452"
+  filter:
+    build: filter/
+    volumes:
+      - ./filter/ :/filter/
+    ports:
+      - "13451:13451"
+  route:
+    build: route/
+    volumes:
+      - ./route/ :/route/
+    ports:
+      - "13451:13451"
+  touche:
+    build: touche/
+    volumes:
+      - ./touche/ :/touche/
+    ports:
+      - "13451:13451"
